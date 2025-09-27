@@ -1,5 +1,5 @@
 // screens/LoginScreen.tsx
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import React, { useState } from "react";
 import {
     ActivityIndicator,
@@ -35,12 +35,16 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }} />
       <KeyboardAvoidingView
         behavior={Platform.select({ ios: "padding", android: undefined })}
         style={{ flex: 1 }}
       >
         <View style={styles.inner}>
-          <Text style={styles.brand}>Mi App</Text>
+          <Text style={styles.brand}>
+            <Text style={{ color: "#5b8266" }}>Fix</Text>
+            <Text>It</Text>
+          </Text>
           <Text style={styles.title}>Iniciar sesión</Text>
 
           {/* Email */}
@@ -155,12 +159,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
   },
-  toggleText: { color: "#0a84ff", fontWeight: "600" },
+  toggleText: { color: "#000000ff", fontWeight: "600" },
 
   primaryBtn: {
     height: 50,
     borderRadius: 14,
-    backgroundColor: "#0a84ff",
+    backgroundColor: "#5b8266",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 8,
@@ -176,5 +180,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  secondaryText: { color: "#111", fontSize: 16, fontWeight: "700" },
+  secondaryText: { color: "#000000ff", fontSize: 16, fontWeight: "700" },
 });

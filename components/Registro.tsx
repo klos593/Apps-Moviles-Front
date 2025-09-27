@@ -38,7 +38,10 @@ export default function Registro() {
       <Stack.Screen options={{ headerShown: false }} />
       <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })} style={{ flex: 1 }}>
         <View style={styles.inner}>
-          <Text style={styles.brand}>Mi App</Text>
+          <Text style={styles.brand}>
+            <Text style={{ color: "#5b8266" }}>Fix</Text>
+            <Text>It</Text>
+          </Text>
           <Text style={styles.title}>Crear cuenta</Text>
 
           <View style={styles.field}>
@@ -96,7 +99,6 @@ export default function Registro() {
             <Text style={styles.rowText}>Acepto términos y condiciones</Text>
           </Pressable>
 
-          {/* Botones */}
           <Pressable onPress={onSubmit} disabled={!formOk} style={[styles.primaryBtn, !formOk && styles.btnDisabled]}>
             {loading ? <ActivityIndicator /> : <Text style={styles.primaryText}>Crear cuenta</Text>}
           </Pressable>
@@ -111,29 +113,113 @@ export default function Registro() {
 }
 
 const styles = StyleSheet.create({
-  container:{ flex:1, backgroundColor:"#fff" },
-  inner:{ flex:1, padding:20, gap:16, paddingTop:32 },
-  brand:{ fontSize:20, fontWeight:"700", textAlign:"center" },
-  title:{ fontSize:24, fontWeight:"800", textAlign:"center", marginTop:8 },
+  container:{ 
+    flex:1, 
+    backgroundColor:"#fff" 
+  },
+  inner:{ 
+    flex:1, 
+    padding:20, 
+    gap:16, 
+    paddingTop:32 
+  },
+  brand:{ 
+    fontSize:20, 
+    fontWeight:"700", 
+    textAlign:"center" 
+  },
+  title:{ 
+    fontSize:24, 
+    fontWeight:"800", 
+    textAlign:"center", 
+    marginTop:8 },
 
-  field:{ gap:8 },
-  label:{ fontSize:14, color:"#444" },
-  input:{ height:48, backgroundColor:"#f2f2f2", borderRadius:12, paddingHorizontal:14, borderWidth:1, borderColor:"transparent" },
-  inputError:{ borderColor:"#ff5a5f", backgroundColor:"#fff5f5" },
-  helper:{ color:"#ff5a5f", fontSize:12 },
+  field:{ 
+    gap:8 
+  },
+  label:{ 
+    fontSize:14, 
+    color:"#444" 
+  },
+  input:{ 
+    height:48, 
+    backgroundColor:"#f2f2f2", 
+    borderRadius:12, 
+    paddingHorizontal:14, 
+    borderWidth:1, 
+    borderColor:"transparent" 
+  },
+  inputError:{ 
+    borderColor:"#ff5a5f", 
+    backgroundColor:"#fff5f5" 
+  },
+  helper:{ 
+    color:"#ff5a5f", 
+    fontSize:12 
+  },
 
-  toggle:{ position:"absolute", right:10, top:10, paddingHorizontal:8, height:28, justifyContent:"center" },
-  toggleText:{ color:"#0a84ff", fontWeight:"600" },
+  toggle:{ 
+    position:"absolute", 
+    right:10, 
+    top:10, 
+    paddingHorizontal:8, 
+    height:28, 
+    justifyContent:"center" 
+  },
+  toggleText:{ 
+    color:"#333", 
+    fontWeight:"600" 
+  },
 
-  row:{ flexDirection:"row", alignItems:"center", gap:10, marginTop:4 },
-  checkbox:{ width:20, height:20, borderRadius:5, borderWidth:1, borderColor:"#bbb", backgroundColor:"#fff" },
-  checkboxOn:{ backgroundColor:"#0a84ff", borderColor:"#0a84ff" },
-  rowText:{ color:"#333" },
+  row:{ 
+    flexDirection:"row", 
+    alignItems:"center", 
+    gap:10, 
+    marginTop:4 
+  },
+  checkbox:{ 
+    width:20, 
+    height:20, 
+    borderRadius:5, 
+    borderWidth:1, 
+    borderColor:"#bbb", 
+    backgroundColor:"#fff" 
+  },
+  checkboxOn:{ 
+    backgroundColor:"#3e6259" 
+  },
+  rowText:{ 
+    color:"#333" 
+  },
 
-  primaryBtn:{ height:50, borderRadius:14, backgroundColor:"#0a84ff", alignItems:"center", justifyContent:"center", marginTop:8 },
-  primaryText:{ color:"#fff", fontSize:16, fontWeight:"700" },
-  btnDisabled:{ opacity:0.5 },
+  primaryBtn:{ 
+    height:50, 
+    borderRadius:14, 
+    backgroundColor:"#5b8266", 
+    alignItems:"center", 
+    justifyContent:"center", 
+    marginTop:8 
+  },
+  primaryText:{ 
+    color:"#fff", 
+    fontSize:16, 
+    fontWeight:"700" 
+  },
+  btnDisabled:{ 
+    opacity:0.5 
+  },
 
-  secondaryBtn:{ height:50, borderRadius:14, borderWidth:1, borderColor:"#d9d9d9", alignItems:"center", justifyContent:"center" },
-  secondaryText:{ color:"#111", fontSize:16, fontWeight:"700" },
+  secondaryBtn:{ 
+    height:50, 
+    borderRadius:14, 
+    borderWidth:1, 
+    borderColor:"#d9d9d9", 
+    alignItems:"center", 
+    justifyContent:"center" 
+  },
+  secondaryText:{ 
+    color:"#111", 
+    fontSize:16, 
+    fontWeight:"700" 
+  },
 });
