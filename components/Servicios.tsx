@@ -32,15 +32,7 @@ export default function DirectoryWithCards() {
   return (
 
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.logo}>logotipo</Text>
-        <Pressable style={styles.mapBtn} onPress={() => console.log("Mapa")}>
-          <Text style={styles.mapBtnText}>Mapa</Text>
-        </Pressable>
-      </View>
 
-      {/* Buscador */}
       <View style={styles.searchWrap}>
         <TextInput
           value={q}
@@ -49,6 +41,9 @@ export default function DirectoryWithCards() {
           style={styles.search}
           returnKeyType="search"
         />
+        <Pressable style={styles.mapBtn} onPress={() => console.log("Mapa")}>
+          <Text style={styles.mapBtnText}>Mapa</Text>
+        </Pressable>
       </View>
 
       <FlatList
@@ -75,7 +70,6 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: "#fff",
-    padding: 70
   },
   header: {
     height: 56,
@@ -93,6 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   mapBtn: {
+    flex: 0.3,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
@@ -104,10 +99,13 @@ const styles = StyleSheet.create({
   },
 
   searchWrap: { 
-    padding: 16,
     backgroundColor: "#fff",
+    flex: 0.1,
+    flexDirection: "row",
+    alignItems: "center",
   },
   search: {
+    flex: 1,
     height: 42,
     borderWidth: 1,
     borderColor: "#ddd",
