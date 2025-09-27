@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   cardTitle: { fontSize: 16, fontWeight: "700", flexShrink: 1, paddingRight: 8 },
   badge: {
     paddingHorizontal: 8, paddingVertical: 4, borderRadius: 10,
-    backgroundColor: "#ededf0", color: "#555", overflow: "hidden",
+    backgroundColor: "#aef6c7", color: "#555", overflow: "hidden", opacity: 0.7
   },
   cardSubtitle: { marginTop: 6, color: "#333" },
   cardNote: { marginTop: 4, color: "#777", fontSize: 12 },
