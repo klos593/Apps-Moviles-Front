@@ -20,14 +20,7 @@ export default function RootLayout() {
         ),
         headerStyle: {backgroundColor: '#294936'},
       }}
-      >
-      <Stack.Screen
-        name="paginaLogin"
-        options={{
-          headerRight: () => null,
-        }}
       />
-    </Stack>
   );
 }
 

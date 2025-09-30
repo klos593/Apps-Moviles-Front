@@ -1,11 +1,13 @@
+import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
 import {
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Image
 } from "react-native";
 import BaseInfo from "../assets/data";
 import type { CardData } from "./InfoTarjeta";
@@ -18,6 +20,7 @@ const normalize = (s: string) =>
 export default function DirectoryWithCards() {
   const [items] = useState<CardData[]>(BaseInfo);
   const [q, setQ] = useState("");
+  const router = useRouter();
 
   const filtered = useMemo(() => {
     if (!q.trim()) return items;
@@ -41,8 +44,8 @@ export default function DirectoryWithCards() {
           style={styles.search}
           returnKeyType="search"
         />
-        <Pressable style={styles.mapBtn} onPress={() => console.log("Mapa")}>
-          <Text style={styles.mapBtnText}>Mapa</Text>
+        <Pressable onPress={() => console.log("Mapa")}>
+          <Image source={require('../assets/images/Mapa.png')} style={styles.mapBtn}/>
         </Pressable>
       </View>
 
@@ -53,7 +56,7 @@ export default function DirectoryWithCards() {
         keyExtractor={(it) => it.id}
         renderItem={({ item }) => (
           <View style={styles.cardWrapper}>
-            <Card data={item} onPress={(d) => console.log("open", d.title)} />
+            <Card data={item} onPress={() => router.push(`/profesionales/${item.title.toLowerCase()}`)} />
           </View>
         )}
         style={styles.flatList}
@@ -87,22 +90,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   mapBtn: {
-    flex: 0.3,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
+    width: 40, 
+    height: 38, 
+    resizeMode: "contain"
   },
-  mapBtnText: { 
-    fontWeight: "600" 
-  },
-
   searchWrap: { 
     backgroundColor: "#fff",
     flex: 0.1,
     flexDirection: "row",
     alignItems: "center",
+    padding: 16
   },
   search: {
     flex: 1,
