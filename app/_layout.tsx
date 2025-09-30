@@ -1,4 +1,3 @@
-
 import { Stack, useRouter } from "expo-router";
 import { Pressable, Image, StyleSheet, Text } from "react-native";
 

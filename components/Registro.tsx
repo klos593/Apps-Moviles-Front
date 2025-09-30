@@ -1,4 +1,3 @@
-// app/registro.tsx
 import { Stack, router } from "expo-router";
 import React, { useState } from "react";
 import {

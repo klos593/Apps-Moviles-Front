@@ -1,11 +1,10 @@
-// screens/LoginScreen.tsx
 import { router, Stack } from "expo-router";
 import React, { useState } from "react";
 import {
     ActivityIndicator,
     KeyboardAvoidingView,
     Platform,
-    Pressable,
+    Pressable,  
     SafeAreaView,
     StyleSheet,
     Text,
