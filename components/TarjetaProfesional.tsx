@@ -16,7 +16,7 @@ export default function Card({ data, onPress }: CardProps) {
   return (
     <Pressable onPress={() => onPress?.(data)} style={styles.card}>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{data.name}</Text>
+        <Text style={styles.cardTitle}>{data.title}</Text>
         {!!data.category && <Text style={styles.badge}>{data.category}</Text>}
       </View>
       {!!data.subtitle && <Text style={styles.cardSubtitle}>{data.subtitle}</Text>}

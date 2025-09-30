@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import {
   FlatList,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   View
 } from "react-native";
 import BaseInfo from "../assets/services";
 import type { CardData } from "./InfoTarjeta";
-import Card from "./TarjetaServicio";
+import Card from "./TarjetaProfesional";
 
 export default function DirectoryWithCards() {
   const [items] = useState<CardData[]>(BaseInfo);
@@ -21,12 +22,12 @@ export default function DirectoryWithCards() {
         <FlatList
         data={BaseInfo}
         renderItem={({item}) => (
-          <View style={styles.serviceView}>
+          <Pressable style={styles.serviceView} onPress={() => router.push(`/${item.title.toLowerCase()}`)}>
             <Image source={item.icon} style={styles.serviceIcon} />
             <Text style={styles.serviceText}>
               {item.title}
             </Text>
-          </View>
+          </Pressable>
         )}
         horizontal={true}
         style={styles.flatListServices}
@@ -48,13 +49,12 @@ export default function DirectoryWithCards() {
           keyExtractor={(it) => it.id}
           renderItem={({ item }) => (
             <View style={styles.cardWrapper}>
-              <Card data={item} onPress={() => router.push(`/${item.title.toLowerCase()}`)} />
+              <Card data={item} onPress={() => router.push(`/${item.id.toLowerCase()}`)} />
             </View>
           )}
           style={styles.flatList}
           contentContainerStyle={styles.flatListContent}
           showsVerticalScrollIndicator={false}
-          ListEmptyComponent={<Text style={styles.empty}>No hay resultados.</Text>}
         />
       </View>
     </View>
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   flatListServiceView:{
     flex:1, 
     justifyContent:"center",
-    alignItems:"center",
+    alignItems:"center"
   },
 
   serviceView:{

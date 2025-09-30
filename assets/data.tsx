@@ -1,26 +1,26 @@
-import { CardData } from "../components/InfoTarjeta";
+import { UserData } from "@/components/InfoUser";
 
-const DATA: CardData[] = [
-  { id: "1", title: "Profesionales", subtitle: "Médicos, abogados, etc.", category: "Directorio", note: "Turnos y contactos" },
-  { id: "2", title: "Personas", subtitle: "Usuarios registrados", category: "Usuarios" },
-  { id: "3", title: "Empresas", subtitle: "Pymes y comercios", category: "Directorio" },
-  { id: "4", title: "Servicios", subtitle: "Electricista, plomero", category: "Servicios" },
-  { id: "5", title: "Educación", subtitle: "Cursos, talleres", category: "Formación" },
-  { id: "6", title: "Salud", subtitle: "Clínicas, farmacias", category: "Bienestar" },
-  { id: "7", title: "Transporte", subtitle: "Taxis, remises", category: "Movilidad" },
-  { id: "8", title: "Gastronomía", subtitle: "Restaurantes, delivery", category: "Comida" },
-  { id: "9", title: "Turismo", subtitle: "Hoteles, agencias", category: "Viajes" },
-  { id: "10", title: "Eventos", subtitle: "Conciertos, teatro", category: "Ocio" },
-  { id: "11", title: "Deportes", subtitle: "Gimnasios, clubes", category: "Actividad física" },
-  { id: "12", title: "Tecnología", subtitle: "Soporte, ventas", category: "Electrónica" },
-  { id: "13", title: "Hogar", subtitle: "Limpieza, mantenimiento", category: "Servicios" },
-  { id: "14", title: "Belleza", subtitle: "Salones, spas", category: "Cuidado personal" },
-  { id: "15", title: "Mascotas", subtitle: "Veterinarias, tiendas", category: "Animales" },
-  { id: "16", title: "Finanzas", subtitle: "Bancos, asesoría", category: "Dinero" },
-  { id: "17", title: "Inmobiliaria", subtitle: "Alquiler, compra", category: "Vivienda" },
-  { id: "18", title: "Automotor", subtitle: "Talleres, concesionarias", category: "Vehículos" },
-  { id: "19", title: "Moda", subtitle: "Ropa, accesorios", category: "Compras" },
-  { id: "20", title: "Arte y cultura", subtitle: "Galerías, museos", category: "Cultura" },
+const DATA: UserData[] = [
+  { id: 1, name: "Pepe", lastName: "Perez", profession: "Plomero", rating: 2 },
+  { id: 2, name: "Facu", lastName: "Perez", profession: "Plomero", rating: 2 },
+  { id: 3, name: "Klos", lastName: "Perez", profession: "Plomero", rating: 2 },
+  { id: 4, name: "Nacho", lastName: "Perez", profession: "Plomero", rating: 2 },
+  { id: 5, name: "Luca", lastName: "Perez", profession: "Electricista", rating: 2 },
+  { id: 6, name: "Mari", lastName: "Perez", profession: "Electricista", rating: 2 },
+  { id: 7, name: "Sofia", lastName: "Perez", profession: "Electricista", rating: 2 },
+  { id: 8, name: "Gaston", lastName: "Perez", profession: "Electricista", rating: 2 },
+  { id: 9, name: "Fran", lastName: "Perez", profession: "Gasista", rating: 2 },
+  { id: 10, name: "Bauti", lastName: "Perez", profession: "Gasista", rating: 2 },
+  { id: 11, name: "Martu", lastName: "Perez", profession: "Gasista", rating: 2 },
+  { id: 12, name: "Mati", lastName: "Perez", profession: "Gasista", rating: 2 },
+  { id: 13, name: "Emi", lastName: "Perez", profession: "Limpieza", rating: 2 },
+  { id: 14, name: "Sol", lastName: "Perez", profession: "Limpieza", rating: 2 },
+  { id: 15, name: "Pili", lastName: "Perez", profession: "Pintor", rating: 2 },
+  { id: 16, name: "More", lastName: "Perez", profession: "Pintor", rating: 2 },
+  { id: 17, name: "Juani", lastName: "Perez", profession: "Paseador", rating: 2 },
+  { id: 18, name: "Juanma", lastName: "Perez", profession: "Paseador", rating: 2 },
+  { id: 19, name: "Juanpi", lastName: "Perez", profession: "Entrenador", rating: 2 },
+  { id: 20, name: "Joaco", lastName: "Perez", profession: "Entrenador", rating: 2 },
 ];
 
 export default DATA;
