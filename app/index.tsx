@@ -1,7 +1,7 @@
+import { router, Stack } from "expo-router";
 import React from "react";
 import { SafeAreaView } from "react-native";
-import { router, Stack } from "expo-router";
-import FixItIntro from "../components/animation";
+import FixItIntro from "../components/Animation";
 
 export default function App() {
   return (

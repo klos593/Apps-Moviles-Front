@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import type { UserData } from "./InfoUser";
+import Rating from "./Rating";
 
 type ProfesionalProps = {
     data: UserData;
@@ -14,11 +15,32 @@ export default function Profesional({data}: ProfesionalProps) {
                     <Image source={data.picture} style={styles.picture} />
                 </View>
                 <View style={styles.informationContainer}>
-                    <Text style={styles.name}>{data.name} {data.lastName}</Text>
+                    <View style={{flex: 2, justifyContent: "center", alignItems: 'center'}}>
+                        <Text style={styles.name}>{data.name} {data.lastName}</Text>
+                        <View style={styles.rating}>
+                            <Rating rating={data.rating}/>
+                            <Text style={styles.numberedRating}>{data.rating}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.professionsContainer}>
+                        <Text style={styles.professions}>
+                            {data.profession}
+                        </Text>
+                    </View>
                 </View>
             </View>
             <View style={styles.secondHalf}>
-                <Text>Prueba</Text>
+                <View>
+                    <Text>{}</Text>
+                </View>
+                <Text>Descripcion</Text>
+                <Text>Telefono</Text>
+                <Text>mail</Text>
+                <Pressable>
+                    <Text>
+                        Contactar
+                    </Text>
+                </Pressable>
             </View>
         </>
     );
@@ -28,18 +50,21 @@ const styles = StyleSheet.create({
     firstHalf: {
         flex: 1,
         flexDirection: "row",
-        justifyContent: "flex-start",
-        padding: 10
+        justifyContent: "center",
+        alignItems: "center",
+        margin: 10
     },
 
     picture: {
         width: 200,
-        height: 220,
+        height: 200,
         resizeMode: "contain"
     },
 
     pictureContainer: {
-        alignSelf: "center"
+        flex: 1,
+        alignSelf: "center",
+        justifyContent: "center"
     },
 
     name: {
@@ -48,12 +73,37 @@ const styles = StyleSheet.create({
     },
     
     informationContainer: {
-        alignSelf: "flex-start",
-        marginTop: 40,
-        marginLeft: 15
+        alignSelf: "center",
+        flex: 1,
+        justifyContent: "center"
     },
 
     secondHalf: {
-        flex:2,
+        flex: 1.5,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    rating: {
+        flexDirection: "row",
+        marginTop: 6
+    },
+
+    numberedRating: {
+        marginLeft: 7
+    },
+
+    professionsContainer: {
+        flex: 1, 
+        justifyContent: "flex-start", 
+        alignItems: "center",
+    },
+
+    professions: {
+        backgroundColor: "#5b8266", 
+        borderRadius: 15, 
+        padding: 5, 
+        fontWeight: 500
     }
 });

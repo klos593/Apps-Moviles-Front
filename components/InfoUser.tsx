@@ -10,4 +10,5 @@ export type UserData = {
   rating: number;
   picture?: ImageSourcePropType;
   address: string;
+  description: string;
 };
