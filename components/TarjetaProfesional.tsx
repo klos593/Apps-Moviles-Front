@@ -3,42 +3,120 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  View
+  View,
+  Image
 } from "react-native";
 import { UserData } from "./InfoUser";
+import { FontAwesome } from "@expo/vector-icons";
 
 type CardProps = {
   data: UserData;
   onPress?: (data: UserData) => void;
 };
 
+type RatingProps = {
+  rating: number;
+};
+
+function Rating( rating: RatingProps ) {
+  const stars = [];
+  const maxStars = 5;
+
+  for (let i = 1; i <= maxStars; i++) {
+    if (i <= Math.floor(rating.rating)) {
+      stars.push(<FontAwesome key={i} name="star" size={18} color="gold" />);
+    } else if (i - rating.rating < 1) {
+      stars.push(<FontAwesome key={i} name="star-half-full" size={18} color="gold" />);
+    } else {
+      stars.push(<FontAwesome key={i} name="star-o" size={18} color="gold" />);
+    }
+  }
+
+  return <View style={{ flexDirection: "row" }}>{stars}</View>;
+}
+
 export default function Card({ data, onPress }: CardProps) {
   return (
     <Pressable onPress={() => onPress?.(data)} style={styles.card}>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{data.name}</Text>
-        {!!data.profession && <Text style={styles.badge}>{data.profession}</Text>}
+        <View>
+          <Image source={data.picture} style={styles.userPicture}/>
+        </View>
+        <View style={styles.data}>
+          <Text style={styles.name}>{data.name} {data.lastName}</Text>
+          <View style={styles.rating}>
+            <Rating rating={data.rating}/>
+            <Text style={styles.numberedRating}>{data.rating}</Text>
+          </View>
+        </View>
+        <View style={styles.tag}>
+          {!!data.profession && <Text style={styles.profession}>{data.profession}</Text>}
+        </View>
       </View>
-      {!!data.lastName && <Text style={styles.cardSubtitle}>{data.lastName}</Text>}
-      {!!data.rating && <Text style={styles.cardNote}>{data.rating}</Text>}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#fff" 
+  },
 
   card: {
-    backgroundColor: "#f4f4f6", borderRadius: 16, padding: 12, marginBottom: 12,
-    minHeight: 110, justifyContent: "center",
+    backgroundColor: "#f4f4f6", 
+    borderRadius: 16, 
+    padding: 12, 
+    marginBottom: 12,
+    minHeight: 110, 
+    justifyContent: "center",
   },
-  cardHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  cardTitle: { fontSize: 16, fontWeight: "700", flexShrink: 1, paddingRight: 8 },
-  badge: {
-    paddingHorizontal: 8, paddingVertical: 4, borderRadius: 10,
-    backgroundColor: "#aef6c7", color: "#555", overflow: "hidden", opacity: 0.7
+
+  cardHeader: { 
+    flexDirection: "row", 
+    alignItems: "center", 
   },
-  cardSubtitle: { marginTop: 6, color: "#333" },
-  cardNote: { marginTop: 4, color: "#777", fontSize: 12 },
-  empty: { textAlign: "center", marginTop: 24, color: "#777" },
+  
+  name: { 
+    fontSize: 16, 
+    fontWeight: "700", 
+    flexShrink: 1, 
+    paddingRight: 8 
+  },
+
+  profession: {
+    paddingHorizontal: 8, 
+    paddingVertical: 4, 
+    borderRadius: 10,
+    backgroundColor: "#aef6c7", 
+    color: "#555", 
+    overflow: "hidden", 
+    opacity: 0.7
+  },
+
+  rating: {
+    flexDirection: "row",
+    marginTop: 6
+  },
+
+  data: {
+    flexDirection:"column",
+    marginLeft: 20
+  },
+
+  numberedRating: {
+    marginLeft: 7
+  },
+
+  userPicture:{
+    width:55,
+    height: 55,
+    resizeMode: "contain"
+  },
+
+  tag: {
+    flex: 1,
+    alignItems: "flex-end",
+    marginBottom: 57
+  }
 });

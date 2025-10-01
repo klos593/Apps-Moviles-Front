@@ -7,4 +7,5 @@ export type UserData = {
   profession: string;
   rating: number;
   picture?: ImageSourcePropType;
+  address: string;
 };

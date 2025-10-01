@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
     FlatList,
@@ -18,7 +18,6 @@ type ProfesionalesProps = {
 
 export default function Profesionales({data}: ProfesionalesProps) {
 const [q, setQ] = useState("");
-const router = useRouter();
 
 return (
 

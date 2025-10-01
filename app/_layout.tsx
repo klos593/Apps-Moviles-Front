@@ -1,9 +1,8 @@
-import { Stack, useRouter } from "expo-router";
+import { Stack, router } from "expo-router";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text } from "react-native";
 
 export default function RootLayout() {
-  const router = useRouter();
   return (
     <Stack
       screenOptions={{
@@ -19,7 +18,13 @@ export default function RootLayout() {
             <Image source={require('../assets/images/UserIcon.png')} style={styles.userIcon}/>
           </Pressable>
         ),
+        headerLeft: () => (
+          <Pressable>
+            <Text style={styles.address}>Direccion</Text>
+          </Pressable>
+        ),
         headerStyle: {backgroundColor: '#294936'},
+        headerBackVisible: false,
       }}
       />
   );
@@ -37,4 +42,9 @@ const styles = StyleSheet.create({
     fontWeight:"700", 
     textAlign:"center" 
   },
+  address:{
+    fontSize: 16,
+    color: "#ffffffff",
+    fontWeight: 500
+  }
 });

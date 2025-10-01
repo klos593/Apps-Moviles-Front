@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { router, Stack } from "expo-router";
 import React, { useState } from "react";
 import {
   FlatList,
@@ -16,50 +16,50 @@ import Card from "./TarjetaProfesional";
 export default function DirectoryWithCards() {
 
   const [profesionales] = useState<UserData[]>(BaseProfesionales);
-  const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <View style={styles.flatListServiceView}>  
-        <FlatList
-        data={BaseInfo}
-        renderItem={({item}) => (
-          <Pressable style={styles.serviceView} onPress={() => router.push(`/${item.title.toLowerCase()}`)}>
-            <Image source={item.icon} style={styles.serviceIcon} />
-            <Text style={styles.serviceText}>
-              {item.title}
-            </Text>
-          </Pressable>
-        )}
-        horizontal={true}
-        style={styles.flatListServices}
-        showsHorizontalScrollIndicator={false}
-        />
-      </View>
+    <><Stack.Screen
+      options={{
+        gestureEnabled: false
+      }} /><View style={styles.container}>
+        <View style={styles.flatListServiceView}>
+          <FlatList
+            data={BaseInfo}
+            renderItem={({ item }) => (
+              <Pressable style={styles.serviceView} onPress={() => router.push(`/${item.title.toLowerCase()}`)}>
+                <Image source={item.icon} style={styles.serviceIcon} />
+                <Text style={styles.serviceText}>
+                  {item.title}
+                </Text>
+              </Pressable>
+            )}
+            horizontal={true}
+            style={styles.flatListServices}
+            showsHorizontalScrollIndicator={false} />
+        </View>
 
         <View style={styles.titleView}>
-            <Text style={styles.title}>
-              Profesionales destacados
-            </Text>
-          </View>
+          <Text style={styles.title}>
+            Profesionales destacados
+          </Text>
+        </View>
 
-      <View style={{flex:3.5}}>
-        <FlatList
-          data={profesionales}
-          key={1} 
-          numColumns={1}
-          keyExtractor={(it) => it.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.cardWrapper}>
-              <Card data={item} onPress={() => router.push(`/${item.id}`)} />
-            </View>
-          )}
-          style={styles.flatList}
-          contentContainerStyle={styles.flatListContent}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-    </View>
+        <View style={{ flex: 3.5 }}>
+          <FlatList
+            data={profesionales}
+            key={1}
+            numColumns={1}
+            keyExtractor={(it) => it.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.cardWrapper}>
+                <Card data={item} onPress={() => router.push(`/${item.id}`)} />
+              </View>
+            )}
+            style={styles.flatList}
+            contentContainerStyle={styles.flatListContent}
+            showsVerticalScrollIndicator={false} />
+        </View>
+      </View></>
   );
 
 }
