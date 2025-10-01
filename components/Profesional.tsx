@@ -30,17 +30,21 @@ export default function Profesional({data}: ProfesionalProps) {
                 </View>
             </View>
             <View style={styles.secondHalf}>
-                <View>
-                    <Text>{}</Text>
+                <View style= {styles.contactContainer}>
+
+                    <Text>Descripcion: {data.description}</Text>
+                    <Text>Telefono: {data.phoneNumber}</Text>
+                    <Text>Mail: {data.mail}</Text>
+
                 </View>
-                <Text>Descripcion</Text>
-                <Text>Telefono</Text>
-                <Text>mail</Text>
-                <Pressable>
-                    <Text>
-                        Contactar
-                    </Text>
-                </Pressable>
+
+                <View style= {{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                    <Pressable style = {{ backgroundColor: "#3E6259", borderRadius: 15, justifyContent: "center", alignItems: "center", padding: 10}}>
+                        <Text style = {{ color: "#FFFFFF", fontWeight: "600", fontSize: 25}}>
+                            Contactar
+                        </Text>
+                    </Pressable>
+                </View>
             </View>
         </>
     );
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
 
     secondHalf: {
         flex: 1.5,
-        flexDirection: "row",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
     },
@@ -105,5 +109,11 @@ const styles = StyleSheet.create({
         borderRadius: 15, 
         padding: 5, 
         fontWeight: 500
-    }
+    },
+    contactContainer: {
+        flex: 1, 
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-between",
+        margin: 10}
 });
