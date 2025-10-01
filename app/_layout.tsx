@@ -1,4 +1,5 @@
 import { Stack, useRouter } from "expo-router";
+import React from "react";
 import { Image, Pressable, StyleSheet, Text } from "react-native";
 
 export default function RootLayout() {
@@ -14,7 +15,7 @@ export default function RootLayout() {
         ),
         headerTitleAlign: "center",
         headerRight: () => (
-          <Pressable onPress={() => router.push("/paginaLogin")}>
+          <Pressable onPress={() => router.push("/paginaUsuario")}>
             <Image source={require('../assets/images/UserIcon.png')} style={styles.userIcon}/>
           </Pressable>
         ),

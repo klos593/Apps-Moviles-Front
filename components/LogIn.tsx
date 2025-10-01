@@ -1,15 +1,15 @@
 import { router, Stack } from "expo-router";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,  
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 
 const isEmail = (v: string) =>
@@ -102,7 +102,7 @@ export default function LoginScreen() {
           </View>
 
           <Pressable
-            onPress={() => {}}
+            onPress={() => router.push("/paginaServicios")}
             disabled={!formOk}
             style={[styles.primaryBtn, !formOk && styles.btnDisabled]}
           >

@@ -2,17 +2,21 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
     FlatList,
+    Image,
     Pressable,
     StyleSheet,
     Text,
     TextInput,
-    View, 
-    Image
+    View
 } from "react-native";
+import type { UserData } from "./InfoUser";
 import Card from "./TarjetaProfesional";
 
+type ProfesionalesProps = {
+  data: UserData[];
+};
 
-export default function DirectoryWithCards({data}: props) {
+export default function Profesionales({data}: ProfesionalesProps) {
 const [q, setQ] = useState("");
 const router = useRouter();
 
@@ -37,7 +41,7 @@ return (
         data={data}
         key={1} 
         numColumns={1}
-        keyExtractor={(it) => it.id}
+        keyExtractor={(it) => it.id.toString()}
         renderItem={({ item }) => (
         <View style={styles.cardWrapper}>
             <Card data={item} onPress={() => console.log(item.name)} />

@@ -1,26 +1,26 @@
 import React from "react";
 import {
-    Pressable,
-    StyleSheet,
-    Text,
-    View
+  Pressable,
+  StyleSheet,
+  Text,
+  View
 } from "react-native";
-import { CardData } from "./InfoTarjeta";
+import { UserData } from "./InfoUser";
 
 type CardProps = {
-  data: CardData;
-  onPress?: (data: CardData) => void;
+  data: UserData;
+  onPress?: (data: UserData) => void;
 };
 
 export default function Card({ data, onPress }: CardProps) {
   return (
     <Pressable onPress={() => onPress?.(data)} style={styles.card}>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{data.title}</Text>
-        {!!data.category && <Text style={styles.badge}>{data.category}</Text>}
+        <Text style={styles.cardTitle}>{data.name}</Text>
+        {!!data.profession && <Text style={styles.badge}>{data.profession}</Text>}
       </View>
-      {!!data.subtitle && <Text style={styles.cardSubtitle}>{data.subtitle}</Text>}
-      {!!data.note && <Text style={styles.cardNote}>{data.note}</Text>}
+      {!!data.lastName && <Text style={styles.cardSubtitle}>{data.lastName}</Text>}
+      {!!data.rating && <Text style={styles.cardNote}>{data.rating}</Text>}
     </Pressable>
   );
 }

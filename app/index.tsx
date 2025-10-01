@@ -1,10 +1,14 @@
-import Servicios from "@/components/Servicios";
+import LogIn from "@/components/LogIn";
+import React from "react";
 import { View } from "react-native";
 
 export default function Index() {
   return (
-    <View style={{flex: 1,}}>
-      <Servicios/>
+    <View
+      style={{
+        flex: 1,}}
+    >
+      <LogIn/>
     </View>
   );
 }

@@ -8,12 +8,14 @@ import {
   Text,
   View
 } from "react-native";
+import BaseProfesionales from "../assets/data";
 import BaseInfo from "../assets/services";
-import type { CardData } from "./InfoTarjeta";
+import type { UserData } from "./InfoUser";
 import Card from "./TarjetaProfesional";
 
 export default function DirectoryWithCards() {
-  const [items] = useState<CardData[]>(BaseInfo);
+
+  const [profesionales] = useState<UserData[]>(BaseProfesionales);
   const router = useRouter();
 
   return (
@@ -43,13 +45,13 @@ export default function DirectoryWithCards() {
 
       <View style={{flex:3.5}}>
         <FlatList
-          data={items}
+          data={profesionales}
           key={1} 
           numColumns={1}
-          keyExtractor={(it) => it.id}
+          keyExtractor={(it) => it.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.cardWrapper}>
-              <Card data={item} onPress={() => router.push(`/${item.id.toLowerCase()}`)} />
+              <Card data={item} onPress={() => router.push(`/${item.id}`)} />
             </View>
           )}
           style={styles.flatList}

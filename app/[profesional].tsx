@@ -1,24 +1,17 @@
-import { useLocalSearchParams } from "expo-router";
-import { FlatList, Text, View } from "react-native"
 import Profesionales from "@/components/Profesionales";
+import { useLocalSearchParams } from "expo-router";
+import React from "react";
+import InfoProfesionales from "../assets/data";
 
-const data = {
-    personas: [
-        { id: "1", name: "John" },
-        { id: "2", name: "Anna" },
-    ],
-    profesionales: [
-        { id: "1", name: "Pepe" },
-        { id: "2", name: "Lala" }, 
-    ]
-};
 
 export default function ProfessionalsScreen() {
-    const { profesional } = useLocalSearchParams<{ service: string }>();
+    const { profesional } = useLocalSearchParams<{ profesional: string }>();
 
-    const professionals = data[profesional];
+    const filtered = InfoProfesionales.filter(
+        (p) => p.profession.toLowerCase() === profesional.toLowerCase()
+    );
 
     return (
-        <Profesionales data={professionals}/>
+        <Profesionales data={filtered} />
     );
 }
