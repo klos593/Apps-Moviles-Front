@@ -1,13 +1,17 @@
-import Servicios from "@/components/Servicios";
-import { View } from "react-native";
+import { router, Stack } from "expo-router";
+import React from "react";
+import { SafeAreaView } from "react-native";
+import FixItIntro from "../components/animation";
 
-export default function Index() {
+export default function App() {
   return (
-    <View
-      style={{
-        flex: 1,}}
-    >
-      <Servicios/>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <FixItIntro
+        onDone={() => {
+          router.push("/paginaServicios")
+        }}
+      />
+    </SafeAreaView>
   );
 }

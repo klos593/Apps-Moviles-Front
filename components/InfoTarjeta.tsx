@@ -1,7 +1,7 @@
+import { ImageSourcePropType } from "react-native";
+
 export type CardData = {
   id: string;
   title: string;
-  subtitle?: string;
-  category?: string;
-  note?: string;
+  icon: ImageSourcePropType;
 };

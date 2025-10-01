@@ -1,67 +1,65 @@
-import React, { useMemo, useState } from "react";
+import { router, Stack } from "expo-router";
+import React, { useState } from "react";
 import {
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
 } from "react-native";
-import BaseInfo from "../assets/data";
-import type { CardData } from "./InfoTarjeta";
-import Card from "./TarjetaServicio";
+import BaseProfesionales from "../assets/data";
+import BaseInfo from "../assets/services";
+import type { UserData } from "./InfoUser";
+import Card from "./TarjetaProfesional";
 
+export default function HomeScreen() {
 
-const normalize = (s: string) =>
-  s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
-
-export default function DirectoryWithCards() {
-  const [items] = useState<CardData[]>(BaseInfo);
-  const [q, setQ] = useState("");
-
-  const filtered = useMemo(() => {
-    if (!q.trim()) return items;
-    const n = normalize(q);
-    return items.filter((it) =>
-      [it.title, it.subtitle ?? "", it.category ?? "", it.note ?? ""]
-        .map(normalize)
-        .some((t) => t.includes(n))
-    );
-  }, [items, q]);
+  const [profesionales] = useState<UserData[]>(BaseProfesionales);
 
   return (
+    <><Stack.Screen
+      options={{
+        gestureEnabled: false
+      }} /><View style={styles.container}>
+        <View style={styles.flatListServiceView}>
+          <FlatList
+            data={BaseInfo}
+            renderItem={({ item }) => (
+              <Pressable style={styles.serviceView} onPress={() => router.push(`/servicio/${item.title.toLowerCase()}`)}>
+                <Image source={item.icon} style={styles.serviceIcon} />
+                <Text style={styles.serviceText}>
+                  {item.title}
+                </Text>
+              </Pressable>
+            )}
+            horizontal={true}
+            style={styles.flatListServices}
+            showsHorizontalScrollIndicator={false} />
+        </View>
 
-    <View style={styles.container}>
+        <View style={styles.titleView}>
+          <Text style={styles.title}>
+            Profesionales destacados
+          </Text>
+        </View>
 
-      <View style={styles.searchWrap}>
-        <TextInput
-          value={q}
-          onChangeText={setQ}
-          placeholder="Buscar..."
-          style={styles.search}
-          returnKeyType="search"
-        />
-        <Pressable style={styles.mapBtn} onPress={() => console.log("Mapa")}>
-          <Text style={styles.mapBtnText}>Mapa</Text>
-        </Pressable>
-      </View>
-
-      <FlatList
-        data={filtered}
-        key={1} 
-        numColumns={1}
-        keyExtractor={(it) => it.id}
-        renderItem={({ item }) => (
-          <View style={styles.cardWrapper}>
-            <Card data={item} onPress={(d) => console.log("open", d.title)} />
-          </View>
-        )}
-        style={styles.flatList}
-        contentContainerStyle={styles.flatListContent}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={<Text style={styles.empty}>No hay resultados.</Text>}
-      />
-    </View>
+        <View style={{ flex: 3.5 }}>
+          <FlatList
+            data={profesionales}
+            key={1}
+            numColumns={1}
+            keyExtractor={(it) => it.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.cardWrapper}>
+                <Card data={item} onPress={() => router.push(`/profesional/${item.id}`)} />
+              </View>
+            )}
+            style={styles.flatList}
+            contentContainerStyle={styles.flatListContent}
+            showsVerticalScrollIndicator={false} />
+        </View>
+      </View></>
   );
 
 }
@@ -71,49 +69,6 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: "#fff",
   },
-  header: {
-    height: 56,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#ddd",
-    backgroundColor: "#fff",
-  },
-  logo: { 
-    flex: 1, 
-    textAlign: "center", 
-    fontSize: 18, 
-    fontWeight: "600",
-  },
-  mapBtn: {
-    flex: 0.3,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  },
-  mapBtnText: { 
-    fontWeight: "600" 
-  },
-
-  searchWrap: { 
-    backgroundColor: "#fff",
-    flex: 0.1,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  search: {
-    flex: 1,
-    height: 42,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 999,
-    paddingHorizontal: 16,
-    backgroundColor: "#fafafa",
-  },
-
   flatList: {
     flex: 1,
     backgroundColor: "#fff",
@@ -126,13 +81,47 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
 
+  flatListServiceView:{
+    flex:1, 
+    justifyContent:"center",
+    alignItems:"center"
+  },
+
+  serviceView:{
+    flex:1,
+    margin:10,
+    justifyContent:"center",
+    alignItems:"center",
+  },
+
+  flatListServices: {
+    flex: 1,
+    marginHorizontal: 15,
+    marginVertical: 5,
+  },
+
   cardWrapper: {
     flex: 1,
   },
 
-  empty: { 
-    textAlign: "center", 
-    marginTop: 24, 
-    color: "#777" 
+  serviceIcon: {
+    width: 90,
+    height: 90,
+    resizeMode: "contain",
   },
+  serviceText: {
+    fontWeight: 600,
+    fontSize: 15,
+    marginTop: 6
+  },
+
+  title: {
+    fontSize: 25,
+    fontWeight: 700
+  },
+  titleView: {
+    flex:0.3,
+    justifyContent:"center",
+    alignItems:"center",
+  }
 });
