@@ -43,7 +43,7 @@ return (
         keyExtractor={(it) => it.id.toString()}
         renderItem={({ item }) => (
         <View style={styles.cardWrapper}>
-            <Card data={item} onPress={() => console.log(item.name)} />
+            <Card data={item} onPress={() => router.push(`/profesional/${item.id}`)} />
         </View>
         )}
         style={styles.flatList}
