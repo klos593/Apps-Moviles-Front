@@ -13,7 +13,7 @@ import BaseInfo from "../assets/services";
 import type { UserData } from "./InfoUser";
 import Card from "./TarjetaProfesional";
 
-export default function DirectoryWithCards() {
+export default function HomeScreen() {
 
   const [profesionales] = useState<UserData[]>(BaseProfesionales);
 
@@ -26,7 +26,7 @@ export default function DirectoryWithCards() {
           <FlatList
             data={BaseInfo}
             renderItem={({ item }) => (
-              <Pressable style={styles.serviceView} onPress={() => router.push(`/${item.title.toLowerCase()}`)}>
+              <Pressable style={styles.serviceView} onPress={() => router.push(`/servicio/${item.title.toLowerCase()}`)}>
                 <Image source={item.icon} style={styles.serviceIcon} />
                 <Text style={styles.serviceText}>
                   {item.title}
@@ -52,7 +52,7 @@ export default function DirectoryWithCards() {
             keyExtractor={(it) => it.id.toString()}
             renderItem={({ item }) => (
               <View style={styles.cardWrapper}>
-                <Card data={item} onPress={() => router.push(`/${item.id}`)} />
+                <Card data={item} onPress={() => router.push(`/profesional/${item.id}`)} />
               </View>
             )}
             style={styles.flatList}

@@ -13,7 +13,7 @@ import type { UserData } from "./InfoUser";
 import Card from "./TarjetaProfesional";
 
 type ProfesionalesProps = {
-  data: UserData[];
+    data: UserData[];
 };
 
 export default function Profesionales({data}: ProfesionalesProps) {
