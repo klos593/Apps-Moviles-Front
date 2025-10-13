@@ -1,7 +1,6 @@
 import { router, Stack } from "expo-router";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -9,7 +8,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from "react-native";
 
 const isEmail = (v: string) =>
@@ -19,18 +18,14 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState<{ email?: boolean; pass?: boolean }>(
     {}
   );
 
   const emailOk = isEmail(email);
   const passOk = pass.length >= 6;
-  const formOk = emailOk && passOk && !loading;
+  const formOk = emailOk && passOk;
 
-
-
-  const onRegister = () => router.push("/paginaRegistro");
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,7 +41,6 @@ export default function LoginScreen() {
           </Text>
           <Text style={styles.title}>Iniciar sesión</Text>
 
-          {/* Email */}
           <View style={styles.field}>
             <Text style={styles.label}>Email</Text>
             <TextInput
@@ -106,14 +100,9 @@ export default function LoginScreen() {
             disabled={!formOk}
             style={[styles.primaryBtn, !formOk && styles.btnDisabled]}
           >
-            {loading ? (
-              <ActivityIndicator />
-            ) : (
-              <Text style={styles.primaryText}>Iniciar sesión</Text>
-            )}
+            <Text style={styles.primaryText}>Iniciar sesión</Text>
           </Pressable>
-
-          <Pressable onPress={onRegister} style={styles.secondaryBtn}>
+          <Pressable style={styles.secondaryBtn} onPress={() => router.push("/paginaRegistro")}>
             <Text style={styles.secondaryText}>Registrarse</Text>
           </Pressable>
         </View>
