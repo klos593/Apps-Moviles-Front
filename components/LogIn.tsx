@@ -4,15 +4,19 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   View
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const isEmail = (v: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+
+const handleLogIn = () => {
+  router.push("/paginaServicios");
+};
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -96,7 +100,7 @@ export default function LoginScreen() {
           </View>
 
           <Pressable
-            onPress={() => router.push("/paginaServicios")}
+            onPress={handleLogIn}
             disabled={!formOk}
             style={[styles.primaryBtn, !formOk && styles.btnDisabled]}
           >
