@@ -1,10 +1,10 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import type { UserData } from "./InfoUser";
 import Rating from "./Rating";
+import { ProfessionalData } from "./Types/ProfessionalData";
 
 type ProfesionalProps = {
-    data: UserData;
+    data: ProfessionalData;
 };
 
 export default function Profesional({data}: ProfesionalProps) {
@@ -14,18 +14,18 @@ export default function Profesional({data}: ProfesionalProps) {
             <View style={{flex:1, backgroundColor:"#f4f4f6", margin: 16, borderRadius: 22}}>
                 <View style={styles.firstHalf}>
                     <View style={styles.pictureContainer}>
-                        <Image source={data.picture} style={styles.picture} />
+                        <Image source={{uri: data.picture}} style={styles.picture} />
                     </View>
                     <View style={styles.informationContainer}>
                         <View style={{flex: 2, justifyContent: "center", alignItems: 'center'}}>
                             <Text style={styles.name}>{data.name} {data.lastName}</Text>
                             <View style={styles.rating}>
                                 <Rating rating={data.rating}/>
-                                <Text style={styles.numberedRating}>{data.rating}</Text>
+                                <Text style={styles.numberedRating}>{(data.rating).toString().slice(0, 3)}</Text>
                             </View>
                         </View>
                         <View style={styles.professionsContainer}>
-                            <Text style={styles.professions}>{data.profession}</Text>
+                            <Text style={styles.professions}>{data.professions[0]}</Text>
                         </View>
                     </View>
                 </View>
@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
     },
 
     picture: {
-        width: 200,
-        height: 200,
+        width: 170,
+        height: 170,
         resizeMode: "contain"
     },
 

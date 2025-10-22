@@ -19,7 +19,7 @@ const Profile = () => {
                 <View style={styles.card}>
                     <View style={styles.topContainer}>
                         <View style={styles.pictureContainer}>
-                            <Image source={require('../assets/images/UsuarioPlaceHolder.png')} style={styles.picture} />
+                            <Image source={{uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/UsuarioPlaceHolder_bzqamd.png'}} style={styles.picture} />
                         </View>
                         <View style={styles.nameContainer}>
                             <Text style={styles.name}>Nombre</Text>

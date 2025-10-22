@@ -1,5 +1,10 @@
+import { getProfessionals, getProfessions } from "@/api/api";
+import {
+  useQuery,
+  useQueryClient
+} from '@tanstack/react-query';
 import { router, Stack } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import {
   FlatList,
   Image,
@@ -8,14 +13,13 @@ import {
   Text,
   View
 } from "react-native";
-import BaseProfesionales from "../assets/data";
-import BaseInfo from "../assets/services";
-import type { UserData } from "./InfoUser";
 import Card from "./TarjetaProfesional";
 
 export default function HomeScreen() {
-
-  const [profesionales] = useState<UserData[]>(BaseProfesionales);
+  
+  const queryClient = useQueryClient()
+  const professionsData = useQuery({ queryKey: ['professions'], queryFn: getProfessions })
+  const professionalsData = useQuery({ queryKey: ['professionals'], queryFn: getProfessionals});
 
   return (
     <><Stack.Screen
@@ -24,12 +28,12 @@ export default function HomeScreen() {
       }} /><View style={styles.container}>
         <View style={styles.flatListServiceView}>
           <FlatList
-            data={BaseInfo}
+            data={professionsData.data}
             renderItem={({ item }) => (
-              <Pressable style={styles.serviceView} onPress={() => router.push(`/servicio/${item.title.toLowerCase()}`)}>
-                <Image source={item.icon} style={styles.serviceIcon} />
+              <Pressable style={styles.serviceView} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
+                <Image source={{uri:item.picture}} style={styles.serviceIcon} />
                 <Text style={styles.serviceText}>
-                  {item.title}
+                  {item.name}
                 </Text>
               </Pressable>
             )}
@@ -46,7 +50,7 @@ export default function HomeScreen() {
 
         <View style={{ flex: 3.5 }}>
           <FlatList
-            data={profesionales}
+            data={professionalsData.data}
             key={1}
             numColumns={1}
             keyExtractor={(it) => it.id.toString()}

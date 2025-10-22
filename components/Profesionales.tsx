@@ -9,35 +9,34 @@ import {
     TextInput,
     View
 } from "react-native";
-import type { UserData } from "./InfoUser";
 import Card from "./TarjetaProfesional";
+import { ProfessionalCardData } from "./Types/ProfessionalCardData";
 
-type ProfesionalesProps = {
-    data: UserData[];
-};
+export default function Profesionales(data: ProfessionalCardData[]) {
+    
+const [filteredData, setFilteredData] = useState(data);
 
-export default function Profesionales({data}: ProfesionalesProps) {
-const [q, setQ] = useState("");
-
+const filterData = (keyWord: string) => {
+        setFilteredData(data.filter(element => (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(keyWord.toLowerCase())))
+    }
 return (
 
     <View style={styles.container}>
 
     <View style={styles.searchWrap}>
         <TextInput
-        value={q}
-        onChangeText={setQ}
+        onChangeText={keyWord => filterData(keyWord)}
         placeholder="Buscar..."
         style={styles.search}
         returnKeyType="search"
         />
         <Pressable onPress={() => console.log("Mapa")}>
-            <Image source={require('../assets/images/Mapa.png')} style={styles.mapBtn}/>
+            <Image source={{uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/Mapa_m1mc95.png'}} style={styles.mapBtn}/>
         </Pressable>
     </View>
 
     <FlatList
-        data={data}
+        data={filteredData}
         key={1} 
         numColumns={1}
         keyExtractor={(it) => it.id.toString()}
