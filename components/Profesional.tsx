@@ -43,7 +43,7 @@ export default function Profesional({data}: ProfesionalProps) {
                     </View>
                 </View>
             </View>
-        </>
+        </View>
     );
 }
 
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: 700
     },
     
@@ -105,12 +105,20 @@ const styles = StyleSheet.create({
         backgroundColor: "#5b8266", 
         borderRadius: 15, 
         padding: 5, 
-        fontWeight: 500
+        fontWeight: 500,
+        fontSize: 17
     },
+
     contactContainer: {
         flex: 1, 
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
-        margin: 10}
+        margin: 10
+    },
+
+    text: {
+        fontSize: 19,
+        alignSelf: "baseline"
+    }
 });
