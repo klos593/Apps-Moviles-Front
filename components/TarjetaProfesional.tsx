@@ -6,30 +6,30 @@ import {
   Text,
   View
 } from "react-native";
-import { UserData } from "./InfoUser";
 import Rating from "./Rating";
+import { ProfessionalCardData } from "./Types/ProfessionalCardData";
 
 type CardProps = {
-  data: UserData;
-  onPress?: (data: UserData) => void;
+  data: ProfessionalCardData;
+  onPress?: (id: number) => void;
 };
 
 export default function Card({ data, onPress }: CardProps) {
   return (
-    <Pressable onPress={() => onPress?.(data)} style={styles.card}>
+    <Pressable onPress={() => onPress?.(parseInt(data.id))} style={styles.card}>
       <View style={styles.cardHeader}>
         <View>
-          <Image source={data.picture} style={styles.userPicture}/>
+          <Image source={{uri: data.picture}} style={styles.userPicture}/>
         </View>
         <View style={styles.data}>
           <Text style={styles.name}>{data.name} {data.lastName}</Text>
           <View style={styles.rating}>
             <Rating rating={data.rating}/>
-            <Text style={styles.numberedRating}>{data.rating}</Text>
+            <Text style={styles.numberedRating}>{(data.rating).toString().slice(0, 3)}</Text>
           </View>
         </View>
         <View style={styles.tag}>
-          {!!data.profession && <Text style={styles.profession}>{data.profession}</Text>}
+          {!!data.professions && <Text style={styles.profession}>{data.professions[0]}</Text>}
         </View>
       </View>
     </Pressable>

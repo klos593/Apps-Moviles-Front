@@ -1,6 +1,7 @@
-import { UserData } from "@/components/InfoUser";
+import { UserData } from "@/components/Types/UserData";
 
 const DATA: UserData[] = [
+  //"id":1,"email":"Pepe@gmail.com","name":"Pepe","lastName":"Perez","password":"1234","birthDate":"2025-09-28T16:55:45.204Z","phone":"1234","workRadius":null,"picture":"acaVaUnaURL"
   { id: 1, name: "Pepe", lastName: "Perez", profession: "Plomero", rating: 5, address: "Calle 1234", picture: require("./images/UsuarioPlaceHolder.png"), mail: "pepe@gmail.com", phoneNumber:"1111-2222", description: "Especialista en reparaciones y mantenimiento de cañerías y sistemas de agua." },
   { id: 2, name: "Facu", lastName: "Perez", profession: "Plomero", rating: 2.5, address: "Calle 1234", picture: require("./images/UsuarioPlaceHolder.png"), mail: "pepe@gmail.com", phoneNumber:"1111-2222", description: "Soluciona pérdidas, instalaciones y arreglos de plomería en general." },
   { id: 3, name: "Klos", lastName: "Perez", profession: "Plomero", rating: 3, address: "Calle 1234", picture: require("./images/UsuarioPlaceHolder.png"), mail: "pepe@gmail.com", phoneNumber:"1111-2222", description: "Experto en instalaciones sanitarias y reparaciones de cañerías." },

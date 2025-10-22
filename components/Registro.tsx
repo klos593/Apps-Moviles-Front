@@ -1,14 +1,14 @@
 import { Stack, router } from "expo-router";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    KeyboardAvoidingView, Platform,
-    Pressable,
-    SafeAreaView,
-    StyleSheet,
-    Text, TextInput,
-    View,
+  ActivityIndicator,
+  KeyboardAvoidingView, Platform,
+  Pressable,
+  StyleSheet,
+  Text, TextInput,
+  View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 
