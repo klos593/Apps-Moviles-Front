@@ -3,6 +3,7 @@ import Profesional from "@/components/Profesional";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
+import { ActivityIndicator, View } from "react-native";
 
 
 export default function UserScreen() {
@@ -10,8 +11,17 @@ export default function UserScreen() {
     const queryClient = useQueryClient()
     const id = Array.isArray(profesional) ? profesional[0] : profesional;
     const professionalData = useQuery({ queryKey: ['professional', id], queryFn: () => getProfessionalWithId(id), enabled: !!id, })
+
+    if (professionalData.isLoading) {
+        return (
+            <View style={{ flex: 1, backgroundColor: 'white' }}>
+                <ActivityIndicator size="large" color="#007AFF" />
+            </View>
+        );
+    }
+
     if (!professionalData.data) {
-        return null; 
+        return null;
     }
 
     return (

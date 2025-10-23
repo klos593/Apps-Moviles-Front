@@ -12,7 +12,11 @@ import {
 import Card from "./TarjetaProfesional";
 import { ProfessionalCardData } from "./Types/ProfessionalCardData";
 
-export default function Profesionales(data: ProfessionalCardData[]) {
+type ProfessionalProps = {
+    data: ProfessionalCardData[];
+};
+
+export default function Profesionales({data}: ProfessionalProps) {
     
 const [filteredData, setFilteredData] = useState(data);
 

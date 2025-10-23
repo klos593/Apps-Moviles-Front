@@ -6,6 +6,7 @@ import {
 import { router, Stack } from "expo-router";
 import React from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
@@ -21,6 +22,13 @@ export default function HomeScreen() {
   const professionsData = useQuery({ queryKey: ['professions'], queryFn: getProfessions })
   const professionalsData = useQuery({ queryKey: ['professionals'], queryFn: getProfessionals});
 
+  if (professionalsData.isLoading || professionsData.isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
   return (
     <><Stack.Screen
       options={{
