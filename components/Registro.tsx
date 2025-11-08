@@ -2,6 +2,7 @@ import { Stack, router } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView, Platform,
   Pressable,
   StyleSheet,
@@ -9,10 +10,12 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "@/src/auth/AuthContext";
 
 const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 
 export default function Registro() {
+  const { register } = useAuth();
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -29,7 +32,22 @@ export default function Registro() {
   const formOk = nombreOk && emailOk && passOk && matchOk && acepta && !loading;
 
   const onSubmit = async () => {
-
+    if (!formOk) return;
+    try {
+      setLoading(true);
+      await register({
+        name: nombre.trim(),
+        lastName: "",        
+        phone: "",           
+        email: email.trim().toLowerCase(),
+        password: pass,
+      });
+      
+    } catch (e: any) {
+      Alert.alert("No se pudo crear la cuenta", e?.message || "Intentalo de nuevo");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -3,6 +3,15 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { secureGet, secureSet, secureDel } from "../utils/secureStorage";
 import {URL} from "../../api/url"
 
+type RegisterInput = {
+  name: string;
+  lastName?: string;
+  phone?: string;
+  email: string;
+  password: string;
+};
+
+
 type User = {   
   id: number;
   email: string;
@@ -16,6 +25,7 @@ type AuthState = {
   user: User | null;
   login: (p: { email: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
+  register: (p: RegisterInput) => Promise<void>;
 };
 
 const AuthCtx = createContext<AuthState | null>(null);
@@ -70,11 +80,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
+  const register: AuthState["register"] = async (payload) => {
+    const res = await fetch(`${URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error || "Register failed");
+    }
+    const data: { token: string; user: User } = await res.json();
+    await secureSet("token", data.token);
+    await secureSet("user", JSON.stringify(data.user));
+    setToken(data.token);
+    setUser(data.user);
+  };
+
   return (
-    <AuthCtx.Provider value={{ isBooting, token, user, login, logout }}>
+    <AuthCtx.Provider value={{ isBooting, token, user, login, logout, register }}>
       {children}
     </AuthCtx.Provider>
   );
+
+
+  
 }
 
 export const useAuth = () => {

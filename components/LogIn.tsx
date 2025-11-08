@@ -1,4 +1,4 @@
-import { router, Stack } from "expo-router";
+// app/paginaLogIn.tsx  ← or keep your current filename if different
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -7,29 +7,42 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Stack, useRouter } from "expo-router";
+import { useAuth } from "@/src/auth/AuthContext";
 
-const isEmail = (v: string) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-const handleLogIn = () => {
-  router.push("/paginaServicios");
-};
+const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 
 export default function LoginScreen() {
+  const router = useRouter();
+  const { login } = useAuth();
+
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [touched, setTouched] = useState<{ email?: boolean; pass?: boolean }>(
     {}
   );
+  const [loading, setLoading] = useState(false);
 
   const emailOk = isEmail(email);
   const passOk = pass.length >= 6;
-  const formOk = emailOk && passOk;
+  const formOk = emailOk && passOk && !loading;
 
+  const onSubmit = async () => {
+    if (!formOk) return;
+    try {
+      setLoading(true);
+      await login({ email, password: pass });
+    } catch (e: any) {
+      Alert.alert("Login failed", e?.message || "Check your credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,7 +97,7 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 textContentType="password"
                 returnKeyType="go"
-                onSubmitEditing={() => { }}
+                onSubmitEditing={onSubmit}
               />
               <Pressable
                 onPress={() => setShowPass((s) => !s)}
@@ -100,13 +113,20 @@ export default function LoginScreen() {
           </View>
 
           <Pressable
-            onPress={handleLogIn}
+            onPress={onSubmit}
             disabled={!formOk}
-            style={[styles.primaryBtn, !formOk && styles.btnDisabled]}
+            style={[styles.primaryBtn, (!formOk || loading) && styles.btnDisabled]}
           >
-            <Text style={styles.primaryText}>Iniciar sesión</Text>
+            <Text style={styles.primaryText}>
+              {loading ? "Ingresando..." : "Iniciar sesión"}
+            </Text>
           </Pressable>
-          <Pressable style={styles.secondaryBtn} onPress={() => router.push("/paginaRegistro")}>
+
+          <Pressable
+            style={styles.secondaryBtn}
+            onPress={() => router.push("/paginaRegistro")}
+            disabled={loading}
+          >
             <Text style={styles.secondaryText}>Registrarse</Text>
           </Pressable>
         </View>

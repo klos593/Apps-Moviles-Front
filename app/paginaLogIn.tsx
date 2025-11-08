@@ -1,20 +1,28 @@
+import React, { useState } from "react";
+import { Alert } from "react-native";
+import { useAuth } from "@/src/auth/AuthContext";
 import LogIn from "@/components/LogIn";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React from "react";
-import { View } from "react-native";
 
-const queryClient = new QueryClient()
+export default function PaginaLogIn() {
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-export default function Index() {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <View
-                style={{
-                    flex: 1,
-                }}
-            >
-                <LogIn />
-            </View>
-        </QueryClientProvider>
-    );
+  const onSubmit = async () => {
+    try {
+      setLoading(true);
+      await login({ email, password });
+
+    } catch (e: any) {
+      Alert.alert("Login failed", e?.message || "Check your credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <LogIn
+    />
+  );
 }
