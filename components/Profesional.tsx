@@ -63,7 +63,7 @@ export default function Profesional({ data }: ProfesionalProps) {
                             </View>
                         </View>
                         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                            <Pressable style={{ backgroundColor: "#3E6259", borderRadius: 15, justifyContent: "center", alignItems: "center", padding: 10 }} onPress={contactProfessional}>
+                            <Pressable style={{ backgroundColor: "#3E6259", borderRadius: 15, justifyContent: "center", alignItems: "center", padding: 10 }} onPress={showModal}>
                                 <Text style={{ color: "#FFFFFF", fontWeight: "600", fontSize: 25 }}>Contactar</Text>
                             </Pressable>
                         </View>
