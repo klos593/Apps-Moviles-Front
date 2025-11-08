@@ -1,8 +1,5 @@
 import { getProfessionals, getProfessions } from "@/api/api";
-import {
-  useQuery,
-  useQueryClient
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { router, Stack } from "expo-router";
 import React from "react";
 import {
@@ -18,14 +15,13 @@ import Card from "./TarjetaProfesional";
 
 export default function HomeScreen() {
 
-  const queryClient = useQueryClient()
   const professionsData = useQuery({ queryKey: ['professions'], queryFn: getProfessions })
   const professionalsData = useQuery({ queryKey: ['professionals'], queryFn: getProfessionals });
 
   if (professionalsData.isLoading || professionsData.isLoading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007AFF" />
+      <View style={{ flex: 1, backgroundColor: 'white', justifyContent: "center"}}>
+        <ActivityIndicator size="large"/>
       </View>
     );
   }

@@ -19,38 +19,31 @@ export default function RootLayout() {
           headerRight: () => (
             <Link href={"/paginaUsuario"} asChild>
               <Pressable>
-                <Image source={{ uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153296/UserIcon_nzkkjz.png' }} style={styles.userIcon} />
+                <Image source={require('@/assets/images/burgerMenu.png')} style={styles.icon} />
               </Pressable>
             </Link>
           ),
-          headerLeft: () => (
-            <Pressable>
-              <Text style={styles.address}>Direccion</Text>
-            </Pressable>
-          ),
           headerStyle: { backgroundColor: '#294936' },
-          headerBackVisible: false,
+          headerBackTitle: "Volver",
+          headerTintColor: "white"
         }}
       >
-        <Stack.Screen name="index" />
-        <Tabs.Screen
+        <Stack.Screen
           name="paginaUsuario"
           options={{
-            headerTitle: () => (
-              <Text style={styles.brand}>
-                <Text style={{ color: "#aef6c7" }}>Fix</Text>
-                <Text>It</Text>
-              </Text>
-            ),
-            headerStyle: { backgroundColor: "#294936" },
-            headerTintColor: "#aef6c7",
             headerRight: () =>
               <Link href={"/paginaUsuario"} asChild>
                 <Pressable>
-                  <Image source={{ uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/EditIcon_gjqs42.png' }} style={styles.userIcon} />
+                  <Image source={require('@/assets/images/EditIcon.png')} style={styles.icon} />
                 </Pressable>
               </Link>,
-            headerLeft: () => null,
+          }}
+        />
+
+        <Stack.Screen
+          name="paginaServicios"
+          options={{
+            headerBackVisible: false
           }}
         />
       </Stack>
@@ -59,7 +52,7 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
-  userIcon: {
+  icon: {
     width: 30,
     height: 33,
     resizeMode: "contain",
