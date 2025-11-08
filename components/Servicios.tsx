@@ -17,10 +17,10 @@ import {
 import Card from "./TarjetaProfesional";
 
 export default function HomeScreen() {
-  
+
   const queryClient = useQueryClient()
   const professionsData = useQuery({ queryKey: ['professions'], queryFn: getProfessions })
-  const professionalsData = useQuery({ queryKey: ['professionals'], queryFn: getProfessionals});
+  const professionalsData = useQuery({ queryKey: ['professionals'], queryFn: getProfessionals });
 
   if (professionalsData.isLoading || professionsData.isLoading) {
     return (
@@ -39,7 +39,7 @@ export default function HomeScreen() {
             data={professionsData.data}
             renderItem={({ item }) => (
               <Pressable style={styles.serviceView} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
-                <Image source={{uri:item.picture}} style={styles.serviceIcon} />
+                <Image source={{ uri: item.picture }} style={styles.serviceIcon} />
                 <Text style={styles.serviceText}>
                   {item.name}
                 </Text>
@@ -77,15 +77,15 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
+  container: {
+    flex: 1,
     backgroundColor: "#fff",
   },
   flatList: {
     flex: 1,
     backgroundColor: "#fff",
   },
-  
+
   flatListContent: {
     flexGrow: 1,
     padding: 16,
@@ -93,17 +93,17 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
 
-  flatListServiceView:{
-    flex:1, 
-    justifyContent:"center",
-    alignItems:"center"
+  flatListServiceView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
 
-  serviceView:{
-    flex:1,
-    margin:10,
-    justifyContent:"center",
-    alignItems:"center",
+  serviceView: {
+    flex: 1,
+    margin: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   flatListServices: {
@@ -132,8 +132,8 @@ const styles = StyleSheet.create({
     fontWeight: 700
   },
   titleView: {
-    flex:0.3,
-    justifyContent:"center",
-    alignItems:"center",
+    flex: 0.3,
+    justifyContent: "center",
+    alignItems: "center",
   }
 });

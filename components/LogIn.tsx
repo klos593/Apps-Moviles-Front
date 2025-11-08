@@ -84,7 +84,7 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 textContentType="password"
                 returnKeyType="go"
-                onSubmitEditing={() => {}}
+                onSubmitEditing={() => { }}
               />
               <Pressable
                 onPress={() => setShowPass((s) => !s)}

@@ -14,19 +14,19 @@ const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 
 export default function Registro() {
   const [nombre, setNombre] = useState("");
-  const [email, setEmail]   = useState("");
-  const [pass, setPass]     = useState("");
-  const [pass2, setPass2]   = useState("");
-  const [show1, setShow1]   = useState(false);
-  const [show2, setShow2]   = useState(false);
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [pass2, setPass2] = useState("");
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [acepta, setAcepta] = useState(false);
 
   const nombreOk = nombre.trim().length >= 2;
-  const emailOk  = isEmail(email);
-  const passOk   = pass.length >= 6;
-  const matchOk  = pass === pass2 && pass2.length > 0;
-  const formOk   = nombreOk && emailOk && passOk && matchOk && acepta && !loading;
+  const emailOk = isEmail(email);
+  const passOk = pass.length >= 6;
+  const matchOk = pass === pass2 && pass2.length > 0;
+  const formOk = nombreOk && emailOk && passOk && matchOk && acepta && !loading;
 
   const onSubmit = async () => {
 
@@ -71,7 +71,7 @@ export default function Registro() {
                 value={pass} onChangeText={setPass} placeholder="Mínimo 6 caracteres"
                 secureTextEntry={!show1} autoCapitalize="none"
               />
-              <Pressable onPress={() => setShow1(s=>!s)} style={styles.toggle}>
+              <Pressable onPress={() => setShow1(s => !s)} style={styles.toggle}>
                 <Text style={styles.toggleText}>{show1 ? "Ocultar" : "Mostrar"}</Text>
               </Pressable>
             </View>
@@ -86,7 +86,7 @@ export default function Registro() {
                 value={pass2} onChangeText={setPass2} placeholder="Repetí tu contraseña"
                 secureTextEntry={!show2} autoCapitalize="none"
               />
-              <Pressable onPress={() => setShow2(s=>!s)} style={styles.toggle}>
+              <Pressable onPress={() => setShow2(s => !s)} style={styles.toggle}>
                 <Text style={styles.toggleText}>{show2 ? "Ocultar" : "Mostrar"}</Text>
               </Pressable>
             </View>
@@ -112,113 +112,114 @@ export default function Registro() {
 }
 
 const styles = StyleSheet.create({
-  container:{ 
-    flex:1, 
-    backgroundColor:"#fff" 
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
   },
-  inner:{ 
-    flex:1, 
-    padding:20, 
-    gap:16, 
-    paddingTop:32 
+  inner: {
+    flex: 1,
+    padding: 20,
+    gap: 16,
+    paddingTop: 32
   },
-  brand:{ 
-    fontSize:20, 
-    fontWeight:"700", 
-    textAlign:"center" 
+  brand: {
+    fontSize: 20,
+    fontWeight: "700",
+    textAlign: "center"
   },
-  title:{ 
-    fontSize:24, 
-    fontWeight:"800", 
-    textAlign:"center", 
-    marginTop:8 },
-
-  field:{ 
-    gap:8 
-  },
-  label:{ 
-    fontSize:14, 
-    color:"#444" 
-  },
-  input:{ 
-    height:48, 
-    backgroundColor:"#f2f2f2", 
-    borderRadius:12, 
-    paddingHorizontal:14, 
-    borderWidth:1, 
-    borderColor:"transparent" 
-  },
-  inputError:{ 
-    borderColor:"#ff5a5f", 
-    backgroundColor:"#fff5f5" 
-  },
-  helper:{ 
-    color:"#ff5a5f", 
-    fontSize:12 
+  title: {
+    fontSize: 24,
+    fontWeight: "800",
+    textAlign: "center",
+    marginTop: 8
   },
 
-  toggle:{ 
-    position:"absolute", 
-    right:10, 
-    top:10, 
-    paddingHorizontal:8, 
-    height:28, 
-    justifyContent:"center" 
+  field: {
+    gap: 8
   },
-  toggleText:{ 
-    color:"#333", 
-    fontWeight:"600" 
+  label: {
+    fontSize: 14,
+    color: "#444"
   },
-
-  row:{ 
-    flexDirection:"row", 
-    alignItems:"center", 
-    gap:10, 
-    marginTop:4 
+  input: {
+    height: 48,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: "transparent"
   },
-  checkbox:{ 
-    width:20, 
-    height:20, 
-    borderRadius:5, 
-    borderWidth:1, 
-    borderColor:"#bbb", 
-    backgroundColor:"#fff" 
+  inputError: {
+    borderColor: "#ff5a5f",
+    backgroundColor: "#fff5f5"
   },
-  checkboxOn:{ 
-    backgroundColor:"#3e6259" 
-  },
-  rowText:{ 
-    color:"#333" 
+  helper: {
+    color: "#ff5a5f",
+    fontSize: 12
   },
 
-  primaryBtn:{ 
-    height:50, 
-    borderRadius:14, 
-    backgroundColor:"#5b8266", 
-    alignItems:"center", 
-    justifyContent:"center", 
-    marginTop:8 
+  toggle: {
+    position: "absolute",
+    right: 10,
+    top: 10,
+    paddingHorizontal: 8,
+    height: 28,
+    justifyContent: "center"
   },
-  primaryText:{ 
-    color:"#fff", 
-    fontSize:16, 
-    fontWeight:"700" 
-  },
-  btnDisabled:{ 
-    opacity:0.5 
+  toggleText: {
+    color: "#333",
+    fontWeight: "600"
   },
 
-  secondaryBtn:{ 
-    height:50, 
-    borderRadius:14, 
-    borderWidth:1, 
-    borderColor:"#d9d9d9", 
-    alignItems:"center", 
-    justifyContent:"center" 
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginTop: 4
   },
-  secondaryText:{ 
-    color:"#111", 
-    fontSize:16, 
-    fontWeight:"700" 
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#bbb",
+    backgroundColor: "#fff"
+  },
+  checkboxOn: {
+    backgroundColor: "#3e6259"
+  },
+  rowText: {
+    color: "#333"
+  },
+
+  primaryBtn: {
+    height: 50,
+    borderRadius: 14,
+    backgroundColor: "#5b8266",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 8
+  },
+  primaryText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700"
+  },
+  btnDisabled: {
+    opacity: 0.5
+  },
+
+  secondaryBtn: {
+    height: 50,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#d9d9d9",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  secondaryText: {
+    color: "#111",
+    fontSize: 16,
+    fontWeight: "700"
   },
 });

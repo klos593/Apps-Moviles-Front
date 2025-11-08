@@ -11,9 +11,10 @@ export default function Index() {
     <QueryClientProvider client={queryClient}>
       <View
         style={{
-          flex: 1,}}
+          flex: 1,
+        }}
       >
-        <Registro/>
+        <Registro />
       </View>
     </QueryClientProvider>
   );

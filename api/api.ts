@@ -14,7 +14,7 @@ export async function getProfessions(): Promise<ProfessionCardData[]> {
     return response.json();
 }
 
-export async function getProfessionalWithId(id: string): Promise<ProfessionalData>{
+export async function getProfessionalWithId(id: string): Promise<ProfessionalData> {
     const response = await fetch(`${URL}/professional/${id}`);
     return response.json();
 }

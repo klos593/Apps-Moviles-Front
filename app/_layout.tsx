@@ -19,7 +19,7 @@ export default function RootLayout() {
           headerRight: () => (
             <Link href={"/paginaUsuario"} asChild>
               <Pressable>
-                <Image source={{uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153296/UserIcon_nzkkjz.png'}} style={styles.userIcon} />
+                <Image source={{ uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153296/UserIcon_nzkkjz.png' }} style={styles.userIcon} />
               </Pressable>
             </Link>
           ),
@@ -47,7 +47,7 @@ export default function RootLayout() {
             headerRight: () =>
               <Link href={"/paginaUsuario"} asChild>
                 <Pressable>
-                  <Image source={{uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/EditIcon_gjqs42.png'}} style={styles.userIcon} />
+                  <Image source={{ uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/EditIcon_gjqs42.png' }} style={styles.userIcon} />
                 </Pressable>
               </Link>,
             headerLeft: () => null,

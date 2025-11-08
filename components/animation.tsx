@@ -25,9 +25,9 @@ const MAX_RADIUS = Math.ceil(Math.sqrt(W * W + H * H) / 2);
 const DIAMETER = MAX_RADIUS * 2;
 
 const FixItIntro: React.FC<Props> = ({
-  fixColor="#aef6c7",
-  itColor="#ffffffff",
-  revealColor="#294936",
+  fixColor = "#aef6c7",
+  itColor = "#ffffffff",
+  revealColor = "#294936",
   textDurationMs = 600,
   revealDelayMs = 250,
   revealDurationMs = 900,

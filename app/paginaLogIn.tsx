@@ -10,9 +10,10 @@ export default function Index() {
         <QueryClientProvider client={queryClient}>
             <View
                 style={{
-                    flex: 1,}}
-                >
-                <LogIn/>
+                    flex: 1,
+                }}
+            >
+                <LogIn />
             </View>
         </QueryClientProvider>
     );

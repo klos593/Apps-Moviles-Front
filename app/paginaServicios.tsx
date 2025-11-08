@@ -8,8 +8,8 @@ const queryClient = new QueryClient()
 export default function Index() {
   return (
     <QueryClientProvider client={queryClient}>
-      <View style={{flex: 1,}}>
-        <Servicios/>
+      <View style={{ flex: 1, }}>
+        <Servicios />
       </View>
     </QueryClientProvider>
   );
