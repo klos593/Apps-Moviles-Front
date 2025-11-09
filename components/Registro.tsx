@@ -1,22 +1,28 @@
+import { useAuth } from "@/src/auth/AuthContext";
 import { Stack, router } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  KeyboardAvoidingView, Platform,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   StyleSheet,
-  Text, TextInput,
+  Text,
+  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuth } from "@/src/auth/AuthContext";
 
 const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+
+const isPhone = (v: string) => /^\+?\d{7,15}$/.test(v.replace(/\s|-/g, ""));
 
 export default function Registro() {
   const { register } = useAuth();
   const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [pass2, setPass2] = useState("");
@@ -26,10 +32,20 @@ export default function Registro() {
   const [acepta, setAcepta] = useState(false);
 
   const nombreOk = nombre.trim().length >= 2;
+  const apellidoOk = apellido.trim().length >= 2;
+  const telefonoOk = isPhone(telefono);
   const emailOk = isEmail(email);
   const passOk = pass.length >= 6;
   const matchOk = pass === pass2 && pass2.length > 0;
-  const formOk = nombreOk && emailOk && passOk && matchOk && acepta && !loading;
+  const formOk =
+    nombreOk &&
+    apellidoOk &&
+    telefonoOk &&
+    emailOk &&
+    passOk &&
+    matchOk &&
+    acepta &&
+    !loading;
 
   const onSubmit = async () => {
     if (!formOk) return;
@@ -37,12 +53,11 @@ export default function Registro() {
       setLoading(true);
       await register({
         name: nombre.trim(),
-        lastName: "",        
-        phone: "",           
+        lastName: apellido.trim(),
+        phone: telefono.replace(/\s|-/g, ""),
         email: email.trim().toLowerCase(),
         password: pass,
       });
-      
     } catch (e: any) {
       Alert.alert("No se pudo crear la cuenta", e?.message || "Intentalo de nuevo");
     } finally {
@@ -53,7 +68,10 @@ export default function Registro() {
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
-      <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })} style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.select({ ios: "padding" })}
+        style={{ flex: 1 }}
+      >
         <View style={styles.inner}>
           <Text style={styles.brand}>
             <Text style={{ color: "#5b8266" }}>Fix</Text>
@@ -61,62 +79,127 @@ export default function Registro() {
           </Text>
           <Text style={styles.title}>Crear cuenta</Text>
 
+          {/* Nombre */}
           <View style={styles.field}>
             <Text style={styles.label}>Nombre</Text>
             <TextInput
               style={[styles.input, !nombreOk && nombre ? styles.inputError : null]}
-              value={nombre} onChangeText={setNombre} placeholder="Tu nombre"
+              value={nombre}
+              onChangeText={setNombre}
+              placeholder="Tu nombre"
+              autoCapitalize="words"
               returnKeyType="next"
             />
-            {!nombreOk && nombre.length > 0 && <Text style={styles.helper}>Mínimo 2 caracteres.</Text>}
+            {!nombreOk && nombre.length > 0 && (
+              <Text style={styles.helper}>Mínimo 2 caracteres.</Text>
+            )}
           </View>
 
+          {/* Apellido */}
+          <View style={styles.field}>
+            <Text style={styles.label}>Apellido</Text>
+            <TextInput
+              style={[styles.input, !apellidoOk && apellido ? styles.inputError : null]}
+              value={apellido}
+              onChangeText={setApellido}
+              placeholder="Tu apellido"
+              autoCapitalize="words"
+              returnKeyType="next"
+            />
+            {!apellidoOk && apellido.length > 0 && (
+              <Text style={styles.helper}>Mínimo 2 caracteres.</Text>
+            )}
+          </View>
+
+          {/* Teléfono */}
+          <View style={styles.field}>
+            <Text style={styles.label}>Teléfono</Text>
+            <TextInput
+              style={[styles.input, !telefonoOk && telefono ? styles.inputError : null]}
+              value={telefono}
+              onChangeText={setTelefono}
+              placeholder="+54 11 1234 5678"
+              keyboardType="phone-pad"
+              autoCapitalize="none"
+            />
+            {!telefonoOk && telefono.length > 0 && (
+              <Text style={styles.helper}>
+                Ingresá un número válido (7–15 dígitos, puede incluir +).
+              </Text>
+            )}
+          </View>
+
+          {/* Email */}
           <View style={styles.field}>
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={[styles.input, !emailOk && email ? styles.inputError : null]}
-              value={email} onChangeText={setEmail} placeholder="tu@correo.com"
-              keyboardType="email-address" autoCapitalize="none" autoCorrect={false}
+              value={email}
+              onChangeText={setEmail}
+              placeholder="tu@correo.com"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
             />
-            {!emailOk && email.length > 0 && <Text style={styles.helper}>Ingresá un email válido.</Text>}
+            {!emailOk && email.length > 0 && (
+              <Text style={styles.helper}>Ingresá un email válido.</Text>
+            )}
           </View>
 
+          {/* Contraseña */}
           <View style={styles.field}>
             <Text style={styles.label}>Contraseña</Text>
             <View style={{ position: "relative" }}>
               <TextInput
                 style={[styles.input, !passOk && pass ? styles.inputError : null]}
-                value={pass} onChangeText={setPass} placeholder="Mínimo 6 caracteres"
-                secureTextEntry={!show1} autoCapitalize="none"
+                value={pass}
+                onChangeText={setPass}
+                placeholder="Mínimo 6 caracteres"
+                secureTextEntry={!show1}
+                autoCapitalize="none"
               />
-              <Pressable onPress={() => setShow1(s => !s)} style={styles.toggle}>
+              <Pressable onPress={() => setShow1((s) => !s)} style={styles.toggle}>
                 <Text style={styles.toggleText}>{show1 ? "Ocultar" : "Mostrar"}</Text>
               </Pressable>
             </View>
-            {!passOk && pass.length > 0 && <Text style={styles.helper}>Al menos 6 caracteres.</Text>}
+            {!passOk && pass.length > 0 && (
+              <Text style={styles.helper}>Al menos 6 caracteres.</Text>
+            )}
           </View>
 
+          {/* Repetir contraseña */}
           <View style={styles.field}>
             <Text style={styles.label}>Repetir contraseña</Text>
             <View style={{ position: "relative" }}>
               <TextInput
                 style={[styles.input, !matchOk && pass2 ? styles.inputError : null]}
-                value={pass2} onChangeText={setPass2} placeholder="Repetí tu contraseña"
-                secureTextEntry={!show2} autoCapitalize="none"
+                value={pass2}
+                onChangeText={setPass2}
+                placeholder="Repetí tu contraseña"
+                secureTextEntry={!show2}
+                autoCapitalize="none"
               />
-              <Pressable onPress={() => setShow2(s => !s)} style={styles.toggle}>
+              <Pressable onPress={() => setShow2((s) => !s)} style={styles.toggle}>
                 <Text style={styles.toggleText}>{show2 ? "Ocultar" : "Mostrar"}</Text>
               </Pressable>
             </View>
-            {!matchOk && pass2.length > 0 && <Text style={styles.helper}>Las contraseñas no coinciden.</Text>}
+            {!matchOk && pass2.length > 0 && (
+              <Text style={styles.helper}>Las contraseñas no coinciden.</Text>
+            )}
           </View>
 
-          <Pressable style={styles.row} onPress={() => setAcepta(a => !a)}>
+          {/* Acepta términos */}
+          <Pressable style={styles.row} onPress={() => setAcepta((a) => !a)}>
             <View style={[styles.checkbox, acepta && styles.checkboxOn]} />
             <Text style={styles.rowText}>Acepto términos y condiciones</Text>
           </Pressable>
 
-          <Pressable onPress={onSubmit} disabled={!formOk} style={[styles.primaryBtn, !formOk && styles.btnDisabled]}>
+          {/* Botones */}
+          <Pressable
+            onPress={onSubmit}
+            disabled={!formOk}
+            style={[styles.primaryBtn, !formOk && styles.btnDisabled]}
+          >
             {loading ? <ActivityIndicator /> : <Text style={styles.primaryText}>Crear cuenta</Text>}
           </Pressable>
 
@@ -130,51 +213,23 @@ export default function Registro() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-  },
-  inner: {
-    flex: 1,
-    padding: 20,
-    gap: 16,
-    paddingTop: 32
-  },
-  brand: {
-    fontSize: 20,
-    fontWeight: "700",
-    textAlign: "center"
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "800",
-    textAlign: "center",
-    marginTop: 8
-  },
+  container: { flex: 1, backgroundColor: "#fff" },
+  inner: { flex: 1, padding: 20, gap: 16, paddingTop: 32 },
+  brand: { fontSize: 20, fontWeight: "700", textAlign: "center" },
+  title: { fontSize: 24, fontWeight: "800", textAlign: "center", marginTop: 8 },
 
-  field: {
-    gap: 8
-  },
-  label: {
-    fontSize: 14,
-    color: "#444"
-  },
+  field: { gap: 8 },
+  label: { fontSize: 14, color: "#444" },
   input: {
     height: 48,
     backgroundColor: "#f2f2f2",
     borderRadius: 12,
     paddingHorizontal: 14,
     borderWidth: 1,
-    borderColor: "transparent"
+    borderColor: "transparent",
   },
-  inputError: {
-    borderColor: "#ff5a5f",
-    backgroundColor: "#fff5f5"
-  },
-  helper: {
-    color: "#ff5a5f",
-    fontSize: 12
-  },
+  inputError: { borderColor: "#ff5a5f", backgroundColor: "#fff5f5" },
+  helper: { color: "#ff5a5f", fontSize: 12 },
 
   toggle: {
     position: "absolute",
@@ -182,33 +237,21 @@ const styles = StyleSheet.create({
     top: 10,
     paddingHorizontal: 8,
     height: 28,
-    justifyContent: "center"
+    justifyContent: "center",
   },
-  toggleText: {
-    color: "#333",
-    fontWeight: "600"
-  },
+  toggleText: { color: "#333", fontWeight: "600" },
 
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    marginTop: 4
-  },
+  row: { flexDirection: "row", alignItems: "center", gap: 10, marginTop: 4 },
   checkbox: {
     width: 20,
     height: 20,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: "#bbb",
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
-  checkboxOn: {
-    backgroundColor: "#3e6259"
-  },
-  rowText: {
-    color: "#333"
-  },
+  checkboxOn: { backgroundColor: "#3e6259" },
+  rowText: { color: "#333" },
 
   primaryBtn: {
     height: 50,
@@ -216,16 +259,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#5b8266",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 8
+    marginTop: 8,
   },
-  primaryText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700"
-  },
-  btnDisabled: {
-    opacity: 0.5
-  },
+  primaryText: { color: "#fff", fontSize: 16, fontWeight: "700" },
+  btnDisabled: { opacity: 0.5 },
 
   secondaryBtn: {
     height: 50,
@@ -233,11 +270,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#d9d9d9",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
-  secondaryText: {
-    color: "#111",
-    fontSize: 16,
-    fontWeight: "700"
-  },
+  secondaryText: { color: "#111", fontSize: 16, fontWeight: "700" },
 });
