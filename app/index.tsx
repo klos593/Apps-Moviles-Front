@@ -12,7 +12,7 @@ export default function App() {
       <SafeAreaView style={{ flex: 1 }}>
         <FixItIntro
           onDone={() => {
-            router.push("/paginaServiciosRealizados" as any);
+            router.push("/paginaServicios");
           }}
         />
       </SafeAreaView>

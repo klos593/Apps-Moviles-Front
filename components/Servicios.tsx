@@ -35,8 +35,7 @@ export default function HomeScreen() {
             data={professionsData.data}
             renderItem={({ item }) => (
               <Pressable style={styles.servicePressable} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
-                {/* <Image source={{ uri: item.picture }} style={styles.serviceIcon} /> */}
-                <Image source={require("@/assets/images/Plomero.png")} style={styles.serviceIcon} />
+                <Image source={{ uri: item.picture }} style={styles.serviceIcon} />
                 <Text style={styles.serviceText}>
                   {item.name}
                 </Text>
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
 
   servicePressable: {
     flex: 1,
-    marginRight: 18,
+    marginRight: 6,
     marginVertical: 8,
     justifyContent: "center",
     alignItems: "center",
@@ -119,9 +118,9 @@ const styles = StyleSheet.create({
   },
 
   serviceIcon: {
-    width: 90,
-    height: 90,
-    resizeMode: "cover",
+    width: 70,
+    height: 70,
+    resizeMode: "contain",
     borderRadius: 15
   },
 
