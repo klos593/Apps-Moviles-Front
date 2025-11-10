@@ -95,9 +95,10 @@ const styles = StyleSheet.create({
   },
 
   userPicture: {
-    width: 55,
-    height: 55,
-    resizeMode: "contain"
+    width: 65,
+    height: 65,
+    resizeMode: "contain",
+    borderRadius: 25
   },
 
   tag: {

@@ -1,4 +1,3 @@
-// app/paginaLogIn.tsx  ← or keep your current filename if different
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from "react";
-import { FlatList, Image, Pressable, Text, TextInput, View } from "react-native";
+import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 
 const queryClient = new QueryClient()
 
@@ -17,7 +17,7 @@ export default function Index() {
                     </View>
                     <View>
                         <Pressable>
-                            <Image source={require('../assets/images/EditIcon.png')} />
+                            
                         </Pressable>
                     </View>
                 </View>
