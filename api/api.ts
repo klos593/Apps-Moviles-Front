@@ -1,6 +1,7 @@
 import { ProfessionalCardData } from "@/components/Types/ProfessionalCardData";
 import { ProfessionalData } from "@/components/Types/ProfessionalData";
 import { ProfessionCardData } from "@/components/Types/ProfessionCardData";
+import { UserData } from "@/components/Types/UserData";
 import { URL } from "./url";
 
 
@@ -16,6 +17,12 @@ export async function getProfessions(): Promise<ProfessionCardData[]> {
 
 export async function getProfessionalWithId(id: string): Promise<ProfessionalData> {
     const response = await fetch(`${URL}/professional/${id}`);
+    return response.json();
+}
+
+export async function getUser(email: string): Promise<UserData> {
+
+    const response = await fetch(`${URL}/user/${email}`);
     return response.json();
 }
 
