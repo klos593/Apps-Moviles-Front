@@ -36,7 +36,7 @@ export default function HomeScreen() {
             renderItem={({ item }) => (
               <Pressable style={styles.servicePressable} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
                 {/* <Image source={{ uri: item.picture }} style={styles.serviceIcon} /> */}
-                <Image source={require("@/assets/images/Paseador.png")} style={styles.serviceIcon} />
+                <Image source={require("@/assets/images/Plomero.png")} style={styles.serviceIcon} />
                 <Text style={styles.serviceText}>
                   {item.name}
                 </Text>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   serviceIcon: {
     width: 90,
     height: 90,
-    resizeMode: "contain",
+    resizeMode: "cover",
     borderRadius: 15
   },
 

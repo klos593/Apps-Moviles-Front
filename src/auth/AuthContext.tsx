@@ -1,7 +1,7 @@
-// src/auth/AuthContext.tsx
+
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { secureGet, secureSet, secureDel } from "../utils/secureStorage";
-import {URL} from "../../api/url"
+import { URL } from "../../api/url";
+import { secureDel, secureGet, secureSet } from "../utils/secureStorage";
 
 type RegisterInput = {
   name: string;
@@ -111,4 +111,17 @@ export const useAuth = () => {
   const ctx = useContext(AuthCtx);
   if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
   return ctx;
+};
+export const useAuthUser = () => {
+  const { user, isBooting } = useAuth();
+
+  if (isBooting) {
+    throw new Error("Auth is still booting, cannot access user yet");
+  }
+
+  if (!user) {
+    throw new Error("No hay un usuario autenticado");
+  }
+
+  return user;
 };
