@@ -13,7 +13,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} />
         <FixItIntro
           onDone={() => {
-            router.push("/paginaServicios");
+            router.push("/paginaServiciosRealizados" as any);
           }}
         />
       </SafeAreaView>
