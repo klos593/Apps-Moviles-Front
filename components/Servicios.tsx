@@ -34,8 +34,9 @@ export default function HomeScreen() {
           <FlatList
             data={professionsData.data}
             renderItem={({ item }) => (
-              <Pressable style={styles.serviceView} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
-                <Image source={{ uri: item.picture }} style={styles.serviceIcon} />
+              <Pressable style={styles.servicePressable} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
+                {/* <Image source={{ uri: item.picture }} style={styles.serviceIcon} /> */}
+                <Image source={require("@/assets/images/Paseador.png")} style={styles.serviceIcon} />
                 <Text style={styles.serviceText}>
                   {item.name}
                 </Text>
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+
   flatList: {
     flex: 1,
     backgroundColor: "#fff",
@@ -95,11 +97,15 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
 
-  serviceView: {
+  servicePressable: {
     flex: 1,
-    margin: 10,
+    marginRight: 18,
+    marginVertical: 8,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f4f4f6",
+    paddingHorizontal: 15,
+    borderRadius: 15
   },
 
   flatListServices: {
@@ -116,7 +122,9 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     resizeMode: "contain",
+    borderRadius: 15
   },
+
   serviceText: {
     fontWeight: 600,
     fontSize: 15,
@@ -127,9 +135,10 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 700
   },
+
   titleView: {
     flex: 0.3,
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
 });
