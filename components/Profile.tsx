@@ -1,18 +1,47 @@
 import { getUser } from "@/api/api";
 import { useAuth, useAuthUser } from "@/src/auth/AuthContext";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import React from "react";
-import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useMemo, useRef } from "react";
+import {
+  Alert,
+  Animated,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Profile() {
   const router = useRouter();
   const { email } = useAuthUser();
   const { logout } = useAuth();
 
+  const insets = useSafeAreaInsets();
+  const tabBarHeight = useBottomTabBarHeight();
+
   const { data: user } = useQuery({
     queryKey: ["User", email],
     queryFn: () => getUser(email),
+  });
+
+  const MAX_HEADER = useMemo(() => 110 + insets.top * 0.5, [insets.top]);
+  const MIN_HEADER = useMemo(() => insets.top + 50, [insets.top]);
+
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, MAX_HEADER - MIN_HEADER],
+    outputRange: [MAX_HEADER, MIN_HEADER],
+    extrapolate: "clamp",
+  });
+
+  const avatarScale = scrollY.interpolate({
+    inputRange: [0, MAX_HEADER - MIN_HEADER],
+    outputRange: [1, 0.92],
+    extrapolate: "clamp",
   });
 
   const handleLogout = () => {
@@ -28,85 +57,126 @@ export default function Profile() {
   };
 
   return (
-    <View style={styles.screen}>
-      {/* Header visual azul */}
-      <View style={styles.headerBg} />
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <Animated.View style={[styles.headerBg, { height: headerHeight }]} />
 
-      {/* Tarjeta superior (avatar + nombre + mail) */}
-      <View style={styles.profileCard}>
-        <View style={styles.avatarWrap}>
-          <Image
-            source={{
-              uri:
-                "https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/UsuarioPlaceHolder_bzqamd.png",
-            }}
-            style={styles.avatar}
-          />
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingTop: MAX_HEADER - 40, // deja la card un poco más arriba
+          paddingHorizontal: 16,
+          paddingBottom: tabBarHeight + insets.bottom + 12, // menos padding para mostrar todo
+        }}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+      >
+        {/* Card de perfil: parte dentro del verde */}
+        <View style={[styles.profileCard, { marginTop: -60 }]}>
+          <Animated.View style={[styles.avatarWrap, { transform: [{ scale: avatarScale }] }]}>
+            <Image
+              source={{
+                uri:
+                  "https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/UsuarioPlaceHolder_bzqamd.png",
+              }}
+              style={styles.avatar}
+            />
+          </Animated.View>
+
+          <Text style={styles.fullName}>
+            {user?.name} {user?.lastName}
+          </Text>
+          <Text style={styles.emailText}>{user?.mail}</Text>
         </View>
 
-        <Text style={styles.fullName}>
-          {user?.name} {user?.lastName}
-        </Text>
-        <Text style={styles.emailText}>{user?.mail}</Text>
-      </View>
+        {/* GENERAL */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>GENERAL</Text>
 
-      {/* Sección GENERAL */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>GENERAL</Text>
+          <Pressable
+            style={styles.row}
+            onPress={() => router.push("/paginaInofrmacion")}
+          >
+            <View style={styles.rowLeft}>
+              <View style={styles.iconStub} />
+              <Text style={styles.rowTitle}>Datos personales</Text>
+            </View>
+            <Text style={styles.rowSubtitle}>Ver y editar tus datos</Text>
+          </Pressable>
 
-        <Pressable 
-          style={styles.row}
-          onPress={() => router.push("/paginaInofrmacion")}
-        >
-          <View style={styles.rowLeft}>
-            <View style={styles.iconStub} />
-            <Text style={styles.rowTitle}>Datos personales</Text>
-          </View>
-          <Text style={styles.rowSubtitle}>Ver y editar tus datos</Text>
-        </Pressable>
+          <Pressable style={styles.row}>
+            <View style={styles.rowLeft}>
+              <View style={styles.iconStub} />
+              <Text style={styles.rowTitle}>Notificaciones</Text>
+            </View>
+            <Text style={styles.rowSubtitle}>Preferencias y datos</Text>
+          </Pressable>
 
-        <Pressable
-          style={styles.row}
-          
-        >
-          <View style={styles.rowLeft}>
-            <View style={styles.iconStub} />
-            <Text style={styles.rowTitle}>Notificaciones</Text>
-          </View>
-          <Text style={styles.rowSubtitle}>Preferencias y datos</Text>
-        </Pressable>
+          <Pressable style={[styles.row, styles.logoutRow]} onPress={handleLogout}>
+            <View style={styles.rowLeft}>
+              <View style={[styles.iconStub, styles.logoutIcon]} />
+              <Text style={[styles.rowTitle, styles.logoutText]}>Cerrar sesión</Text>
+            </View>
+          </Pressable>
+        </View>
+      </Animated.ScrollView>
 
-        <Pressable style={[styles.row, styles.logoutRow]} onPress={handleLogout}>
-          <View style={styles.rowLeft}>
-            <View style={[styles.iconStub, styles.logoutIcon]} />
-            <Text style={[styles.rowTitle, styles.logoutText]}>Cerrar sesión</Text>
-          </View>
-        </Pressable>
-      </View>
-    </View>
+      <BottomWhiteMask />
+    </SafeAreaView>
+  );
+}
+
+function BottomWhiteMask() {
+  const insets = useSafeAreaInsets();
+  const tabBarHeight = useBottomTabBarHeight();
+
+  const LIFT_OVER_TAB = 56;
+  const EXTRA_BASE = 12; // achicado para mostrar todo el contenido
+
+  return (
+    <>
+      <View
+        pointerEvents="none"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: tabBarHeight + insets.bottom + EXTRA_BASE,
+          backgroundColor: "#F5F6FA",
+          zIndex: 5,
+        }}
+      />
+      <View
+        pointerEvents="none"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: tabBarHeight + insets.bottom - 4,
+          height: LIFT_OVER_TAB,
+          backgroundColor: "#F5F6FA",
+          zIndex: 5,
+        }}
+      />
+    </>
   );
 }
 
 const CARD_RADIUS = 18;
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: "#F5F6FA",
-  },
+  screen: { flex: 1, backgroundColor: "#F5F6FA" },
   headerBg: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 200,
+    top: 0, left: 0, right: 0,
     backgroundColor: "#294936",
-    borderBottomRightRadius: 40,  
-    overflow: "hidden",         
+    borderBottomRightRadius: 40,
+    overflow: "hidden",
   },
   profileCard: {
-    marginHorizontal: 16,
-    marginTop: 100, 
     backgroundColor: "white",
     borderRadius: CARD_RADIUS,
     paddingHorizontal: 20,
@@ -117,42 +187,24 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
     alignItems: "center",
+    zIndex: 2,
   },
   avatarWrap: {
-    width: 96,
-    height: 96,
-    borderRadius: 20,
+    width: 96, height: 96, borderRadius: 20,
     backgroundColor: "#F1F4F8",
     overflow: "hidden",
     marginBottom: 14,
   },
-  avatar: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
+  avatar: { width: "100%", height: "100%", resizeMode: "cover" },
   fullName: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#1F2D3D",
-    marginTop: 4,
+    fontSize: 20, fontWeight: "700", color: "#1F2D3D",
+    marginTop: 4, textAlign: "center",
   },
-  emailText: {
-    fontSize: 14,
-    color: "#6B7A90",
-    marginTop: 4,
-  },
+  emailText: { fontSize: 14, color: "#6B7A90", marginTop: 4, textAlign: "center" },
 
-  section: {
-    marginTop: 22,
-    marginHorizontal: 16,
-  },
-  sectionTitle: {
-    color: "#6B7A90",
-    fontWeight: "700",
-    marginBottom: 10,
-    letterSpacing: 0.5,
-  },
+  section: { marginTop: 8 },
+  sectionTitle: { color: "#6B7A90", fontWeight: "700", marginBottom: 10, letterSpacing: 0.5 },
+
   row: {
     backgroundColor: "white",
     borderRadius: CARD_RADIUS,
@@ -165,35 +217,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     elevation: 2,
   },
-  rowLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    marginBottom: 6,
-  },
-  iconStub: {
-    width: 28,
-    height: 28,
-    borderRadius: 8,
-    backgroundColor: "#E5ECFF",
-  },
-  rowTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#1F2D3D",
-  },
-  rowSubtitle: {
-    fontSize: 13,
-    color: "#708099",
-    marginLeft: 40,
-  },
-  logoutRow: {
-    backgroundColor: "#FFF5F5",
-  },
-  logoutIcon: {
-    backgroundColor: "#FFD3D3",
-  },
-  logoutText: {
-    color: "#D72638",
-  },
+  rowLeft: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 6 },
+  iconStub: { width: 28, height: 28, borderRadius: 8, backgroundColor: "#E5ECFF" },
+  rowTitle: { fontSize: 16, fontWeight: "700", color: "#1F2D3D" },
+  rowSubtitle: { fontSize: 13, color: "#708099", marginLeft: 40 },
+  logoutRow: { backgroundColor: "#FFF5F5" },
+  logoutIcon: { backgroundColor: "#FFD3D3" },
+  logoutText: { color: "#D72638" },
 });
