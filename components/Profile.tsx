@@ -13,7 +13,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Profile() {
   const router = useRouter();
@@ -57,15 +57,15 @@ export default function Profile() {
   };
 
   return (
-    <SafeAreaView style={styles.screen} edges={["top"]}>
+    <View style={styles.screen}>
       <Animated.View style={[styles.headerBg, { height: headerHeight }]} />
 
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: MAX_HEADER - 40, // deja la card un poco más arriba
+          paddingTop: MAX_HEADER - 40, 
           paddingHorizontal: 16,
-          paddingBottom: tabBarHeight + insets.bottom + 12, // menos padding para mostrar todo
+          paddingBottom: tabBarHeight + insets.bottom + 12, 
         }}
         scrollEventThrottle={16}
         onScroll={Animated.event(
@@ -124,7 +124,7 @@ export default function Profile() {
       </Animated.ScrollView>
 
       <BottomWhiteMask />
-    </SafeAreaView>
+    </View>
   );
 }
 
