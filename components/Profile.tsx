@@ -1,5 +1,8 @@
 import { getUser } from "@/api/api";
 import { useAuth, useAuthUser } from "@/src/auth/AuthContext";
+import Feather from '@expo/vector-icons/Feather';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -8,15 +11,13 @@ import {
   Alert,
   Animated,
   Image,
+  InteractionManager,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import Feather from '@expo/vector-icons/Feather';
 
 export default function Profile() {
   const router = useRouter();
@@ -53,7 +54,15 @@ export default function Profile() {
       "¿Seguro que querés cerrar sesión?",
       [
         { text: "Cancelar", style: "cancel" },
-        { text: "Cerrar sesión", style: "destructive", onPress: () => logout() },
+        { text: "Cerrar sesión", style: "destructive", onPress: () =>{
+          router.replace("/paginaLogIn");
+
+          // Ejecutar el logout cuando termine la transición de navegación
+          InteractionManager.runAfterInteractions(() => {
+            // no esperes acá para no bloquear la UI
+            logout();
+          });
+        } },
       ],
       { cancelable: true }
     );

@@ -1,7 +1,11 @@
 import React from "react";
-import { StyleSheet, View, TextInput } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 
-export default function SearchBar({ onSearch }) {
+type SearchBarProps = {
+    onSearch: (text: string) => void;
+};
+
+export default function SearchBar({ onSearch }: SearchBarProps) {
     return (
         <View style={styles.searchWrap}>
         <TextInput

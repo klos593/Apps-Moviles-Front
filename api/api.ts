@@ -31,17 +31,13 @@ export async function getProfessionalsWithProfession(profession: string): Promis
     return response.json();
 }
 
-// --- Ejemplo simple de API para actualizar (ajustá URL/body según tu backend) ---
-export async function updateUser(id: string, payload: {
-  name: string;
-  lastName: string;
-  phoneNumber: string;
-  address: string;
-}) {
-  const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL || ""}/user/${encodeURIComponent(id)}`, {
+
+export async function updateUser(email: string, body: {name:string; lastName:string; phoneNumber:string; address:string}) {
+  const res = await fetch(`${URL}/user/${encodeURIComponent(email)}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(body),
   });
+  if (!res.ok) throw new Error("No se pudo actualizar");
   return res.json();
 }

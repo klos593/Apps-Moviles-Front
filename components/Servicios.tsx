@@ -1,7 +1,9 @@
 import { getProfessionals, getProfessions } from "@/api/api";
+import SearchBar from "@/components/SearchBar";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useQuery } from '@tanstack/react-query';
 import { router, Stack } from "expo-router";
-import { React, useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -11,10 +13,8 @@ import {
   Text,
   View,
 } from "react-native";
-import Card from "./TarjetaProfesional";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import SearchBar from "@/components/SearchBar"
+import Card from "./TarjetaProfesional";
 
 export default function HomeScreen() {
 
