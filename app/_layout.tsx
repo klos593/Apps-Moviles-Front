@@ -1,6 +1,4 @@
-// app/_layout.tsx
 import React, { useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
 import { Tabs, useRouter, useSegments } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NavBar from "@/components/NavBar";
@@ -14,7 +12,6 @@ function AuthGate({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isBooting) return;
-
     
     const first = segments[0]; 
     const inAuth = first === "paginaLogIn" || first === "paginaRegistro";
@@ -42,19 +39,12 @@ export default function RootLayout() {
           <Tabs
               tabBar={(props) => <NavBar {...props} />}
               screenOptions={{
-                headerTitle: () => (
-                  <Text style={styles.brand}>
-                    <Text style={{ color: "#aef6c7" }}>Fix</Text>
-                    <Text>It</Text>
-                  </Text>
-                ),
-                headerTitleAlign: "center",
-                headerStyle: { backgroundColor: "#294936" },
+                headerShown: false
               }}
             >
-            <Tabs.Screen name="paginaServicios" options={{ title: "Home" }} />
+            <Tabs.Screen name="home" options={{ title: "Home" }} />
             <Tabs.Screen name="paginaHistorial" options={{title: "Historial"}}/>
-            <Tabs.Screen name="paginaUsuario" options={{ title: "Perfil" }} />
+            <Tabs.Screen name="perfil" options={{ title: "Perfil" }} />
             <Tabs.Screen name="index" options={{ headerShown: false }}/>
           </Tabs>
         </AuthGate>
@@ -62,11 +52,3 @@ export default function RootLayout() {
     </QueryClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  brand: {
-    fontSize: 20,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-});

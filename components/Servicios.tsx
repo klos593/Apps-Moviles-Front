@@ -11,7 +11,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Card from "./TarjetaProfesional";
@@ -67,7 +67,7 @@ export default function HomeScreen() {
             data={professionsData}
             renderItem={({ item }) => (
               <View style={styles.pressableWrapper}>
-                <Pressable style={styles.servicePressable} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
+                <Pressable style={styles.servicePressable} onPress={() => router.push(`/home/servicio/${item.name.toLowerCase()}`)}>
                   <Image source={{ uri: item.picture }} style={styles.serviceIcon} />
                   <Text style={styles.serviceText}>
                     {item.name}
@@ -96,13 +96,14 @@ export default function HomeScreen() {
             keyExtractor={(it) => it.id.toString()}
             renderItem={({ item }) => (
               <View style={styles.cardWrapper}>
-                <Card data={item} onPress={() => router.push(`/profesional/${item.id}`)} />
+                <Card data={item} onPress={() => router.push(`/home/profesional/${item.id}`)} />
               </View>
             )}
             style={styles.flatList}
             contentContainerStyle={styles.flatListContent}
             showsVerticalScrollIndicator={false} />
         </View>
+        <View style={{flex:0.5}}></View>
       </View>
     <BottomWhiteMask/></>
   );
@@ -160,6 +161,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     paddingVertical: 13,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
   },
 
   pressableWrapper: {
@@ -169,7 +175,7 @@ const styles = StyleSheet.create({
   },
 
   flatListServices: {
-    marginVertical: 8,
+    marginVertical: 3,
   },
 
   cardWrapper: {
@@ -198,25 +204,5 @@ const styles = StyleSheet.create({
     marginTop: 8,
     justifyContent: "center",
     alignItems: "center",
-  },
-
-  searchWrap: {
-    backgroundColor: "#F5F6FA",
-    flex: 0.2,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16
-  },
-
-  search: {
-    flex: 1,
-    backgroundColor: "white",
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: "#DDE2E5",
-    color: "#0E0E0E",
-    fontSize: 15,
-  },
+  }
 });
