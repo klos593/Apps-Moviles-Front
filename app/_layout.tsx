@@ -14,10 +14,10 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isBooting) return;
     
-    const inAuthGroup = segments[0] === "auth"
+    const inAuthGroup = segments[0] === "(auth)"
 
     if (!token && !inAuthGroup) {
-      router.replace("/auth");
+      router.replace("(auth)");
       return;
     }
     if (token && inAuthGroup) {
