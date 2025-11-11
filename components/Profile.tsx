@@ -14,6 +14,9 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Feather from '@expo/vector-icons/Feather';
 
 export default function Profile() {
   const router = useRouter();
@@ -100,7 +103,9 @@ export default function Profile() {
             onPress={() => router.push("/paginaInformacion")}
           >
             <View style={styles.rowLeft}>
-              <View style={styles.iconStub} />
+              <View style={styles.iconStub}>
+                <MaterialCommunityIcons name="account-details" size={20} color="#6B7A90" />
+              </View>
               <Text style={styles.rowTitle}>Datos personales</Text>
             </View>
             <Text style={styles.rowSubtitle}>Ver y editar tus datos</Text>
@@ -108,7 +113,9 @@ export default function Profile() {
 
           <Pressable style={styles.row}>
             <View style={styles.rowLeft}>
-              <View style={styles.iconStub} />
+              <View style={styles.iconStub}>
+                <Ionicons name="notifications" size={20} color="#6B7A90" /> 
+              </View>
               <Text style={styles.rowTitle}>Notificaciones</Text>
             </View>
             <Text style={styles.rowSubtitle}>Preferencias y datos</Text>
@@ -116,7 +123,9 @@ export default function Profile() {
 
           <Pressable style={[styles.row, styles.logoutRow]} onPress={handleLogout}>
             <View style={styles.rowLeft}>
-              <View style={[styles.iconStub, styles.logoutIcon]} />
+              <View style={[styles.iconStub, styles.logoutIcon]}>
+                <Feather name="log-out" size={20} color="#D72638" />
+              </View>
               <Text style={[styles.rowTitle, styles.logoutText]}>Cerrar sesión</Text>
             </View>
           </Pressable>
@@ -218,7 +227,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   rowLeft: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 6 },
-  iconStub: { width: 28, height: 28, borderRadius: 8, backgroundColor: "#E5ECFF" },
+  iconStub: { width: 28, height: 28, borderRadius: 8, backgroundColor: "#E5ECFF", alignItems: "center", justifyContent: "center" },
   rowTitle: { fontSize: 16, fontWeight: "700", color: "#1F2D3D" },
   rowSubtitle: { fontSize: 13, color: "#708099", marginLeft: 40 },
   logoutRow: { backgroundColor: "#FFF5F5" },

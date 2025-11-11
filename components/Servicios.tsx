@@ -1,7 +1,7 @@
 import { getProfessionals, getProfessions } from "@/api/api";
 import { useQuery } from '@tanstack/react-query';
 import { router, Stack } from "expo-router";
-import React from "react";
+import { React, useState, useEffect } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -9,30 +9,62 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import Card from "./TarjetaProfesional";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import SearchBar from "@/components/SearchBar"
 
 export default function HomeScreen() {
 
-  const professionsData = useQuery({ queryKey: ['professions'], queryFn: getProfessions })
-  const professionalsData = useQuery({ queryKey: ['professionals'], queryFn: getProfessionals });
+  const professionsQuery = useQuery({
+    queryKey: ["professions"],
+    queryFn: getProfessions,
+  });
 
-  if (professionalsData.isLoading || professionsData.isLoading) {
+  const professionalsQuery = useQuery({
+    queryKey: ["professionals"],
+    queryFn: getProfessionals,
+  });
+
+  const professionsData = professionsQuery.data ?? [];
+  const professionalsData = professionalsQuery.data ?? [];
+  const [filteredData, setFilteredData] = useState(professionalsData);
+
+  useEffect(() => {
+    if (professionalsData.length) setFilteredData(professionalsData);
+  }, [professionalsData]);
+
+  const handleSearch = (keyWord: string) => {
+    if (!keyWord.trim()) {
+      setFilteredData(professionalsData);
+      return;
+    }
+
+    const filtered = professionalsData.filter((element) =>
+      (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(
+        keyWord.toLowerCase()
+      )
+    );
+
+    setFilteredData(filtered);
+  }
+
+  if (professionalsQuery.isLoading || professionsQuery.isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: 'white', justifyContent: "center"}}>
         <ActivityIndicator size="large"/>
       </View>
     );
   }
+
   return (
     <><Stack.Screen options={{ gestureEnabled: false}}/>
-    <View style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.flatListServiceView}>
           <FlatList
-            data={professionsData.data}
+            data={professionsData}
             renderItem={({ item }) => (
               <View style={styles.pressableWrapper}>
                 <Pressable style={styles.servicePressable} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
@@ -54,9 +86,11 @@ export default function HomeScreen() {
           </Text>
         </View>
 
+        <SearchBar onSearch={handleSearch} />
+
         <View style={{ flex: 3.5 }}>
           <FlatList
-            data={professionalsData.data}
+            data={filteredData}
             key={1}
             numColumns={1}
             keyExtractor={(it) => it.id.toString()}
@@ -69,8 +103,8 @@ export default function HomeScreen() {
             contentContainerStyle={styles.flatListContent}
             showsVerticalScrollIndicator={false} />
         </View>
-        <BottomWhiteMask />
-      </View></>
+      </View>
+    <BottomWhiteMask/></>
   );
 }
 
@@ -88,7 +122,7 @@ function BottomWhiteMask() {
           right: 0,
           bottom: 0,
           height: tabBarHeight + insets.bottom - 10,
-          backgroundColor: "#fff",
+          backgroundColor: "#F5F6FA",
           zIndex: 5,
         }}
       />
@@ -99,12 +133,12 @@ function BottomWhiteMask() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F5F6FA",
   },
 
   flatList: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F5F6FA",
   },
 
   flatListContent: {
@@ -123,9 +157,9 @@ const styles = StyleSheet.create({
   servicePressable: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f4f4f6",
+    backgroundColor: "white",
     borderRadius: 15,
-    paddingVertical: 13
+    paddingVertical: 13,
   },
 
   pressableWrapper: {
@@ -161,8 +195,28 @@ const styles = StyleSheet.create({
   },
 
   titleView: {
-    flex: 0.3,
+    marginTop: 8,
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  searchWrap: {
+    backgroundColor: "#F5F6FA",
+    flex: 0.2,
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16
+  },
+
+  search: {
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: "#DDE2E5",
+    color: "#0E0E0E",
+    fontSize: 15,
   },
 });

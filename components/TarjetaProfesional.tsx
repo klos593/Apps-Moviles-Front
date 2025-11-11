@@ -50,12 +50,17 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "#f4f4f6",
+    backgroundColor: "white",
     borderRadius: 16,
     padding: 12,
     marginBottom: 12,
     minHeight: 110,
     justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
   },
 
   cardHeader: {
