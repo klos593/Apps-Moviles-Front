@@ -97,7 +97,7 @@ export default function Profile() {
 
           <Pressable
             style={styles.row}
-            onPress={() => router.push("/paginaInofrmacion")}
+            onPress={() => router.push("/paginaInformacion")}
           >
             <View style={styles.rowLeft}>
               <View style={styles.iconStub} />
