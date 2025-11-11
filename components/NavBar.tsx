@@ -21,7 +21,7 @@ const NavBar: React.FC<BottomTabBarProps> = ({
   navigation,
 }) => {
 
-  if (["index"].includes(state.routes[state.index].name)) {
+  if (["index", "paginaLogIn","paginaRegistro"].includes(state.routes[state.index].name)) {
     return null;
 }
 
