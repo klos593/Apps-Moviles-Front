@@ -55,7 +55,7 @@ export default function Profile() {
       [
         { text: "Cancelar", style: "cancel" },
         { text: "Cerrar sesión", style: "destructive", onPress: () =>{
-          router.replace("/paginaLogIn");
+          router.replace("/(auth)");
 
           // Ejecutar el logout cuando termine la transición de navegación
           InteractionManager.runAfterInteractions(() => {
