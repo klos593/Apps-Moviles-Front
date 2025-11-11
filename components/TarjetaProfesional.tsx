@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#aef6c7",
     color: "#555",
     overflow: "hidden",
-    opacity: 0.7
+    opacity: 0.7,
+    alignSelf:"flex-end"
   },
 
   rating: {

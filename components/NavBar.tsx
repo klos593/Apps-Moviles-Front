@@ -1,5 +1,6 @@
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Octicons from '@expo/vector-icons/Octicons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -9,7 +10,7 @@ import Animated, {
   LinearTransition,
 } from "react-native-reanimated";
 
-const VISIBLE_TABS = ["paginaUsuario", "paginaServicios"];
+const VISIBLE_TABS = ["paginaUsuario", "paginaHistorial", "paginaServicios"];
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -85,8 +86,11 @@ const NavBar: React.FC<BottomTabBarProps> = ({
     switch (routeName) {
       case "paginaUsuario":
         return <FontAwesome5 name="user" size={24} color={color} />
+      case "paginaHistorial":
+        return <AntDesign name="history" size={24} color={color} />
       case "paginaServicios":
         return <Octicons name="home" size={24} color={color} />
+      
     }
   }
 };
@@ -100,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#294936",
     width: "80%",
     alignSelf: "center",
-    bottom: 35,
+    bottom: 25,
     borderRadius: 40,
     paddingHorizontal: 12,
     paddingVertical: 15,

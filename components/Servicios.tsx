@@ -12,6 +12,8 @@ import {
   View
 } from "react-native";
 import Card from "./TarjetaProfesional";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 export default function HomeScreen() {
 
@@ -26,20 +28,20 @@ export default function HomeScreen() {
     );
   }
   return (
-    <><Stack.Screen
-      options={{
-        gestureEnabled: false
-      }} /><View style={styles.container}>
+    <><Stack.Screen options={{ gestureEnabled: false}}/>
+    <View style={styles.container}>
         <View style={styles.flatListServiceView}>
           <FlatList
             data={professionsData.data}
             renderItem={({ item }) => (
-              <Pressable style={styles.servicePressable} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
-                <Image source={{ uri: item.picture }} style={styles.serviceIcon} />
-                <Text style={styles.serviceText}>
-                  {item.name}
-                </Text>
-              </Pressable>
+              <View style={styles.pressableWrapper}>
+                <Pressable style={styles.servicePressable} onPress={() => router.push(`/servicio/${item.name.toLowerCase()}`)}>
+                  <Image source={{ uri: item.picture }} style={styles.serviceIcon} />
+                  <Text style={styles.serviceText}>
+                    {item.name}
+                  </Text>
+                </Pressable>
+              </View>
             )}
             horizontal={true}
             style={styles.flatListServices}
@@ -67,9 +69,31 @@ export default function HomeScreen() {
             contentContainerStyle={styles.flatListContent}
             showsVerticalScrollIndicator={false} />
         </View>
+        <BottomWhiteMask />
       </View></>
   );
+}
 
+function BottomWhiteMask() {
+  const insets = useSafeAreaInsets();
+  const tabBarHeight = useBottomTabBarHeight();
+
+  return (
+    <>
+      <View
+        pointerEvents="none"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: tabBarHeight + insets.bottom - 10,
+          backgroundColor: "#fff",
+          zIndex: 5,
+        }}
+      />
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -97,20 +121,21 @@ const styles = StyleSheet.create({
   },
 
   servicePressable: {
-    flex: 1,
-    marginRight: 6,
-    marginVertical: 8,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f4f4f6",
-    paddingHorizontal: 15,
-    borderRadius: 15
+    borderRadius: 15,
+    paddingVertical: 13
+  },
+
+  pressableWrapper: {
+    width: 120,
+    marginTop: 8,
+    marginHorizontal: 10
   },
 
   flatListServices: {
-    flex: 1,
-    marginHorizontal: 15,
-    marginVertical: 5,
+    marginVertical: 8,
   },
 
   cardWrapper: {
@@ -127,7 +152,7 @@ const styles = StyleSheet.create({
   serviceText: {
     fontWeight: 600,
     fontSize: 15,
-    marginTop: 6
+    marginTop: 10
   },
 
   title: {

@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import React, { useState } from "react";
 import {
     FlatList,
@@ -24,7 +24,7 @@ export default function Profesionales({ data }: ProfessionalProps) {
         setFilteredData(data.filter(element => (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(keyWord.toLowerCase())))
     }
     return (
-
+        <><Stack.Screen options={{headerBackVisible: true}}/>
         <View style={styles.container}>
 
             <View style={styles.searchWrap}>
@@ -54,7 +54,7 @@ export default function Profesionales({ data }: ProfessionalProps) {
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={<Text style={styles.empty}>No hay resultados.</Text>}
             />
-        </View>
+        </View></>
     );
 
 }
