@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { Tabs, useRouter, useSegments } from "expo-router";
+import { Tabs, useRouter, useSegments, Slot } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NavBar from "@/components/NavBar";
+import { ActivityIndicator, View } from "react-native";
 
 import { AuthProvider, useAuth } from "@/src/auth/AuthContext";
 
@@ -13,20 +14,26 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isBooting) return;
     
-    const first = segments[0]; 
-    const inAuth = first === "paginaLogIn" || first === "paginaRegistro";
+    const inAuthGroup = segments[0] === "auth"
 
-    if (!token && !inAuth) {
-      router.replace("/paginaLogIn");
+    if (!token && !inAuthGroup) {
+      router.replace("/auth");
       return;
     }
-    if (token && inAuth) {
+    if (token && inAuthGroup) {
       router.replace("/"); 
       return;
     }
-  }, [isBooting, token, segments]);
+  }, [isBooting, token, segments, router]);
 
-  return <>{children}</>;
+  if (isBooting) {
+    return (
+      <View style={{ flex: 1, backgroundColor: 'white', justifyContent: "center"}}>
+        <ActivityIndicator size="large"/>
+      </View>
+    )
+  }
+  return <Slot/>
 }
 
 export default function RootLayout() {
