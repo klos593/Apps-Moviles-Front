@@ -1,12 +1,9 @@
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import {
     FlatList,
-    Image,
-    Pressable,
     StyleSheet,
     Text,
-    TextInput,
     View
 } from "react-native";
 import Card from "./TarjetaProfesional";
@@ -17,29 +14,10 @@ type ProfessionalProps = {
 };
 
 export default function Profesionales({ data }: ProfessionalProps) {
-
-    const [filteredData, setFilteredData] = useState(data);
-
-    const filterData = (keyWord: string) => {
-        setFilteredData(data.filter(element => (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(keyWord.toLowerCase())))
-    }
     return (
         <View style={styles.container}>
-
-            <View style={styles.searchWrap}>
-                <TextInput
-                    onChangeText={keyWord => filterData(keyWord)}
-                    placeholder="Buscar..."
-                    style={styles.search}
-                    returnKeyType="search"
-                />
-                <Pressable onPress={() => console.log("Mapa")}>
-                    <Image source={{ uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/Mapa_m1mc95.png' }} style={styles.mapBtn} />
-                </Pressable>
-            </View>
-
             <FlatList
-                data={filteredData}
+                data={data}
                 key={1}
                 numColumns={1}
                 keyExtractor={(it) => it.id.toString()}
