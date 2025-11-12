@@ -5,10 +5,11 @@ export type UserData = {
   mail: string;
   name: string;
   lastName: string;
-  phoneNumber: string;
+  phone: string;
   profession: string;
   rating: number;
   picture?: ImageSourcePropType;
-  address: string;
+  street: string;
+  number: number;
   description: string;
 };

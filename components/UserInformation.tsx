@@ -12,7 +12,6 @@ import {
   View,
 } from "react-native";
 
-const PROFILE_ROUTE = "/paginaInformacion"; // ajustá al path real de tu perfil
 
 export default function ProfileNotifications() {
   const { email } = useAuthUser();
@@ -35,25 +34,25 @@ export default function ProfileNotifications() {
     if (user && !editing) {
       setName(user?.name ?? "");
       setLastName(user?.lastName ?? "");
-      setPhone(user?.phoneNumber ?? "");
-      setStreet(user?.address ?? "");
+      setPhone(user?.phone ?? "");
+      setStreet(user?.street ?? "");
       setNumber(
-        user?.address != null ? String(user.address) : ""
-      );
-    }
+        String(user?.number) ?? ""
+      );}
   }, [user, editing]);
 
   const mutation = useMutation({
     mutationFn: (payload: {
       name: string;
       lastName: string;
-      phoneNumber: string;
-      address: string;
+      phone: string;
+      street: string;
+      number: number;
     }) => updateUser(email, payload),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ["User", email] });
       setEditing(false);
-      router.replace(PROFILE_ROUTE); // te manda al perfil
+      router.replace("/(tabs)/perfil");
     },
   });
 
@@ -65,14 +64,15 @@ export default function ProfileNotifications() {
     mutation.mutate({
       name,
       lastName,
-      phoneNumber: phone,
-      address: street ? `${street} ${Number(number) || 0}` : String(Number(number) || 0),
+      phone: phone,
+      street: street,
+      number: Number(number),
     });
   };
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>Notificaciones</Text>
+      <Text style={styles.title}>Datos Personales</Text>
 
       <View style={styles.card}>
         <Row label="Nombre" value={name} editable={editing} onChangeText={setName} />

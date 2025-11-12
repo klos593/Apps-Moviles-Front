@@ -32,7 +32,7 @@ export async function getProfessionalsWithProfession(profession: string): Promis
 }
 
 
-export async function updateUser(email: string, body: {name:string; lastName:string; phoneNumber:string; address:string}) {
+export async function updateUser(email: string, body: {name:string; lastName:string; phone:string; street:string, number:number}): Promise<UserData> {
   const res = await fetch(`${URL}/user/${encodeURIComponent(email)}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
