@@ -2,7 +2,6 @@ import { useAuth } from "@/src/auth/AuthContext";
 import { Stack, router } from "expo-router";
 import React, { useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -11,9 +10,10 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LoadingArc from "./LoadingAnimation";
 
 const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 const isPhone = (v: string) => /^\+?\d{7,15}$/.test(v.replace(/\s|-/g, ""));
@@ -277,7 +277,11 @@ export default function Registro() {
 
 
             <Pressable onPress={onSubmit} disabled={!formOk} style={[styles.primaryBtn, !formOk && styles.btnDisabled]}>
-              {loading ? <ActivityIndicator /> : <Text style={styles.primaryText}>Crear cuenta</Text>}
+              {loading ? 
+              <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                <LoadingArc size={72} strokeWidth={10} />
+              </View> : 
+              <Text style={styles.primaryText}>Crear cuenta</Text>}
             </Pressable>
 
             <Pressable onPress={() => router.back()} style={styles.secondaryBtn}>

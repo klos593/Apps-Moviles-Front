@@ -4,13 +4,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from "react-native";
+import LoadingArc from "./LoadingAnimation";
 
 
 export default function ProfileNotifications() {
@@ -38,7 +38,8 @@ export default function ProfileNotifications() {
       setStreet(user?.street ?? "");
       setNumber(
         String(user?.number) ?? ""
-      );}
+      );
+    }
   }, [user, editing]);
 
   const mutation = useMutation({
@@ -89,7 +90,9 @@ export default function ProfileNotifications() {
         disabled={mutation.isPending}
       >
         {mutation.isPending ? (
-          <ActivityIndicator color="#fff" />
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <LoadingArc size={72} strokeWidth={10} />
+          </View>
         ) : (
           <Text style={styles.editButtonText}>
             {editing ? "Guardar cambios" : "Editar información"}

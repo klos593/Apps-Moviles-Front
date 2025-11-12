@@ -1,9 +1,10 @@
 import { getProfessionalsWithProfession } from "@/api/api";
+import LoadingArc from "@/components/LoadingAnimation";
 import Profesionales from "@/components/Profesionales";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { ActivityIndicator, View } from "react-native";
+import { View } from "react-native";
 
 
 export default function ProfessionalsScreen() {
@@ -13,8 +14,8 @@ export default function ProfessionalsScreen() {
 
   if (professionalsData.isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white', justifyContent: "center"}}>
-        <ActivityIndicator size="large"/>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <LoadingArc size={72} strokeWidth={10} />
       </View>
     );
   }

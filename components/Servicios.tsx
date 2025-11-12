@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import { router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
@@ -14,6 +13,7 @@ import {
   View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import LoadingArc from "./LoadingAnimation";
 import Card from "./TarjetaProfesional";
 
 export default function HomeScreen() {
@@ -53,14 +53,14 @@ export default function HomeScreen() {
 
   if (professionalsQuery.isLoading || professionsQuery.isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white', justifyContent: "center"}}>
-        <ActivityIndicator size="large"/>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <LoadingArc />
       </View>
     );
   }
 
   return (
-    <><Stack.Screen options={{ gestureEnabled: false}}/>
+    <><Stack.Screen options={{ gestureEnabled: false }} />
       <View style={styles.container}>
         <View style={styles.flatListServiceView}>
           <FlatList
@@ -103,9 +103,9 @@ export default function HomeScreen() {
             contentContainerStyle={styles.flatListContent}
             showsVerticalScrollIndicator={false} />
         </View>
-        <View style={{flex:0.5}}></View>
+        <View style={{ flex: 0.5 }}></View>
       </View>
-    <BottomWhiteMask/></>
+      <BottomWhiteMask /></>
   );
 }
 

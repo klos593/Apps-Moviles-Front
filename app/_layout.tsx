@@ -1,8 +1,9 @@
+import LoadingArc from "@/components/LoadingAnimation";
 import { AuthProvider, useAuth } from "@/src/auth/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Slot, useRouter, useSegments } from "expo-router"; // <-- Importa Slot
 import React, { useEffect } from "react";
-import { ActivityIndicator, View } from "react-native"; // Para el loading
+import { View } from "react-native"; // Para el loading
 
 const queryClient = new QueryClient();
 
@@ -31,8 +32,8 @@ function AuthGate() {
   // Mientras bootea, mostramos un loader para evitar "parpadeos"
   if (isBooting) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <LoadingArc size={72} strokeWidth={10} />
       </View>
     );
   }

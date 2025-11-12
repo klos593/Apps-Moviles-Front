@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
-import { Text, StyleSheet } from "react-native";
+import React from "react";
+import { StyleSheet, Text } from "react-native";
 
 export default function HomeLayout() {
     return (
