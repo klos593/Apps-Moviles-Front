@@ -1,8 +1,9 @@
-import serviciosMock from '@/assets/data/services';
+import { getFinishedUsedServices } from '@/api/api';
 import SearchBar from '@/components/SearchBar';
 import ServiceCard from '@/components/ServiceCard';
+import { useAuthUser } from '@/src/auth/AuthContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,6 +12,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function Index() {
 
   const queryClient = new QueryClient()
+  const {email} = useAuthUser();
+
+  const finishedUsedServices = useQuery({
+    queryKey: ["FinishedUsedServices", email],
+    queryFn: () => getFinishedUsedServices(email),
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -35,7 +42,7 @@ export default function Index() {
           </View>
         </View>
         <View style={{ flex: 10 }}>
-          <FlatList data={serviciosMock} renderItem={({ item }) => (
+          <FlatList data={finishedUsedServices.data} renderItem={({ item }) => (
             <ServiceCard data={item} />
           )} />
         </View>

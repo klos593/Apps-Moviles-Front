@@ -1,37 +1,25 @@
-import React from "react"
-import { StyleSheet, Text, View } from "react-native"
-
-
-type ServiceData = {
-    nombreProveedor: String,
-    apellidoProveedor: String,
-    profesionProveedor: String,
-    fecha: String,
-    lugar: String,
-    estado: String,
-    precio: Number,
-    rating: Number,
-    comentario: String,
-}
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import ServiceCardData from "./Types/ServiceCardData";
 
 type ServiceCardProps = {
-    data: ServiceData
+    data: ServiceCardData
 }
 
 export default function ServiceCard({ data }: ServiceCardProps) {
 
     var borderColor;
     var backgroundTextColor;
-    if (data.estado === 'CANCELED' || data.estado === 'REJECTED') {
+    if (data.state === 'CANCELED' || data.state === 'REJECTED') {
         borderColor = '#7A7F85'
         backgroundTextColor = '#62666B'
-    } else if (data.estado === 'COMPLETED') {
+    } else if (data.state === 'COMPLETED') {
         borderColor = '#294936'
         backgroundTextColor = '#2b6c5f'
-    } else if (data.estado === 'PENDING') {
+    } else if (data.state === 'PENDING') {
         borderColor = '#5b8266'
         backgroundTextColor = '#3f9a7c'
-    } else if (data.estado === 'ACCEPTED') {
+    } else if (data.state === 'ACCEPTED') {
         borderColor = '#3e6259'
         backgroundTextColor = '#2b6c5f'
     }
@@ -40,16 +28,16 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         <View style={{ ...styles.cardWrapper, borderColor: borderColor }}>
             <View style={{ ...styles.cardHeader, backgroundColor: borderColor, borderColor: borderColor }}>
                 <View style={styles.nameContainer}>
-                    <Text style={styles.name}>{data.nombreProveedor} {data.apellidoProveedor}</Text>
+                    <Text style={styles.name}>{data.name} {data.lastName}</Text>
                 </View>
                 <View style={styles.statusContainer}>
-                    <Text style={{ ...styles.status,backgroundColor: backgroundTextColor}}>{data.estado}</Text>
+                    <Text style={{ ...styles.status,backgroundColor: backgroundTextColor}}>{data.state}</Text>
                 </View>
             </View>
             <View style={styles.cardBody}>
-                <Text> Servicio (Icono?): {data.profesionProveedor}</Text>
-                <Text> Fecha (Icono): {data.fecha.slice(0, 10)} - {data.fecha.slice(11, 16)}</Text>
-                <Text> Lugar (Icono): {data.lugar}</Text>
+                <Text> Servicio (Icono?): {data.profession}</Text>
+                <Text> Fecha (Icono): {data.date.slice(0, 10)} - {data.date.slice(11, 16)}</Text>
+                <Text> Lugar (Icono): {data.address.street}</Text>
             </View>
         </View>
     )

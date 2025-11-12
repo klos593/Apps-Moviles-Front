@@ -1,6 +1,7 @@
 import { ProfessionalCardData } from "@/components/Types/ProfessionalCardData";
 import { ProfessionalData } from "@/components/Types/ProfessionalData";
 import { ProfessionCardData } from "@/components/Types/ProfessionCardData";
+import ServiceCardData from "@/components/Types/ServiceCardData";
 import { UserData } from "@/components/Types/UserData";
 import { URL } from "./url";
 
@@ -16,18 +17,18 @@ export async function getProfessions(): Promise<ProfessionCardData[]> {
 }
 
 export async function getProfessionalWithId(id: string): Promise<ProfessionalData> {
-    const response = await fetch(`${URL}/professional/${id}`);
+    const response = await fetch(`${URL}/professional/${encodeURIComponent(id)}`);
     return response.json();
 }
 
 export async function getUser(email: string): Promise<UserData> {
 
-    const response = await fetch(`${URL}/user/${email}`);
+    const response = await fetch(`${URL}/user/${encodeURIComponent(email)}`);
     return response.json();
 }
 
 export async function getProfessionalsWithProfession(profession: string): Promise<ProfessionalCardData[]> {
-    const response = await fetch(`${URL}/professionals/${profession}`);
+    const response = await fetch(`${URL}/professionals/${encodeURIComponent(profession)}`);
     return response.json();
 }
 
@@ -40,4 +41,9 @@ export async function updateUser(email: string, body: {name:string; lastName:str
   });
   if (!res.ok) throw new Error("No se pudo actualizar");
   return res.json();
+}
+
+export async function getFinishedUsedServices(email: string): Promise<ServiceCardData[]> {
+    const response = await fetch(`${URL}/finishedUsedServices/${encodeURIComponent(email)}`);
+    return response.json();
 }
