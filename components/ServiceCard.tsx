@@ -1,6 +1,7 @@
 import React from "react"
 import { StyleSheet, Text, View } from "react-native"
-
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 type ServiceData = {
     nombreProveedor: String,
@@ -20,8 +21,8 @@ type ServiceCardProps = {
 
 export default function ServiceCard({ data }: ServiceCardProps) {
 
-    var borderColor;
-    var backgroundTextColor;
+    let borderColor;
+    let backgroundTextColor;
     if (data.estado === 'CANCELED' || data.estado === 'REJECTED') {
         borderColor = '#7A7F85'
         backgroundTextColor = '#62666B'
@@ -47,9 +48,20 @@ export default function ServiceCard({ data }: ServiceCardProps) {
                 </View>
             </View>
             <View style={styles.cardBody}>
-                <Text> Servicio (Icono?): {data.profesionProveedor}</Text>
-                <Text> Fecha (Icono): {data.fecha.slice(0, 10)} - {data.fecha.slice(11, 16)}</Text>
-                <Text> Lugar (Icono): {data.lugar}</Text>
+                <View style={styles.infoView}>
+                    <View style={styles.iconStub}><FontAwesome6 name="screwdriver-wrench" size={16} color="#6B7A90" /></View>
+                    <Text style={{alignSelf: "center"}}>{data.profesionProveedor}</Text>
+                </View>
+
+                <View style={styles.infoView}>
+                    <View style={styles.iconStub}><FontAwesome name="calendar-o" size={18} color="#6B7A90" /></View>
+                    <Text style={{alignSelf: "center"}}>{data.fecha.slice(0, 10)} - {data.fecha.slice(11, 16)}</Text>
+                </View>
+
+                <View style={styles.infoView}>
+                    <View style={styles.iconStub}><FontAwesome name="map-marker" size={20} color="#6B7A90" /></View>
+                    <Text style={{alignSelf: "center"}}>{data.lugar}</Text>
+                </View>
             </View>
         </View>
     )
@@ -112,5 +124,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly', 
         alignItems: 'flex-start', 
         marginLeft: 15 
-    }
+    },
+
+    infoView: {
+        flexDirection: 'row',
+        gap:10,
+    },
+
+    iconStub: { 
+        width: 28, 
+        height: 28, 
+        borderRadius: 8, 
+        backgroundColor: "#E5ECFF", 
+        alignItems: "center", 
+        justifyContent: "center" },
 })

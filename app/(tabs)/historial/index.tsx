@@ -4,7 +4,7 @@ import ServiceCard from '@/components/ServiceCard';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
-import { FlatList, Pressable, Text, View } from 'react-native';
+import { FlatList, Pressable, Text, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
@@ -14,21 +14,21 @@ export default function Index() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <View style={{ flex: 1, backgroundColor: '#F5F6FA' }}>
-        <View style={{ flex: 0.8, justifyContent: 'center', alignItems: 'flex-start', margin: 10 }}>
-          <Text style={{ fontWeight: '700', fontSize: 30, marginLeft: 7 }}>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>
             Historial
           </Text>
         </View>
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-          <View style={{ flex: 4 }}>
+        <View style={styles.searchBarAndFilterContainer}>
+          <View style={styles.searchBarContainer}>
             <SearchBar onSearch={function (text: string): void {
               throw new Error('Function not implemented.');
             }} />
           </View>
-          <View style={{ flex: 1, paddingVertical: 8, paddingHorizontal: 15 }}>
-            <Pressable style={{ borderRadius: 16, backgroundColor: '#20d88fff', justifyContent: 'center', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 16 }}>
-              <Text>
+          <View style={styles.filterContainer}>
+            <Pressable style={styles.filterButton}>
+              <Text style= {styles.filterText}>
                 Filtrar
               </Text>
             </Pressable>
@@ -67,3 +67,55 @@ function BottomWhiteMask() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { 
+    flex: 1, 
+    backgroundColor: '#F5F6FA' 
+  },
+
+  titleContainer: { 
+    flex: 0.8, 
+    justifyContent: 'center', 
+    alignItems: 'flex-start', 
+    marginHorizontal: 10,
+    marginTop: 15 
+  },
+
+  title: { 
+    fontWeight: 700, 
+    fontSize: 30, 
+    marginLeft: 7 
+  },
+
+  searchBarAndFilterContainer : { 
+    flex: 1, 
+    flexDirection: 'row', 
+    justifyContent: 'flex-start', 
+    alignItems: 'center' 
+  },
+
+  searchBarContainer: {
+    flex: 8
+  },
+
+  filterContainer: { 
+    flex: 1, 
+    paddingVertical: 8, 
+    paddingHorizontal: 15 
+  },
+
+  filterButton: { 
+    borderRadius: 16, 
+    backgroundColor: '#20d88fff', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    paddingVertical: 12, 
+    paddingHorizontal: 16 
+  },
+
+  filterText: {
+    color: "white", 
+    fontWeight: 700
+  }
+})
