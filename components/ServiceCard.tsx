@@ -100,5 +100,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly', 
         alignItems: 'flex-start', 
         marginLeft: 15 
-    }
+    },
+
+    infoView: {
+        flexDirection: 'row',
+        gap:10,
+    },
+
+    iconStub: { 
+        width: 28, 
+        height: 28, 
+        borderRadius: 8, 
+        backgroundColor: "#E5ECFF", 
+        alignItems: "center", 
+        justifyContent: "center" },
 })
