@@ -48,7 +48,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
 
                 <View style={styles.infoView}>
                     <View style={styles.iconStub}><FontAwesome name="map-marker" size={20} color="#6B7A90" /></View>
-                    <Text >{data.address.street} {data.address.number.toString()}, {data.address.postalCode.toString()}, {data.address.province}, {data.address.country} </Text>
+                    <Text >{data.address.street} {data.address.number.toString()}, {data.address.postalCode.toString()}, {data.address.province} </Text>
                 </View>
             </View>
         </View>
