@@ -18,6 +18,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import LoadingArc from "./LoadingAnimation";
 
 export default function Profile() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function Profile() {
   const insets = useSafeAreaInsets();
   const tabBarHeight = useBottomTabBarHeight();
 
-  const { data: user } = useQuery({
+  const user = useQuery({
     queryKey: ["User", email],
     queryFn: () => getUser(email),
   });
@@ -54,19 +55,29 @@ export default function Profile() {
       "¿Seguro que querés cerrar sesión?",
       [
         { text: "Cancelar", style: "cancel" },
-        { text: "Cerrar sesión", style: "destructive", onPress: () =>{
-          router.replace("/(auth)");
+        {
+          text: "Cerrar sesión", style: "destructive", onPress: () => {
+            router.replace("/(auth)");
 
-          // Ejecutar el logout cuando termine la transición de navegación
-          InteractionManager.runAfterInteractions(() => {
-            // no esperes acá para no bloquear la UI
-            logout();
-          });
-        } },
+            // Ejecutar el logout cuando termine la transición de navegación
+            InteractionManager.runAfterInteractions(() => {
+              // no esperes acá para no bloquear la UI
+              logout();
+            });
+          }
+        },
       ],
       { cancelable: true }
     );
   };
+
+  if (user.isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <LoadingArc />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
@@ -75,9 +86,9 @@ export default function Profile() {
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: MAX_HEADER - 40, 
+          paddingTop: MAX_HEADER - 40,
           paddingHorizontal: 16,
-          paddingBottom: tabBarHeight + insets.bottom + 12, 
+          paddingBottom: tabBarHeight + insets.bottom + 12,
         }}
         scrollEventThrottle={16}
         onScroll={Animated.event(
@@ -97,10 +108,14 @@ export default function Profile() {
             />
           </Animated.View>
 
-          <Text style={styles.fullName}>
-            {user?.name} {user?.lastName}
-          </Text>
-          <Text style={styles.emailText}>{user?.mail}</Text>
+          {user.data && (
+            <>
+              <Text style={styles.fullName}>
+                {user.data.name} {user.data.lastName}
+              </Text>
+              <Text style={styles.emailText}>{user.data.mail}</Text>
+            </>
+          )}
         </View>
 
         {/* GENERAL */}
@@ -123,7 +138,7 @@ export default function Profile() {
           <Pressable style={styles.row}>
             <View style={styles.rowLeft}>
               <View style={styles.iconStub}>
-                <Ionicons name="notifications" size={20} color="#6B7A90" /> 
+                <Ionicons name="notifications" size={20} color="#6B7A90" />
               </View>
               <Text style={styles.rowTitle}>Notificaciones</Text>
             </View>
