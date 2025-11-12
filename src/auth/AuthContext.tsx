@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { URL } from "../../api/url";
 import { secureDel, secureGet, secureSet } from "../utils/secureStorage";
@@ -10,7 +9,6 @@ type RegisterInput = {
   email: string;
   password: string;
 };
-
 
 type User = {   
   id: number;
@@ -34,7 +32,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isBooting, setIsBooting] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-
 
   useEffect(() => {
     (async () => {
@@ -102,9 +99,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthCtx.Provider>
   );
-
-
-  
 }
 
 export const useAuth = () => {
@@ -112,6 +106,7 @@ export const useAuth = () => {
   if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
   return ctx;
 };
+
 export const useAuthUser = () => {
   const { user, isBooting } = useAuth();
 

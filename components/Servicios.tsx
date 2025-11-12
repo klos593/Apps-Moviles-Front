@@ -111,6 +111,7 @@ export default function HomeScreen() {
 
 function BottomWhiteMask() {
   const insets = useSafeAreaInsets();
+  const bottom = useBottomTabBarHeight();
 
   return (
     <>
@@ -121,7 +122,7 @@ function BottomWhiteMask() {
           left: 0,
           right: 0,
           bottom: 0,
-          height: 46 + insets.bottom - 10,
+          height: bottom + insets.bottom - 10,
           backgroundColor: "#F5F6FA",
           zIndex: 5,
         }}
