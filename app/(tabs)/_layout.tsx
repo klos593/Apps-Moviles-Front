@@ -15,7 +15,7 @@ export default function RootLayout() {
                 }}
                 >
                 <Tabs.Screen name="home" options={{ title: "Home" }} />
-                <Tabs.Screen name="paginaHistorial" options={{title: "Historial"}}/>
+                <Tabs.Screen name="historial" options={{title: "Historial"}}/>
                 <Tabs.Screen name="perfil" options={{ title: "Perfil" }} />
                 <Tabs.Screen name="index" options={{ headerShown: false }}/>
             </Tabs>

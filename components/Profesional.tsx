@@ -12,18 +12,44 @@ type ProfesionalProps = {
   data: ProfessionalData;
 };
 
-  const handlePressWhatsapp = async () => {
-    const url = "https://wa.me/2477465180?text=Hello%20I%20would%20like%20more%20information";
+const handlePressWhatsapp = async () => {
+  const url = `https://wa.me/2477465180?text=Hello%20I%20would%20like%20more%20information`;
 
-    // Check if the URL can be opened
-    const supported = await Linking.canOpenURL(url);
+  // Check if the URL can be opened
+  const supported = await Linking.canOpenURL(url);
 
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      Alert.alert(`Don't know how to open this URL: ${url}`);
-    }
+  if (supported) {
+    await Linking.openURL(url);
+  } else {
+    Alert.alert(`Don't know how to open this URL: ${url}`);
   }
+}
+
+const handlePressMail = async () => {
+  const url = `mailto:support@example.com`;
+
+  // Check if the URL can be opened
+  const supported = await Linking.canOpenURL(url);
+
+  if (supported) {
+    await Linking.openURL(url);
+  } else {
+    Alert.alert(`Don't know how to open this URL: ${url}`);
+  }
+}
+
+const handlePressPhone = async () => {
+  const url = `tel:2477465180`;
+
+  // Check if the URL can be opened
+  const supported = await Linking.canOpenURL(url);
+
+  if (supported) {
+    await Linking.openURL(url);
+  } else {
+    Alert.alert(`Don't know how to open this URL: ${url}`);
+  }
+}
 
 export default function Profesional({ data }: ProfesionalProps) {
   const [modal, setModal] = useState(false);
@@ -107,12 +133,12 @@ export default function Profesional({ data }: ProfesionalProps) {
                   <FontAwesome name="whatsapp" size={44} color="white" />
                 </Pressable>
               <View style={styles.modalIconSlot}>
-                <Pressable style={[styles.iconStub, {backgroundColor: "#65a8faff"}]}>
+                <Pressable style={[styles.iconStub, {backgroundColor: "#65a8faff"}]} onPress={handlePressMail}>
                   <Fontisto name="email" size={34} color="white" />
                 </Pressable>
               </View>
               <View style={styles.modalIconSlot}>
-                <Pressable style={[styles.iconStub, {backgroundColor: "#50b94cff"}]}>
+                <Pressable style={[styles.iconStub, {backgroundColor: "#50b94cff"}]} onPress={handlePressPhone}>
                   <FontAwesome5 name="phone-alt" size={30} color="white" />
                 </Pressable>
               </View>

@@ -10,7 +10,7 @@ import Animated, {
   LinearTransition,
 } from "react-native-reanimated";
 
-const VISIBLE_TABS = ["perfil", "paginaHistorial", "home"];
+const VISIBLE_TABS = ["perfil", "historial", "home"];
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -86,7 +86,7 @@ const NavBar: React.FC<BottomTabBarProps> = ({
     switch (routeName) {
       case "perfil":
         return <FontAwesome5 name="user" size={24} color={color} />
-      case "paginaHistorial":
+      case "historial":
         return <AntDesign name="history" size={24} color={color} />
       case "home":
         return <Octicons name="home" size={24} color={color} />
