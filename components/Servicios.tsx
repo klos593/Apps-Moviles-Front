@@ -122,7 +122,7 @@ function BottomWhiteMask() {
           left: 0,
           right: 0,
           bottom: 0,
-          height: bottom + insets.bottom - 10,
+          height: bottom + insets.bottom - 15,
           backgroundColor: "#F5F6FA",
           zIndex: 5,
         }}
@@ -171,7 +171,8 @@ const styles = StyleSheet.create({
   pressableWrapper: {
     width: 120,
     marginTop: 8,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    marginBottom: 13
   },
 
   flatListServices: {

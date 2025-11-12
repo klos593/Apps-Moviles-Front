@@ -1,14 +1,29 @@
 import React, { useState } from "react";
-import { FlatList, Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, Image, Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import Rating from "./Rating";
 import SuccessModal from "./SuccesAnimation";
 import { ProfessionalData } from "./Types/ProfessionalData";
+import Entypo from '@expo/vector-icons/Entypo';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Fontisto from '@expo/vector-icons/Fontisto';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 type ProfesionalProps = {
   data: ProfessionalData;
 };
 
-const HEADER_GREEN = "#294936"; // cambia el verde si querés
+  const handlePressWhatsapp = async () => {
+    const url = "https://wa.me/2477465180?text=Hello%20I%20would%20like%20more%20information";
+
+    // Check if the URL can be opened
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${url}`);
+    }
+  }
 
 export default function Profesional({ data }: ProfesionalProps) {
   const [modal, setModal] = useState(false);
@@ -81,29 +96,24 @@ export default function Profesional({ data }: ProfesionalProps) {
           <View style={styles.modalCard}>
             <View style={styles.modalCloseRow}>
               <Pressable onPress={closeModal}>
-                <Image
-                  source={{ uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1762472196/cancel_17875314_bbohnu.png' }}
-                  style={{ width: 30, height: 30 }}
-                />
+                  <Entypo name="cross" size={24} color="#6B7A90" />
               </Pressable>
             </View>
 
             <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 20 }}>Contacto</Text>
 
-            <View style={styles.modalIconsRow}>
+              <View style={styles.modalIconsRow}>
+                <Pressable style={[styles.iconStub, {backgroundColor: "#59cc55ff"}]} onPress={handlePressWhatsapp}>
+                  <FontAwesome name="whatsapp" size={44} color="white" />
+                </Pressable>
               <View style={styles.modalIconSlot}>
-                <Pressable>
-                  <Image source={{ uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1762470194/whatsapp_185988_oq7nsm.png' }} style={{ height: 50, width: 50 }} />
+                <Pressable style={[styles.iconStub, {backgroundColor: "#65a8faff"}]}>
+                  <Fontisto name="email" size={34} color="white" />
                 </Pressable>
               </View>
               <View style={styles.modalIconSlot}>
-                <Pressable>
-                  <Image source={{ uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1762470184/email_552486_mngyzs.png' }} style={{ height: 50, width: 50 }} />
-                </Pressable>
-              </View>
-              <View style={styles.modalIconSlot}>
-                <Pressable>
-                  <Image source={{ uri: 'https://res.cloudinary.com/dvdw8zjel/image/upload/v1762470179/phone_552489_e1r0cl.png' }} style={{ height: 50, width: 50 }} />
+                <Pressable style={[styles.iconStub, {backgroundColor: "#50b94cff"}]}>
+                  <FontAwesome5 name="phone-alt" size={30} color="white" />
                 </Pressable>
               </View>
             </View>
@@ -133,7 +143,7 @@ const styles = StyleSheet.create({
   // Fondo verde que llega hasta la mitad de la foto
   header: {
     height: 160,
-    backgroundColor: HEADER_GREEN,
+    backgroundColor: "#294936",
     justifyContent: "flex-end",
     alignItems: "center",
   },
@@ -179,7 +189,7 @@ const styles = StyleSheet.create({
   },
 
   professionChip: {
-    backgroundColor: HEADER_GREEN,
+    backgroundColor: "#294936",
     color: "white",
     borderRadius: 16,
     paddingVertical: 6,
@@ -267,4 +277,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
+  iconStub: { width: 58, height: 58, borderRadius: 8, alignItems: "center", justifyContent: "center" },
 });

@@ -42,30 +42,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
 
-    mapBtn: {
-        width: 40,
-        height: 38,
-        resizeMode: "contain"
-    },
-
-    searchWrap: {
-        backgroundColor: "#fff",
-        flex: 0.1,
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 16
-    },
-    
-    search: {
-        flex: 1,
-        height: 42,
-        borderWidth: 1,
-        borderColor: "#ddd",
-        borderRadius: 999,
-        paddingHorizontal: 16,
-        backgroundColor: "#fafafa",
-    },
-
     flatList: {
         flex: 1,
         backgroundColor: "#fff",
