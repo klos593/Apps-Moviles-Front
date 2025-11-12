@@ -22,7 +22,7 @@ type Props = {
 
 const { width: W, height: H } = Dimensions.get("screen");
 const MAX_RADIUS = Math.ceil(Math.sqrt(W * W + H * H) / 2);
-const DIAMETER = MAX_RADIUS * 2;
+const DIAMETER = MAX_RADIUS * 2.12;
 
 const FixItIntro: React.FC<Props> = ({
   fixColor = "#aef6c7",
