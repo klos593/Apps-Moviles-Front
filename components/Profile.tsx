@@ -18,6 +18,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BottomWhiteMask } from "./BottomWhiteMask";
 import LoadingArc from "./LoadingAnimation";
 
 export default function Profile() {
@@ -118,7 +119,6 @@ export default function Profile() {
           )}
         </View>
 
-        {/* GENERAL */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>GENERAL</Text>
 
@@ -145,6 +145,19 @@ export default function Profile() {
             <Text style={styles.rowSubtitle}>Preferencias y datos</Text>
           </Pressable>
 
+          <Pressable 
+            style={styles.row}
+            onPress={() => router.push("/perfil/paginaEditarProfesiones")}
+            >
+            <View style={styles.rowLeft}>
+              <View style={styles.iconStub}>
+                <Feather name="settings" size={20} color="#6B7A90" />
+              </View>
+              <Text style={styles.rowTitle}>Profesiones</Text>
+            </View>
+            <Text style={styles.rowSubtitle}>Ver y editar tus profesiones</Text>
+          </Pressable>
+
           <Pressable style={[styles.row, styles.logoutRow]} onPress={handleLogout}>
             <View style={styles.rowLeft}>
               <View style={[styles.iconStub, styles.logoutIcon]}>
@@ -161,42 +174,6 @@ export default function Profile() {
   );
 }
 
-function BottomWhiteMask() {
-  const insets = useSafeAreaInsets();
-  const tabBarHeight = useBottomTabBarHeight();
-
-  const LIFT_OVER_TAB = 56;
-  const EXTRA_BASE = 12; // achicado para mostrar todo el contenido
-
-  return (
-    <>
-      <View
-        pointerEvents="none"
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: tabBarHeight + insets.bottom + EXTRA_BASE,
-          backgroundColor: "#F5F6FA",
-          zIndex: 5,
-        }}
-      />
-      <View
-        pointerEvents="none"
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: tabBarHeight + insets.bottom - 4,
-          height: LIFT_OVER_TAB,
-          backgroundColor: "#F5F6FA",
-          zIndex: 5,
-        }}
-      />
-    </>
-  );
-}
 
 const CARD_RADIUS = 18;
 
