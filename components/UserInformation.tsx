@@ -29,6 +29,7 @@ export default function ProfileNotifications() {
   const [phone, setPhone] = useState("");
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState<string>("");
+  const [floor, setFloor] = useState("");
 
   useEffect(() => {
     if (user && !editing) {
@@ -39,6 +40,7 @@ export default function ProfileNotifications() {
       setNumber(
         String(user?.number) ?? ""
       );
+      setFloor(user?.floor ?? "");
     }
   }, [user, editing]);
 
@@ -49,6 +51,7 @@ export default function ProfileNotifications() {
       phone: string;
       street: string;
       number: number;
+      floor: string;
     }) => updateUser(email, payload),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ["User", email] });
@@ -68,6 +71,7 @@ export default function ProfileNotifications() {
       phone: phone,
       street: street,
       number: Number(number),
+      floor: floor,
     });
   };
 
@@ -82,6 +86,7 @@ export default function ProfileNotifications() {
         <Row label="Teléfono" value={phone} editable={editing} onChangeText={setPhone} keyboardType="phone-pad" />
         <Row label="Calle" value={street} editable={editing} onChangeText={setStreet} />
         <Row label="Número" value={number} editable={editing} onChangeText={setNumber} keyboardType="numeric" last />
+        <Row label="Piso" value={floor} editable={editing} onChangeText={setFloor} />
       </View>
 
       <Pressable

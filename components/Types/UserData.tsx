@@ -12,4 +12,5 @@ export type UserData = {
   street: string;
   number: number;
   description: string;
+  floor: string;
 };
