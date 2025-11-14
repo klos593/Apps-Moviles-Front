@@ -1,6 +1,8 @@
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import ServiceDetailsModal from "./ServiceModal";
 import ServiceCardData from "./Types/ServiceCardData";
 
 type ServiceCardProps = {
@@ -25,33 +27,89 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         backgroundTextColor = '#2b6c5f'
     }
 
+    const [modal, setModal] = useState(false)
+
+    const professionsQuery = useQuery({
+        queryKey: ["serviceInfo", data.id],
+        queryFn: () => getServiceInfoById(data.id),
+    });
+
+    const openModal = () => {
+        setModal(true)
+
+    }
+
+    const handleCancelService = () => {
+    console.log('Cancelar servicio');
+    // Aquí implementas la lógica para cancelar
+  };
+
+  const handleContactProvider = () => {
+    console.log('Contactar proveedor');
+    // Aquí abres tu modal de contacto
+  };
+
+    const exampleService = {
+    id: 1,
+    provider: {
+      name: 'Juan',
+      lastName: 'Pérez',
+    },
+    profession: {
+      name: 'Plomero',
+    },
+    date: '2025-11-20T14:30:00',
+    state: 'PENDING',
+    address: {
+      street: 'Av. Corrientes',
+      number: 1234,
+      floor: '3A',
+      province: 'Buenos Aires',
+      country: 'Argentina',
+    },
+    price: 5000,
+    rating: 4.5,
+    comment: 'Excelente trabajo, muy profesional',
+  };
+
     return (
-        <View style={{ ...styles.cardWrapper, borderColor: borderColor }}>
-            <View style={{ ...styles.cardHeader, backgroundColor: borderColor, borderColor: borderColor }}>
-                <View style={styles.nameContainer}>
-                    <Text style={styles.name}>{data.name} {data.lastName}</Text>
-                </View>
-                <View style={styles.statusContainer}>
-                    <Text style={{ ...styles.status, backgroundColor: backgroundTextColor }}>{data.state}</Text>
-                </View>
-            </View>
-            <View style={styles.cardBody}>
-                <View style={styles.infoView}>
-                    <View style={styles.iconStub}><FontAwesome6 name="screwdriver-wrench" size={16} color="#6B7A90" /></View>
-                    <Text>{data.profession}</Text>
-                </View>
+        <>
+            <Pressable onPress={openModal}>
+                <View style={{ ...styles.cardWrapper, borderColor: borderColor }}>
+                    <View style={{ ...styles.cardHeader, backgroundColor: borderColor, borderColor: borderColor }}>
+                        <View style={styles.nameContainer}>
+                            <Text style={styles.name}>{data.name} {data.lastName}</Text>
+                        </View>
+                        <View style={styles.statusContainer}>
+                            <Text style={{ ...styles.status, backgroundColor: backgroundTextColor }}>{data.state}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.cardBody}>
+                        <View style={styles.infoView}>
+                            <View style={styles.iconStub}><FontAwesome6 name="screwdriver-wrench" size={16} color="#6B7A90" /></View>
+                            <Text>{data.profession}</Text>
+                        </View>
 
-                <View style={styles.infoView}>
-                    <View style={styles.iconStub}><FontAwesome name="calendar-o" size={18} color="#6B7A90" /></View>
-                    <Text>{data.date.slice(0, 10)} - {data.date.slice(11, 16)}</Text>
-                </View>
+                        <View style={styles.infoView}>
+                            <View style={styles.iconStub}><FontAwesome name="calendar-o" size={18} color="#6B7A90" /></View>
+                            <Text>{data.date.slice(0, 10)} - {data.date.slice(11, 16)}</Text>
+                        </View>
 
-                <View style={styles.infoView}>
-                    <View style={styles.iconStub}><FontAwesome name="map-marker" size={20} color="#6B7A90" /></View>
-                    <Text >{data.address.street} {data.address.number.toString()}, {data.address.postalCode.toString()}, {data.address.province} </Text>
+                        <View style={styles.infoView}>
+                            <View style={styles.iconStub}><FontAwesome name="map-marker" size={20} color="#6B7A90" /></View>
+                            <Text >{data.address.street} {data.address.number.toString()}, {data.address.postalCode.toString()}, {data.address.province} </Text>
+                        </View>
+                    </View>
                 </View>
-            </View>
-        </View>
+            </Pressable>
+            <ServiceDetailsModal
+                visible={modal}
+                onClose={() => setModal(false)}
+                service={exampleService}
+                onCancelService={handleCancelService}
+                onContactProvider={handleContactProvider}
+            />
+        </>
     )
 }
 

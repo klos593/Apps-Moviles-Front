@@ -28,7 +28,7 @@ export default function ServiceTypeScreen() {
     };
 
     return (
-        <View style={{ flex: 1 }}>   {/* <- importante */}
+        <View style={{ flex: 1 }}>
             <View style={styles.container}>
                 <View style={styles.gridContainer}>
                     {professionsData.map((opt) => {
@@ -41,7 +41,6 @@ export default function ServiceTypeScreen() {
                             >
                                 <Image source={{ uri: opt.picture }} style={styles.serviceIcon} />
                                 <Text style={styles.serviceText}>{opt.name}</Text>
-
                                 {isSelected && (
                                     <View style={styles.checkBadge}>
                                         <Ionicons name="checkmark" size={14} color="#fff" />
@@ -52,7 +51,6 @@ export default function ServiceTypeScreen() {
                     })}
                 </View>
 
-                {/* Botón CONTINUAR debajo de todas las profesiones */}
                 <Pressable onPress={handleContinue}>
                     <LinearGradient
                         colors={["#0f8c47ff", "#0ea599ff"]}

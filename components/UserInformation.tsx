@@ -30,17 +30,21 @@ export default function ProfileNotifications() {
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState<string>("");
   const [floor, setFloor] = useState("");
+  const [province,setProvince] = useState("")
+  const [country,setCountry] = useState("")
+  const [description,setDescription] = useState("")
 
   useEffect(() => {
     if (user && !editing) {
       setName(user?.name ?? "");
       setLastName(user?.lastName ?? "");
       setPhone(user?.phone ?? "");
-      setStreet(user?.street ?? "");
-      setNumber(
-        String(user?.number) ?? ""
-      );
-      setFloor(user?.floor ?? "");
+      setStreet(String(user?.address.street) ?? "");
+      setNumber(String(user?.address.number) ?? "");
+      setFloor(String(user?.address.floor) ?? "");
+      setProvince(String(user?.address.province) ?? "")
+      setCountry(String(user?.address.country) ?? "")
+      setDescription(user?.description ?? "")
     }
   }, [user, editing]);
 
@@ -52,6 +56,9 @@ export default function ProfileNotifications() {
       street: string;
       number: number;
       floor: string;
+      province: string;
+      country: string;
+      description: string;
     }) => updateUser(email, payload),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ["User", email] });
@@ -66,12 +73,15 @@ export default function ProfileNotifications() {
       return;
     }
     mutation.mutate({
-      name,
-      lastName,
+      name: name,
+      lastName: lastName,
       phone: phone,
       street: street,
       number: Number(number),
       floor: floor,
+      province: province,
+      country: country,
+      description: description,
     });
   };
 
@@ -87,6 +97,9 @@ export default function ProfileNotifications() {
         <Row label="Calle" value={street} editable={editing} onChangeText={setStreet} />
         <Row label="Número" value={number} editable={editing} onChangeText={setNumber} keyboardType="numeric" last />
         <Row label="Piso" value={floor} editable={editing} onChangeText={setFloor} />
+        <Row label="Provincia" value={province} editable={editing} onChangeText={setProvince} />
+        <Row label="Pais" value={country} editable={editing} onChangeText={setCountry} />
+        <Row label="Descripcion" value={description} editable={editing} onChangeText={setDescription} />
       </View>
 
       <Pressable

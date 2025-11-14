@@ -10,11 +10,11 @@ type Props = {
     dismissOnBackdrop?: boolean; // opcional: tocar afuera cierra
 };
 
-export default function SuccessModal({
+export default function ErrorModal({
     visible,
     onClose,
     autoCloseMs = 2000,
-    message = "¡Servicio solcitado con éxito!",
+    message = "¡Ha ocurrido un error!",
     dismissOnBackdrop = true,
 }: Props) {
     const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -58,7 +58,7 @@ export default function SuccessModal({
                             ]}
                         >
                             <View style={styles.circle}>
-                                <Ionicons name="checkmark" size={80} color="white" />
+                                <Ionicons name="close" size={80} color="white" />
                             </View>
                             <Text style={styles.text}>{message}</Text>
                         </Animated.View>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         width: 120,
         height: 120,
         borderRadius: 60,
-        backgroundColor: "#2ecc71",
+        backgroundColor: "#d22424ff",
         alignItems: "center",
         justifyContent: "center",
         marginBottom: 16,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
         marginTop: 4,
         fontSize: 17,
         fontWeight: "600",
-        color: "#2ecc71",
+        color: "#d22424ff",
         textAlign: "center",
     },
 });

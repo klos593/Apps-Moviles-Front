@@ -1,12 +1,16 @@
+import { createService, getProfessionalProfessions, getUserIdAndAddressId } from '@/api/api';
+import { useAuthUser } from '@/src/auth/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from "react";
-import { Alert, FlatList, Image, Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, Image, Linking, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import DateTimeSelector from './DateTimeSelector';
+import ErrorModal from './ErorrAnimation';
+import LoadingArc from './LoadingAnimation';
 import Rating from "./Rating";
 import SuccessModal from "./SuccesAnimation";
 import { ProfessionalData } from "./Types/ProfessionalData";
-import Entypo from '@expo/vector-icons/Entypo';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Fontisto from '@expo/vector-icons/Fontisto';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { ProfessionCardData } from './Types/ProfessionCardData';
 
 type ProfesionalProps = {
   data: ProfessionalData;
@@ -15,7 +19,6 @@ type ProfesionalProps = {
 const handlePressWhatsapp = async () => {
   const url = `https://wa.me/2477465180?text=Hello%20I%20would%20like%20more%20information`;
 
-  // Check if the URL can be opened
   const supported = await Linking.canOpenURL(url);
 
   if (supported) {
@@ -28,7 +31,6 @@ const handlePressWhatsapp = async () => {
 const handlePressMail = async () => {
   const url = `mailto:support@example.com`;
 
-  // Check if the URL can be opened
   const supported = await Linking.canOpenURL(url);
 
   if (supported) {
@@ -41,7 +43,6 @@ const handlePressMail = async () => {
 const handlePressPhone = async () => {
   const url = `tel:2477465180`;
 
-  // Check if the URL can be opened
   const supported = await Linking.canOpenURL(url);
 
   if (supported) {
@@ -49,32 +50,92 @@ const handlePressPhone = async () => {
   } else {
     Alert.alert(`Don't know how to open this URL: ${url}`);
   }
+
 }
+
+const useCreateService = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['services'] });
+    },
+    onError: (error) => {
+      console.error('Error al crear servicio:', error);
+    },
+  });
+};
 
 export default function Profesional({ data }: ProfesionalProps) {
   const [modal, setModal] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [selectedProfession, setSelectedProfession] = useState<ProfessionCardData | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const createServiceMutation = useCreateService();
+  const {email} = useAuthUser()
+
+  const professionsQuery = useQuery({
+    queryKey: ["professionalProfessions", data.id.toString()],
+    queryFn: () => getProfessionalProfessions(data.id.toString()),
+  });
+  const professionsData = professionsQuery.data ?? [];
 
   const showModal = () => setModal(true);
   const closeModal = () => setModal(false);
 
+  const userQuery = useQuery({
+    queryKey: ["userInfo", email],
+    queryFn: () => getUserIdAndAddressId(email),
+  });
+
+  const handleContact = async () => {
+    if (!selectedProfession) {
+      Alert.alert('Error', 'Debes seleccionar una profesión');
+      return;
+    }
+
+    if (!selectedDate) {
+      Alert.alert('Error', 'Debes seleccionar una fecha');
+      return;
+    }
+
+    if (!userQuery.data?.userId || !userQuery.data?.addressId) {
+      Alert.alert('Error', 'No se pudo obtener la información del usuario');
+      return;
+    }
+    const serviceData = {
+      professionId: parseInt(selectedProfession.id,10),
+      userId: userQuery.data.userId, 
+      providerId: data.id, 
+      rating: null, 
+      price: null, 
+      comment: null, 
+      date: selectedDate, 
+      addressId: userQuery.data.addressId, 
+      state: 'PENDING', 
+    };
+
+    try {
+      const result = await createServiceMutation.mutateAsync(serviceData);
+      setSuccessOpen(true)
+    } catch (error) {
+      setErrorOpen(true)
+    }
+
+  };
+
   return (
     <>
       <View style={styles.root}>
-        {/* HEADER VERDE */}
         <View style={styles.header}>
-          {/* Avatar que sobresale a la mitad */}
           <View style={styles.avatarWrap}>
             <Image source={{ uri: data.picture }} style={styles.picture} />
           </View>
         </View>
-
-        {/* CONTENIDO */}
         <View style={styles.content}>
-          {/* Nombre */}
           <Text style={styles.name}>{data.name} {data.lastName}</Text>
-
-          {/* Profesiones (chips) */}
           <View style={styles.professionsContainer}>
             <FlatList
               data={data.professions}
@@ -87,14 +148,10 @@ export default function Profesional({ data }: ProfesionalProps) {
               )}
             />
           </View>
-
-          {/* Descripción */}
           <Text style={styles.description}>
             <Text style={{ fontWeight: "600" }}>Descripción: </Text>
             {data.description}
           </Text>
-
-          {/* Fila: Rating (izq) + Botón Contactar (der) */}
           <View style={styles.rowRatingAction}>
             <View style={styles.ratingBlock}>
               <Rating rating={data.rating} />
@@ -105,10 +162,7 @@ export default function Profesional({ data }: ProfesionalProps) {
               <Text style={styles.contactBtnText}>Contactar</Text>
             </Pressable>
           </View>
-
-          {/* REVIEWS ABAJO DEL BOTÓN */}
           <View style={styles.reviewsContainer}>
-            {/* acá montás tu FlatList horizontal */}
             <Text style={styles.reviewsPlaceholder}>
               ACA VAN REVIEWS (un flatlist horizontal)
             </Text>
@@ -116,44 +170,122 @@ export default function Profesional({ data }: ProfesionalProps) {
         </View>
       </View>
 
-      {/* Modal de contacto */}
-      <Modal visible={modal} transparent animationType="fade" onRequestClose={closeModal}>
+      <Modal
+        visible={modal}
+        transparent
+        animationType="fade"
+        onRequestClose={closeModal}
+      >
+        <View style={styles.overlay}>
+          <View style={styles.modal}>
+            <View style={styles.modalHandle} />
+            <Text style={styles.modalTitle}>Solicitar servicio</Text>
+            <View style={{ flex: 2 }}>
+              <ScrollView
+                style={styles.modalScroll}
+                contentContainerStyle={styles.modalScrollContent}
+                showsVerticalScrollIndicator={false}
+              >
+                <View style={styles.gridContainer}>
+                  {professionsData.map((opt) => {
+                    const isSelected = selectedProfession === opt;
+                    return (
+                      <Pressable
+                        key={opt.id}
+                        style={[styles.card, isSelected && styles.cardSelected]}
+                        onPress={() => setSelectedProfession(opt)}
+                      >
+                        <Image source={{ uri: opt.picture }} style={styles.serviceIcon} />
+                        <Text style={styles.serviceText}>{opt.name}</Text>
+                        {isSelected && (
+                          <View style={styles.checkBadge}>
+                            <Ionicons name="checkmark" size={14} color="#fff" />
+                          </View>
+                        )}
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </ScrollView>
+            </View>
+            <View style={styles.dateSection}>
+              <DateTimeSelector
+                onDateChange={(date) => {
+                  setSelectedDate(date);
+                }}
+              />
+
+              {selectedDate && (
+                <Text style={styles.selectedDateText}>
+                  Turno: {selectedDate.toLocaleString("es-AR")}
+                </Text>
+              )}
+            </View>
+            <View style={styles.actionsRow}>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.cancelButton]}
+                onPress={closeModal}
+              >
+                <Text style={styles.actionTextCancel}>Cancelar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.actionButton, styles.primaryButton]}
+                onPress={handleContact}
+                disabled={createServiceMutation.isPending}
+              >
+                <Text style={styles.actionTextPrimary}>Solicitar servicio</Text>
+              </TouchableOpacity>
+            </View>
+            <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => setSuccessOpen(false)}/>
+            <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => setErrorOpen(false)}/>
+            {createServiceMutation.isPending &&
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <LoadingArc />
+              </View>}
+          </View>
+        </View>
+      </Modal>
+
+
+
+      {/*<Modal visible={modal} transparent animationType="fade" onRequestClose={closeModal}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+              <DateTimeSelector visible={modal} onClose={closeModal} onConfirm={closeModal}/>
+          </View>
+        </View>
+      </Modal>*/}
+
+      {/*<Modal visible={modal} transparent animationType="fade" onRequestClose={closeModal}>
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
             <View style={styles.modalCloseRow}>
               <Pressable onPress={closeModal}>
-                  <Entypo name="cross" size={24} color="#6B7A90" />
+                <Entypo name="cross" size={24} color="#6B7A90" />
               </Pressable>
             </View>
 
             <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 20 }}>Contacto</Text>
 
-              <View style={styles.modalIconsRow}>
-                <Pressable style={[styles.iconStub, {backgroundColor: "#59cc55ff"}]} onPress={handlePressWhatsapp}>
-                  <FontAwesome name="whatsapp" size={44} color="white" />
-                </Pressable>
+            <View style={styles.modalIconsRow}>
+              <Pressable style={[styles.iconStub, { backgroundColor: "#59cc55ff" }]} onPress={handlePressWhatsapp}>
+                <FontAwesome name="whatsapp" size={44} color="white" />
+              </Pressable>
               <View style={styles.modalIconSlot}>
-                <Pressable style={[styles.iconStub, {backgroundColor: "#65a8faff"}]} onPress={handlePressMail}>
+                <Pressable style={[styles.iconStub, { backgroundColor: "#65a8faff" }]} onPress={handlePressMail}>
                   <Fontisto name="email" size={34} color="white" />
                 </Pressable>
               </View>
               <View style={styles.modalIconSlot}>
-                <Pressable style={[styles.iconStub, {backgroundColor: "#50b94cff"}]} onPress={handlePressPhone}>
+                <Pressable style={[styles.iconStub, { backgroundColor: "#50b94cff" }]} onPress={handlePressPhone}>
                   <FontAwesome5 name="phone-alt" size={30} color="white" />
                 </Pressable>
               </View>
             </View>
           </View>
         </View>
-      </Modal>
-
-      <SuccessModal
-        visible={successOpen}
-        onClose={() => setSuccessOpen(false)}
-        autoCloseMs={2000}
-        message="¡El profesional fue contactado con exito!"
-        dismissOnBackdrop
-      />
+      </Modal>*/}
     </>
   );
 }
@@ -199,7 +331,7 @@ const styles = StyleSheet.create({
 
   content: {
     flex: 1,
-    paddingTop: (AVATAR_SIZE / 2) + 16, // deja lugar por la superposición
+    paddingTop: AVATAR_SIZE / 2 + 16, // deja lugar por la superposición
     paddingHorizontal: 16,
     gap: 12,
   },
@@ -267,42 +399,152 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 
-  // ===== Modal =====
-  modalBackdrop: {
+  // ===== Modal de "Contactar" =====
+
+  overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  modalCard: {
-    width: 350,
-    height: 500,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  modalCloseRow: {
-    width: "100%",
-    flexDirection: "row",
     justifyContent: "flex-end",
   },
 
-  modalIconsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    flex: 1,
-    width: "90%",
+  // el modal ocupa casi toda la pantalla, dejando un margen arriba
+  modal: {
+    backgroundColor: "white",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 16,
+    height: "90%",      // casi toda la pantalla
   },
 
-  modalIconSlot: {
-    flex: 1,
+  modalHandle: {
+    width: 48,
+    height: 5,
+    borderRadius: 999,
+    backgroundColor: "#E5E7EB",
+    alignSelf: "center",
+    marginBottom: 12,
+  },
+
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    textAlign: "center",
+    marginBottom: 12,
+    color: "#111827",
+  },
+
+  modalScroll: {
+    flex: 1
+  },
+
+  modalScrollContent: {
+    paddingBottom: 8,
+  },
+
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    marginBottom: 1,
+  },
+
+  card: {
+    width: 110,
+    height: 110,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: "#E0E0F0",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 18,
+    backgroundColor: "#FFFFFF",
+    position: "relative",
+  },
+
+  cardSelected: {
+    borderColor: "#00cb58b3",
+    backgroundColor: "#ffffffff",
+  },
+
+  checkBadge: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    width: 20,
+    height: 20,
+    borderRadius: 999,
+    backgroundColor: "#5b8266",
     alignItems: "center",
     justifyContent: "center",
   },
 
-  iconStub: { width: 58, height: 58, borderRadius: 8, alignItems: "center", justifyContent: "center" },
+  serviceIcon: {
+    width: 70,
+    height: 70,
+    resizeMode: "contain",
+    borderRadius: 15,
+  },
+
+  serviceText: {
+    fontWeight: "600",
+    fontSize: 15,
+    marginTop: 10,
+    textAlign: "center",
+  },
+
+  dateSection: {
+    marginTop: 13,
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  selectedDateText: {
+    marginTop: 8,
+    fontSize: 14,
+    textAlign: "center",
+    color: "#374151",
+  },
+
+  actionsRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 0,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-end'
+  },
+
+  actionButton: {
+    flex: 1,
+    height: 48,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  cancelButton: {
+    backgroundColor: "#E5E7EB",
+  },
+
+  primaryButton: {
+    backgroundColor: "#3E6259",
+  },
+
+  actionTextCancel: {
+    color: "#111827",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  actionTextPrimary: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
 });
+
+

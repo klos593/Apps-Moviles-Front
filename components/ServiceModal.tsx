@@ -1,0 +1,373 @@
+import React from 'react';
+import {
+    Modal,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+
+const ServiceDetailsModal = ({
+  visible,
+  onClose,
+  service,
+  onCancelService,
+  onContactProvider,
+}) => {
+  if (!service) return null;
+
+  const getStateColor = (state) => {
+    switch (state) {
+      case 'PENDING':
+        return '#5b8266';
+      case 'ACCEPTED':
+        return '#3e6259';
+      case 'COMPLETED':
+        return '#294936';
+      case 'CANCELED':
+        return '#7A7F85';
+      case 'REJECTED':
+        return '#7A7F85';
+      default:
+        return '#666';
+    }
+  };
+
+  const getStateText = (state) => {
+    switch (state) {
+      case 'PENDING':
+        return 'Pendiente';
+      case 'ACCEPTED':
+        return 'Aceptado';
+      case 'COMPLETED':
+        return 'Completado';
+      case 'CANCELED':
+        return 'Cancelado';
+      case 'REJECTED':
+        return 'Rechazado';
+      default:
+        return state;
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push('★');
+      } else if (i === fullStars && hasHalfStar) {
+        stars.push('★');
+      } else {
+        stars.push('☆');
+      }
+    }
+    return stars.join(' ');
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <View style={styles.overlay}>
+        <View style={styles.modal}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <Text style={styles.title}>Detalles del Servicio</Text>
+
+            {/* Proveedor */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Proveedor</Text>
+              <View style={styles.card}>
+                <InfoRow 
+                  label="Nombre" 
+                  value={`${service.provider.name} ${service.provider.lastName}`} 
+                />
+                <InfoRow 
+                  label="Profesión" 
+                  value={service.profession.name} 
+                  last 
+                />
+              </View>
+            </View>
+
+            {/* Estado y Fecha */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Información del Turno</Text>
+              <View style={styles.card}>
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>Estado</Text>
+                  <View
+                    style={[
+                      styles.stateBadge,
+                      { backgroundColor: getStateColor(service.state) },
+                    ]}
+                  >
+                    <Text style={styles.stateText}>
+                      {getStateText(service.state)}
+                    </Text>
+                  </View>
+                </View>
+                <InfoRow 
+                  label="Fecha y Hora" 
+                  value={formatDate(service.date)} 
+                  last 
+                />
+              </View>
+            </View>
+
+            {/* Dirección */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Dirección</Text>
+              <View style={styles.card}>
+                <InfoRow 
+                  label="Calle" 
+                  value={service.address.street} 
+                />
+                <InfoRow 
+                  label="Número" 
+                  value={String(service.address.number)} 
+                />
+                <InfoRow 
+                  label="Piso" 
+                  value={service.address.floor} 
+                />
+                <InfoRow 
+                  label="Provincia" 
+                  value={service.address.province} 
+                />
+                <InfoRow 
+                  label="País" 
+                  value={service.address.country} 
+                  last 
+                />
+              </View>
+            </View>
+
+            {/* Precio y Rating */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Valoración</Text>
+              <View style={styles.card}>
+                {service.price > 0 && (
+                  <InfoRow 
+                    label="Precio" 
+                    value={`$${Number(service.price).toFixed(2)}`} 
+                  />
+                )}
+                {service.rating > 0 && (
+                  <View style={styles.row}>
+                    <Text style={styles.rowLabel}>Rating</Text>
+                    <View style={styles.ratingContainer}>
+                      <Text style={styles.starsText}>
+                        {renderStars(Number(service.rating))}
+                      </Text>
+                      <Text style={styles.ratingNumber}>
+                        {Number(service.rating).toFixed(1)}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {service.comment && (
+                  <View style={[styles.row, { borderBottomWidth: 0 }]}>
+                    <Text style={styles.rowLabel}>Comentario</Text>
+                    <Text style={styles.commentText}>{service.comment}</Text>
+                  </View>
+                )}
+              </View>
+            </View>
+
+            {/* Botones de Acción */}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={styles.contactButton}
+                onPress={onContactProvider}
+              >
+                <Text style={styles.contactButtonText}>Contactar</Text>
+              </TouchableOpacity>
+
+              {(service.state === 'PENDING' || service.state === 'ACCEPTED') && (
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={onCancelService}
+                >
+                  <Text style={styles.cancelButtonText}>Cancelar Servicio</Text>
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={onClose}
+              >
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+const InfoRow = ({ label, value, last }) => (
+  <View style={[styles.row, last && { borderBottomWidth: 0 }]}>
+    <Text style={styles.rowLabel}>{label}</Text>
+    <Text style={styles.rowValue}>{value || '-'}</Text>
+  </View>
+);
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modal: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    paddingTop: 30,
+    height: '90%',
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: '800',
+    marginBottom: 20,
+    color: '#1F2D3D',
+  },
+  section: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#516072',
+    marginBottom: 8,
+  },
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#E6EAF0',
+  },
+  row: {
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#E6EAF0',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  rowLabel: {
+    fontWeight: '600',
+    color: '#516072',
+    fontSize: 14,
+  },
+  rowValue: {
+    color: '#1F2D3D',
+    fontSize: 14,
+    flex: 1,
+    textAlign: 'right',
+  },
+  stateBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  stateText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 13,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  starsText: {
+    color: '#FFA500',
+    fontSize: 16,
+  },
+  ratingNumber: {
+    color: '#1F2D3D',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  commentText: {
+    color: '#1F2D3D',
+    fontSize: 14,
+    flex: 1,
+    textAlign: 'right',
+    fontStyle: 'italic',
+  },
+  buttonsContainer: {
+    marginTop: 10,
+    gap: 10,
+  },
+  contactButton: {
+    backgroundColor: '#00cb58b3',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  contactButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  cancelButton: {
+    backgroundColor: '#ff4444',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  cancelButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  closeButton: {
+    backgroundColor: '#e6ebf2',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#516072',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+});
+
+export default ServiceDetailsModal;

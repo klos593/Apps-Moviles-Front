@@ -97,7 +97,6 @@ export default function Profile() {
           { useNativeDriver: false }
         )}
       >
-        {/* Card de perfil: parte dentro del verde */}
         <View style={[styles.profileCard, { marginTop: -60 }]}>
           <Animated.View style={[styles.avatarWrap, { transform: [{ scale: avatarScale }] }]}>
             <Image
