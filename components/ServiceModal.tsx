@@ -4,7 +4,6 @@ import {
     ScrollView,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
     Pressable,
     Linking,
@@ -54,7 +53,6 @@ const ServiceDetailsModal = ({
   onClose,
   service,
   onCancelService,
-  onContactProvider,
 }) => {
   if (!service) return null;
 
@@ -236,7 +234,7 @@ const ServiceDetailsModal = ({
             {/* Botones de Acción */}
             <View style={styles.buttonsContainer}>
               <Text style={styles.sectionTitle}>Contacto</Text>
-              <View style={[styles.card, {flexDirection: "row", justifyContent: "space-evenly"}]}>
+              <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
                 <Pressable style={[styles.iconStub, { backgroundColor: "#59cc55ff" }]} onPress={handlePressWhatsapp}>
                   <FontAwesome name="whatsapp" size={44} color="white" />
                 </Pressable>
@@ -250,20 +248,20 @@ const ServiceDetailsModal = ({
                 </Pressable>
               </View>
               {(service.state === 'PENDING' || service.state === 'ACCEPTED') && (
-                <TouchableOpacity
+                <Pressable
                   style={styles.cancelButton}
                   onPress={onCancelService}
                 >
                   <Text style={styles.cancelButtonText}>Cancelar Servicio</Text>
-                </TouchableOpacity>
+                </Pressable>
               )}
 
-              <TouchableOpacity
+              <Pressable
                 style={styles.closeButton}
                 onPress={onClose}
               >
                 <Text style={styles.closeButtonText}>Cerrar</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </ScrollView>
         </View>

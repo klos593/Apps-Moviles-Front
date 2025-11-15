@@ -17,17 +17,26 @@ import {
   StyleSheet,
   Text,
   View,
+  Switch,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomWhiteMask } from "./BottomWhiteMask";
 import LoadingArc from "./LoadingAnimation";
+
+  const getTagText = (mode) => {
+    switch (mode) {
+      case 'user':
+        return 'Usuario';
+      case 'provider':
+        return 'Proveedor';
+    }
+  };
 
 export default function Profile() {
   const { mode, toggleMode } = useAuth();
   const router = useRouter();
   const { email } = useAuthUser();
   const { logout } = useAuth();
-
   const insets = useSafeAreaInsets();
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -61,12 +70,7 @@ export default function Profile() {
         {
           text: "Cerrar sesión", style: "destructive", onPress: () => {
             router.replace("/(auth)");
-
-            // Ejecutar el logout cuando termine la transición de navegación
-            InteractionManager.runAfterInteractions(() => {
-              // no esperes acá para no bloquear la UI
-              logout();
-            });
+            logout();
           }
         },
       ],
@@ -122,6 +126,23 @@ export default function Profile() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>GENERAL</Text>
+          <View style={styles.row}>
+            <View style={styles.rowLeft}>
+              <View style={styles.iconStub}>
+                <Ionicons name="invert-mode" size={21} color="#6B7A90" />
+              </View>
+
+              <View style={{flex:1, flexDirection:"column"}}>
+                <Text style={styles.rowTitle}>Modo</Text>
+                <Text style={styles.rowSubtitle}>{getTagText(mode)}</Text>
+              </View>
+              
+              <View style={{flex:0.2, justifyContent: "center"}}>
+                <Switch value={mode === "user"} onValueChange={toggleMode} />
+              </View>
+
+            </View>
+          </View>
 
           <Pressable
             style={styles.row}
@@ -131,9 +152,12 @@ export default function Profile() {
               <View style={styles.iconStub}>
                 <MaterialCommunityIcons name="account-details" size={20} color="#6B7A90" />
               </View>
-              <Text style={styles.rowTitle}>Datos personales</Text>
+
+              <View style={{flex:1, flexDirection:"column"}}>
+                <Text style={styles.rowTitle}>Datos personales</Text>
+                <Text style={styles.rowSubtitle}>Ver y editar tus datos</Text>
+              </View>
             </View>
-            <Text style={styles.rowSubtitle}>Ver y editar tus datos</Text>
           </Pressable>
 
           <Pressable style={styles.row}>
@@ -141,9 +165,12 @@ export default function Profile() {
               <View style={styles.iconStub}>
                 <Ionicons name="notifications" size={20} color="#6B7A90" />
               </View>
-              <Text style={styles.rowTitle}>Notificaciones</Text>
+
+              <View style={{flex:1, flexDirection:"column"}}>
+                <Text style={styles.rowTitle}>Notificaciones</Text>
+                <Text style={styles.rowSubtitle}>Preferencias y datos</Text>
+              </View>
             </View>
-            <Text style={styles.rowSubtitle}>Preferencias y datos</Text>
           </Pressable>
 
           <Pressable
@@ -152,11 +179,14 @@ export default function Profile() {
           >
             <View style={styles.rowLeft}>
               <View style={styles.iconStub}>
-                <MaterialIcons name="work-outline" size={22} color="#6B7A90" />
+                <MaterialIcons name="work" size={21} color="#6B7A90" />
               </View>
-              <Text style={styles.rowTitle}>Profesiones</Text>
+
+              <View style={{flex:1, flexDirection:"column"}}>
+                <Text style={styles.rowTitle}>Profesiones</Text>
+                <Text style={styles.rowSubtitle}>Ver y editar tus profesiones</Text>
+              </View>
             </View>
-            <Text style={styles.rowSubtitle}>Ver y editar tus profesiones</Text>
           </Pressable>
 
           <Pressable style={[styles.row, styles.logoutRow]} onPress={handleLogout}>
@@ -167,13 +197,6 @@ export default function Profile() {
               <Text style={[styles.rowTitle, styles.logoutText]}>Cerrar sesión</Text>
             </View>
           </Pressable>
-          <Text>Modo actual: {mode === "user" ? "Usuario" : "Proveedor"}</Text>
-
-          <Pressable onPress={toggleMode}>
-            <Text>
-              {mode === "user" ? "Cambiar a proveedor" : "Cambiar a usuario"}
-            </Text>
-          </Pressable>
         </View>
       </Animated.ScrollView>
 
@@ -181,7 +204,6 @@ export default function Profile() {
     </View>
   );
 }
-
 
 const CARD_RADIUS = 18;
 
@@ -238,7 +260,7 @@ const styles = StyleSheet.create({
   rowLeft: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 6 },
   iconStub: { width: 28, height: 28, borderRadius: 8, backgroundColor: "#E5ECFF", alignItems: "center", justifyContent: "center" },
   rowTitle: { fontSize: 16, fontWeight: "700", color: "#1F2D3D" },
-  rowSubtitle: { fontSize: 13, color: "#708099", marginLeft: 40 },
+  rowSubtitle: { fontSize: 13, color: "#708099", marginTop: 3 },
   logoutRow: { backgroundColor: "#FFF5F5" },
   logoutIcon: { backgroundColor: "#FFD3D3" },
   logoutText: { color: "#D72638" },
