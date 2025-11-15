@@ -9,8 +9,10 @@ import Animated, {
   FadeOut,
   LinearTransition,
 } from "react-native-reanimated";
+import { useAuth } from '@/src/auth/AuthContext';
 
 const VISIBLE_TABS = ["perfil", "historial", "home"];
+const VISIBLE_TABS_PROVIDER = ["perfil", "historial"];
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -21,6 +23,15 @@ const NavBar: React.FC<BottomTabBarProps> = ({
   navigation,
 }) => {
 
+  const { mode } = useAuth();
+
+  if (mode === "user"){
+    var TABS = VISIBLE_TABS;
+  }
+  else {
+    var TABS = VISIBLE_TABS_PROVIDER;
+  }
+
   if (["index", "paginaLogIn","paginaRegistro"].includes(state.routes[state.index].name)) {
     return null;
 }
@@ -28,7 +39,7 @@ const NavBar: React.FC<BottomTabBarProps> = ({
   return (
     <View style={styles.container}>
       {state.routes
-        .filter((route) => VISIBLE_TABS.includes(route.name))
+        .filter((route) => TABS.includes(route.name))
         .map((route, index) => {if (["_sitemap", "+not-found"].includes(route.name)) return null;
 
         const { options } = descriptors[route.key];
