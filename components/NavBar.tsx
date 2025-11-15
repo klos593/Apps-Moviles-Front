@@ -1,6 +1,7 @@
+import { useAuth } from '@/src/auth/AuthContext';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Octicons from '@expo/vector-icons/Octicons';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -9,10 +10,9 @@ import Animated, {
   FadeOut,
   LinearTransition,
 } from "react-native-reanimated";
-import { useAuth } from '@/src/auth/AuthContext';
 
-const VISIBLE_TABS = ["perfil", "historial", "home"];
-const VISIBLE_TABS_PROVIDER = ["perfil", "historial"];
+const VISIBLE_TABS = ["perfil", "historial", "home", "serviciosActivos"];
+const VISIBLE_TABS_PROVIDER = ["perfil", "historial", "serviciosActivos"];
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -101,6 +101,8 @@ const NavBar: React.FC<BottomTabBarProps> = ({
         return <AntDesign name="history" size={24} color={color} />
       case "home":
         return <Octicons name="home" size={24} color={color} />
+      case "serviciosActivos":
+        return <Octicons name="versions" size={24} color={color} />
       
     }
   }

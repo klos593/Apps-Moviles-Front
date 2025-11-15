@@ -3,7 +3,7 @@ import { useAuthUser } from '@/src/auth/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from "react";
-import { Alert, FlatList, Image, Linking, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import DateTimeSelector from './DateTimeSelector';
 import ErrorModal from './ErorrAnimation';
 import LoadingArc from './LoadingAnimation';
@@ -64,6 +64,8 @@ export default function Profesional({ data }: ProfesionalProps) {
     if (!selectedDate) {
       Alert.alert('Error', 'Debes seleccionar una fecha');
       return;
+    }else if (selectedDate < new Date()){
+      Alert.alert('Error', 'La fecha seleccionada ya no esta disponible')
     }
 
     if (!userQuery.data?.userId || !userQuery.data?.addressId) {
@@ -182,7 +184,7 @@ export default function Profesional({ data }: ProfesionalProps) {
 
               {selectedDate && (
                 <Text style={styles.selectedDateText}>
-                  Turno: {selectedDate.toLocaleString("es-AR")}
+                  Turno: {selectedDate.toString()}
                 </Text>
               )}
             </View>
@@ -202,8 +204,8 @@ export default function Profesional({ data }: ProfesionalProps) {
                 <Text style={styles.actionTextPrimary}>Solicitar servicio</Text>
               </TouchableOpacity>
             </View>
-            <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => setSuccessOpen(false)}/>
-            <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => setErrorOpen(false)}/>
+            <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => {setSuccessOpen(false)}}/>
+            <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => {setErrorOpen(false)}}/>
             {createServiceMutation.isPending &&
               <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <LoadingArc />

@@ -1,84 +1,95 @@
-import { getFinishedUsedServices } from '@/api/api';
+import { getFinishedProvidedServices, getFinishedUsedServices } from '@/api/api';
 import LoadingArc from '@/components/LoadingAnimation';
 import SearchBar from '@/components/SearchBar';
 import ServiceCard from '@/components/ServiceCard';
-import { useAuthUser } from '@/src/auth/AuthContext';
+import { useAuth, useAuthUser } from '@/src/auth/AuthContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-
 export default function Index() {
-
-  const queryClient = new QueryClient()
   const { email } = useAuthUser();
+  const { mode } = useAuth();
 
   const finishedUsedServicesQuery = useQuery({
     queryKey: ["FinishedUsedServices", email],
     queryFn: () => getFinishedUsedServices(email),
+    refetchInterval: 1000,
+    refetchIntervalInBackground: false,
+    enabled: mode === "user",
   });
 
-  const finishedUsedServicesData = finishedUsedServicesQuery.data ?? [];
-  const [filteredData, setFilteredData] = useState(finishedUsedServicesData);
+  const finishedProvidedServicesQuery = useQuery({
+    queryKey: ["FinishedProvidedServices", email],
+    queryFn: () => getFinishedProvidedServices(email),
+    refetchInterval: 1000,
+    refetchIntervalInBackground: false,
+    enabled: mode === "provider",
+  });
+
+  const activeQuery =
+    mode === "user" ? finishedUsedServicesQuery : finishedProvidedServicesQuery;
+
+  const serviceData = activeQuery.data ?? [];
+
+  const [filteredData, setFilteredData] = useState(serviceData);
 
   useEffect(() => {
-    if (finishedUsedServicesData.length) setFilteredData(finishedUsedServicesData);
-  }, [finishedUsedServicesData]);
+    setFilteredData(serviceData);
+  }, [serviceData]);
 
   const handleSearch = (keyWord: string) => {
-  if (!keyWord.trim()) {
-    setFilteredData(finishedUsedServicesData);
-    return;
-  }
+    if (!keyWord.trim()) {
+      setFilteredData(serviceData);
+      return;
+    }
 
-  const filtered = finishedUsedServicesData.filter((element) =>
-    (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(
-      keyWord.toLowerCase()
-    )
-  );
+    const filtered = serviceData.filter((element) =>
+      (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(
+        keyWord.toLowerCase()
+      )
+    );
 
-  setFilteredData(filtered);
-}
+    setFilteredData(filtered);
+  };
 
-  if (finishedUsedServicesQuery.isLoading) {
+  if (activeQuery.isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <LoadingArc />
       </View>
     );
   }
-  
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            Historial
-          </Text>
-        </View>
-        <View style={styles.searchBarAndFilterContainer}>
-          <View style={styles.searchBarContainer}>
-            <SearchBar onSearch={handleSearch} />
-          </View>
-          <View style={styles.filterContainer}>
-            <Pressable style={styles.filterButton}>
-              <Text style={styles.filterText}>
-                Filtrar
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-        <View style={{ flex: 10 }}>
-          <FlatList data={filteredData} renderItem={({ item }) => (
-            <ServiceCard data={item} />
-          )} />
-        </View>
-        <View style={{ flex: 1.7 }}></View>
+    <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Historial</Text>
       </View>
+
+      <View style={styles.searchBarAndFilterContainer}>
+        <View style={styles.searchBarContainer}>
+          <SearchBar onSearch={handleSearch} />
+        </View>
+        <View style={styles.filterContainer}>
+          <Pressable style={styles.filterButton}>
+            <Text style={styles.filterText}>Filtrar</Text>
+          </Pressable>
+        </View>
+      </View>
+
+      <View style={{ flex: 10 }}>
+        <FlatList
+          data={filteredData}
+          renderItem={({ item }) => <ServiceCard data={item} />}
+        />
+      </View>
+
+      <View style={{ flex: 1.7 }} />
       <BottomWhiteMask />
-    </QueryClientProvider>
+    </View>
   );
 }
 
@@ -87,71 +98,62 @@ function BottomWhiteMask() {
   const tabBarHeight = useBottomTabBarHeight();
 
   return (
-    <>
-      <View
-        pointerEvents="none"
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: tabBarHeight + insets.bottom - 10,
-          backgroundColor: "#F5F6FA",
-          zIndex: 5,
-        }}
-      />
-    </>
+    <View
+      pointerEvents="none"
+      style={{
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: tabBarHeight + insets.bottom - 10,
+        backgroundColor: "#F5F6FA",
+        zIndex: 5,
+      }}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F6FA'
+    backgroundColor: '#F5F6FA',
   },
-
   titleContainer: {
     flex: 0.8,
     justifyContent: 'center',
     alignItems: 'flex-start',
     marginHorizontal: 10,
-    marginTop: 15
+    marginTop: 15,
   },
-
   title: {
-    fontWeight: 700,
+    fontWeight: '700',
     fontSize: 30,
-    marginLeft: 7
+    marginLeft: 7,
   },
-
   searchBarAndFilterContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-
   searchBarContainer: {
-    flex: 4
+    flex: 4,
   },
-
   filterContainer: {
     flex: 1,
     paddingVertical: 8,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
-
   filterButton: {
     borderRadius: 16,
     backgroundColor: '#20d88fff',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
-
   filterText: {
-    color: "white",
-    fontWeight: 700
-  }
-})
+    color: 'white',
+    fontWeight: '700',
+  },
+});

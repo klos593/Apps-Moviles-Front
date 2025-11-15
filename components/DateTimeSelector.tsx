@@ -76,18 +76,24 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
     };
 
     const getValidMinutes = () => {
-        const minutes = [];
-        const isNow = selectedDate.day === now.getDate() &&
-            selectedDate.month === now.getMonth() &&
-            selectedDate.year === now.getFullYear() &&
-            selectedDate.hour === now.getHours();
+    const minutes = [];
+    const isNow =
+        selectedDate.day === now.getDate() &&
+        selectedDate.month === now.getMonth() &&
+        selectedDate.year === now.getFullYear() &&
+        selectedDate.hour === now.getHours();
 
-        const startMinute = isNow ? now.getMinutes() : 0;
-        for (let i = startMinute; i < 60; i++) {
-            minutes.push(i);
+    const quarters = [0, 15, 30, 45];
+    const currentMinute = now.getMinutes();
+
+    quarters.forEach((q) => {
+        if (!isNow || q >= currentMinute) {
+            minutes.push(q);
         }
-        return minutes;
-    };
+    });
+
+    return minutes;
+};
 
     const handleDateChange = (newDate) => {
         setSelectedDate(newDate);

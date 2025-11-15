@@ -54,6 +54,21 @@ export async function getFinishedUsedServices(email: string): Promise<ServiceCar
     return response.json();
 }
 
+export async function getFinishedProvidedServices(email: string): Promise<ServiceCardData[]> {
+    const response = await fetch(`${URL}/finishedProvidedServices/${encodeURIComponent(email)}`);
+    return response.json();
+}
+
+export async function getUserActiveServices(email: string): Promise<ServiceCardData[]> {
+    const response = await fetch(`${URL}/userActiveServices/${encodeURIComponent(email)}`);
+    return response.json();
+}
+
+export async function getProviderActiveServices(email: string): Promise<ServiceCardData[]> {
+    const response = await fetch(`${URL}/providerActiveServices/${encodeURIComponent(email)}`);
+    return response.json();
+}
+
 export async function  createService(serviceData: ServiceData) {
   const response = await fetch(`${URL}/createService`, {
     method: 'POST',
