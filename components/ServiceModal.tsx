@@ -9,7 +9,7 @@ import {
     Linking,
     Alert
 } from 'react-native';
-import { FontAwesome, FontAwesome5, Fontisto } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, Fontisto, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const handlePressWhatsapp = async () => {
   const url = `https://wa.me/2477465180?text=Hello%20I%20would%20like%20more%20information`;
@@ -236,15 +236,15 @@ const ServiceDetailsModal = ({
               <Text style={styles.sectionTitle}>Contacto</Text>
               <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
                 <Pressable style={[styles.iconStub, { backgroundColor: "#59cc55ff" }]} onPress={handlePressWhatsapp}>
-                  <FontAwesome name="whatsapp" size={44} color="white" />
+                  <FontAwesome name="whatsapp" size={37} color="white" />
                 </Pressable>
 
                 <Pressable style={[styles.iconStub, { backgroundColor: "#65a8faff" }]} onPress={handlePressMail}>
-                  <Fontisto name="email" size={34} color="white" />
+                  <MaterialCommunityIcons name="email" size={34} color="white" />
                 </Pressable>
 
                 <Pressable style={[styles.iconStub, { backgroundColor: "#50b94cff" }]} onPress={handlePressPhone}>
-                  <FontAwesome5 name="phone-alt" size={30} color="white" />
+                  <FontAwesome5 name="phone-alt" size={25} color="white" />
                 </Pressable>
               </View>
               {(service.state === 'PENDING' || service.state === 'ACCEPTED') && (
