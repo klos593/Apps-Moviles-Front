@@ -1,9 +1,6 @@
 import { getUser } from "@/api/api";
 import { useAuth, useAuthUser } from "@/src/auth/AuthContext";
-import Feather from '@expo/vector-icons/Feather';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -12,7 +9,6 @@ import {
   Alert,
   Animated,
   Image,
-  InteractionManager,
   Pressable,
   StyleSheet,
   Text,

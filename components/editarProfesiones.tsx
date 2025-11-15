@@ -2,7 +2,6 @@
 import { getProfessions } from "@/api/api";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
     Image,

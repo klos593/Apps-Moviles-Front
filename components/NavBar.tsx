@@ -1,7 +1,5 @@
 import { useAuth } from '@/src/auth/AuthContext';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import Octicons from '@expo/vector-icons/Octicons';
+import { AntDesign, FontAwesome5, Octicons, Entypo } from '@expo/vector-icons';
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -102,7 +100,7 @@ const NavBar: React.FC<BottomTabBarProps> = ({
       case "home":
         return <Octicons name="home" size={24} color={color} />
       case "serviciosActivos":
-        return <Octicons name="versions" size={24} color={color} />
+        return <Entypo name="calendar" size={24} color={color} />
       
     }
   }

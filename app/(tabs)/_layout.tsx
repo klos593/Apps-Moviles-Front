@@ -20,7 +20,7 @@ export default function RootLayout() {
                 >
                 <Tabs.Screen name="home" options={{ title: "Home" }} />
                 <Tabs.Screen name="historial" options={{title: "Historial"}}/>
-                <Tabs.Screen name="serviciosActivos" options={{ title: "NOSE" }} />
+                <Tabs.Screen name="serviciosActivos" options={{ title: "Próximos" }} />
                 <Tabs.Screen name="perfil" options={{ title: "Perfil" }} />
                 <Tabs.Screen name="index" options={{ headerShown: false }}/>
             </Tabs>
@@ -37,7 +37,7 @@ else {
                 }}
                 >
                 <Tabs.Screen name="historial" options={{title: "Historial"}}/>
-                <Tabs.Screen name="serviciosActivos" options={{ title: "NOSE" }} />
+                <Tabs.Screen name="serviciosActivos" options={{ title: "Próximos" }} />
                 <Tabs.Screen name="perfil" options={{ title: "Perfil" }} />
             </Tabs>
         </QueryClientProvider>
