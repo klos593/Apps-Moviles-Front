@@ -5,7 +5,7 @@ import ServiceCard from '@/components/ServiceCard';
 import { useAuthUser } from '@/src/auth/AuthContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -15,12 +15,34 @@ export default function Index() {
   const queryClient = new QueryClient()
   const { email } = useAuthUser();
 
-  const finishedUsedServices = useQuery({
+  const finishedUsedServicesQuery = useQuery({
     queryKey: ["FinishedUsedServices", email],
     queryFn: () => getFinishedUsedServices(email),
   });
 
-  if (finishedUsedServices.isLoading) {
+  const finishedUsedServicesData = finishedUsedServicesQuery.data ?? [];
+  const [filteredData, setFilteredData] = useState(finishedUsedServicesData);
+
+  useEffect(() => {
+    if (finishedUsedServicesData.length) setFilteredData(finishedUsedServicesData);
+  }, [finishedUsedServicesData]);
+
+  const handleSearch = (keyWord: string) => {
+  if (!keyWord.trim()) {
+    setFilteredData(finishedUsedServicesData);
+    return;
+  }
+
+  const filtered = finishedUsedServicesData.filter((element) =>
+    (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(
+      keyWord.toLowerCase()
+    )
+  );
+
+  setFilteredData(filtered);
+}
+
+  if (finishedUsedServicesQuery.isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <LoadingArc />
@@ -38,9 +60,7 @@ export default function Index() {
         </View>
         <View style={styles.searchBarAndFilterContainer}>
           <View style={styles.searchBarContainer}>
-            <SearchBar onSearch={function (text: string): void {
-              throw new Error('Function not implemented.');
-            }} />
+            <SearchBar onSearch={handleSearch} />
           </View>
           <View style={styles.filterContainer}>
             <Pressable style={styles.filterButton}>
@@ -51,7 +71,7 @@ export default function Index() {
           </View>
         </View>
         <View style={{ flex: 10 }}>
-          <FlatList data={finishedUsedServices.data} renderItem={({ item }) => (
+          <FlatList data={filteredData} renderItem={({ item }) => (
             <ServiceCard data={item} />
           )} />
         </View>

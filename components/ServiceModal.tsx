@@ -6,7 +6,48 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Pressable,
+    Linking,
+    Alert
 } from 'react-native';
+import { FontAwesome, FontAwesome5, Fontisto } from '@expo/vector-icons';
+
+const handlePressWhatsapp = async () => {
+  const url = `https://wa.me/2477465180?text=Hello%20I%20would%20like%20more%20information`;
+
+  const supported = await Linking.canOpenURL(url);
+
+  if (supported) {
+    await Linking.openURL(url);
+  } else {
+    Alert.alert(`Don't know how to open this URL: ${url}`);
+  }
+}
+
+const handlePressMail = async () => {
+  const url = `mailto:support@example.com`;
+
+  const supported = await Linking.canOpenURL(url);
+
+  if (supported) {
+    await Linking.openURL(url);
+  } else {
+    Alert.alert(`Don't know how to open this URL: ${url}`);
+  }
+}
+
+const handlePressPhone = async () => {
+  const url = `tel:2477465180`;
+
+  const supported = await Linking.canOpenURL(url);
+
+  if (supported) {
+    await Linking.openURL(url);
+  } else {
+    Alert.alert(`Don't know how to open this URL: ${url}`);
+  }
+
+}
 
 const ServiceDetailsModal = ({
   visible,
@@ -194,13 +235,20 @@ const ServiceDetailsModal = ({
 
             {/* Botones de Acción */}
             <View style={styles.buttonsContainer}>
-              <TouchableOpacity
-                style={styles.contactButton}
-                onPress={onContactProvider}
-              >
-                <Text style={styles.contactButtonText}>Contactar</Text>
-              </TouchableOpacity>
+              <Text style={styles.sectionTitle}>Contacto</Text>
+              <View style={[styles.card, {flexDirection: "row", justifyContent: "space-evenly"}]}>
+                <Pressable style={[styles.iconStub, { backgroundColor: "#59cc55ff" }]} onPress={handlePressWhatsapp}>
+                  <FontAwesome name="whatsapp" size={44} color="white" />
+                </Pressable>
 
+                <Pressable style={[styles.iconStub, { backgroundColor: "#65a8faff" }]} onPress={handlePressMail}>
+                  <Fontisto name="email" size={34} color="white" />
+                </Pressable>
+
+                <Pressable style={[styles.iconStub, { backgroundColor: "#50b94cff" }]} onPress={handlePressPhone}>
+                  <FontAwesome5 name="phone-alt" size={30} color="white" />
+                </Pressable>
+              </View>
               {(service.state === 'PENDING' || service.state === 'ACCEPTED') && (
                 <TouchableOpacity
                   style={styles.cancelButton}
@@ -368,6 +416,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
   },
+  iconStub: { 
+    width: 48, 
+    height: 48, 
+    borderRadius: 10, 
+    backgroundColor: "#E5ECFF", 
+    alignItems: "center", 
+    justifyContent: "center" 
+  },
+  contactIconsContainer: {
+    flex:1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly"
+  }
+
 });
 
 export default ServiceDetailsModal;

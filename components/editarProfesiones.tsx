@@ -51,15 +51,8 @@ export default function ServiceTypeScreen() {
                     })}
                 </View>
 
-                <Pressable onPress={handleContinue}>
-                    <LinearGradient
-                        colors={["#0f8c47ff", "#0ea599ff"]}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={styles.continueButton}
-                    >
-                        <Text style={styles.continueText}>CONTINUAR</Text>
-                    </LinearGradient>
+                <Pressable style={styles.button} onPress={handleContinue}>
+                    <Text style={styles.continueText}>CONTINUAR</Text>
                 </Pressable>
             </View>
             <BottomWhiteMask />
@@ -133,4 +126,15 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginTop: 10,
     },
+    button: {
+        backgroundColor: "#5b8266",
+        paddingVertical: 14,
+        borderRadius: 14,
+        alignItems: "center",
+        justifyContent: "center",
+        shadowColor: "#000",
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 4 },
+    }
 });

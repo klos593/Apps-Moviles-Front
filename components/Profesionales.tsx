@@ -23,7 +23,7 @@ export default function Profesionales({ data }: ProfessionalProps) {
                 keyExtractor={(it) => it.id.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.cardWrapper}>
-                        <Card data={item} onPress={() => router.push(`/profesional/${item.id}`)} />
+                        <Card data={item} onPress={() => router.push(`/(tabs)/home/profesional/${item.id}`)} />
                     </View>
                 )}
                 style={styles.flatList}

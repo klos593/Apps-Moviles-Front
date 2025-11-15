@@ -16,42 +16,7 @@ type ProfesionalProps = {
   data: ProfessionalData;
 };
 
-const handlePressWhatsapp = async () => {
-  const url = `https://wa.me/2477465180?text=Hello%20I%20would%20like%20more%20information`;
 
-  const supported = await Linking.canOpenURL(url);
-
-  if (supported) {
-    await Linking.openURL(url);
-  } else {
-    Alert.alert(`Don't know how to open this URL: ${url}`);
-  }
-}
-
-const handlePressMail = async () => {
-  const url = `mailto:support@example.com`;
-
-  const supported = await Linking.canOpenURL(url);
-
-  if (supported) {
-    await Linking.openURL(url);
-  } else {
-    Alert.alert(`Don't know how to open this URL: ${url}`);
-  }
-}
-
-const handlePressPhone = async () => {
-  const url = `tel:2477465180`;
-
-  const supported = await Linking.canOpenURL(url);
-
-  if (supported) {
-    await Linking.openURL(url);
-  } else {
-    Alert.alert(`Don't know how to open this URL: ${url}`);
-  }
-
-}
 
 const useCreateService = () => {
   const queryClient = useQueryClient();
@@ -158,8 +123,8 @@ export default function Profesional({ data }: ProfesionalProps) {
               <Text style={styles.numberedRating}>{(data.rating).toString().slice(0, 3)}</Text>
             </View>
 
-            <Pressable style={styles.contactBtn} onPress={showModal}>
-              <Text style={styles.contactBtnText}>Contactar</Text>
+            <Pressable style={styles.hireBtn} onPress={showModal}>
+              <Text style={styles.hireBtnText}>Contratar</Text>
             </Pressable>
           </View>
           <View style={styles.reviewsContainer}>
@@ -246,46 +211,6 @@ export default function Profesional({ data }: ProfesionalProps) {
           </View>
         </View>
       </Modal>
-
-
-
-      {/*<Modal visible={modal} transparent animationType="fade" onRequestClose={closeModal}>
-        <View style={styles.modalBackdrop}>
-          <View style={styles.modalCard}>
-              <DateTimeSelector visible={modal} onClose={closeModal} onConfirm={closeModal}/>
-          </View>
-        </View>
-      </Modal>*/}
-
-      {/*<Modal visible={modal} transparent animationType="fade" onRequestClose={closeModal}>
-        <View style={styles.modalBackdrop}>
-          <View style={styles.modalCard}>
-            <View style={styles.modalCloseRow}>
-              <Pressable onPress={closeModal}>
-                <Entypo name="cross" size={24} color="#6B7A90" />
-              </Pressable>
-            </View>
-
-            <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 20 }}>Contacto</Text>
-
-            <View style={styles.modalIconsRow}>
-              <Pressable style={[styles.iconStub, { backgroundColor: "#59cc55ff" }]} onPress={handlePressWhatsapp}>
-                <FontAwesome name="whatsapp" size={44} color="white" />
-              </Pressable>
-              <View style={styles.modalIconSlot}>
-                <Pressable style={[styles.iconStub, { backgroundColor: "#65a8faff" }]} onPress={handlePressMail}>
-                  <Fontisto name="email" size={34} color="white" />
-                </Pressable>
-              </View>
-              <View style={styles.modalIconSlot}>
-                <Pressable style={[styles.iconStub, { backgroundColor: "#50b94cff" }]} onPress={handlePressPhone}>
-                  <FontAwesome5 name="phone-alt" size={30} color="white" />
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>*/}
     </>
   );
 }
@@ -378,14 +303,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  contactBtn: {
+  hireBtn: {
     backgroundColor: "#3E6259",
     borderRadius: 14,
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
 
-  contactBtnText: {
+  hireBtnText: {
     color: "#fff",
     fontSize: 18,
     fontWeight: "600",
@@ -399,7 +324,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 
-  // ===== Modal de "Contactar" =====
+  // ===== Modal de "Contratar" =====
 
   overlay: {
     flex: 1,

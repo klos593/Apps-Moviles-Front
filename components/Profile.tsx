@@ -3,6 +3,7 @@ import { useAuth, useAuthUser } from "@/src/auth/AuthContext";
 import Feather from '@expo/vector-icons/Feather';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -150,7 +151,7 @@ export default function Profile() {
             >
             <View style={styles.rowLeft}>
               <View style={styles.iconStub}>
-                <Feather name="settings" size={20} color="#6B7A90" />
+                <MaterialIcons name="work-outline" size={22} color="#6B7A90" />
               </View>
               <Text style={styles.rowTitle}>Profesiones</Text>
             </View>

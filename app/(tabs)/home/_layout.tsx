@@ -9,7 +9,7 @@ export default function HomeLayout() {
                 headerTitle: () => (
                 <Text style={styles.brand}>
                     <Text style={{ color: "#aef6c7" }}>Fix</Text>
-                    <Text>It</Text>
+                    <Text style={{color: "white"}}>It</Text>
                 </Text>
                 ),
                 headerTitleAlign: "center",
