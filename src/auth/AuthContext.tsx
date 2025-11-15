@@ -10,17 +10,22 @@ type RegisterInput = {
   password: string;
 };
 
-type User = {   
+type User = {
   id: number;
   email: string;
   name: string;
   lastName: string;
-}; 
+};
+
+type AppMode = "user" | "provider";
 
 type AuthState = {
   isBooting: boolean;
   token: string | null;
   user: User | null;
+  mode: AppMode;                 
+  setMode: (m: AppMode) => void;   
+  toggleMode: () => void;
   login: (p: { email: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   register: (p: RegisterInput) => Promise<void>;
@@ -29,15 +34,21 @@ type AuthState = {
 const AuthCtx = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [mode, setModeState] = useState<AppMode>("user");
   const [isBooting, setIsBooting] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     (async () => {
-      const t = await secureGet("token");
-      const u = await secureGet("user");
+      const [t, u, rawMode] = await Promise.all([
+        secureGet("token"),
+        secureGet("user"),
+        secureGet("mode"),   
+      ]);
+
       if (t) setToken(t);
+
       if (u) {
         try {
           setUser(JSON.parse(u) as User);
@@ -45,12 +56,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           await secureDel("user");
         }
       }
+
+      if (rawMode === "provider" || rawMode === "user") {
+        setModeState(rawMode);
+      } else {
+        setModeState("user");
+      }
+
       setIsBooting(false);
     })();
   }, []);
 
-  const login: AuthState["login"] = async ({ email, password }) => {
+  const setMode = async (m: AppMode) => {
+    setModeState(m);
+    await secureSet("mode", m);
+  };
 
+  const toggleMode = () => {
+    setModeState((prev) => {
+      const next = prev === "user" ? "provider" : "user";
+      secureSet("mode", next);
+      return next;
+    });
+  };
+
+  const login: AuthState["login"] = async ({ email, password }) => {
     const res = await fetch(`${URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -73,8 +103,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await secureDel("token");
     await secureDel("user");
     await secureDel("refresh_token");
+    await secureDel("mode");      
     setToken(null);
     setUser(null);
+    setModeState("user");
   };
 
   const register: AuthState["register"] = async (payload) => {
@@ -95,7 +127,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthCtx.Provider value={{ isBooting, token, user, login, logout, register }}>
+    <AuthCtx.Provider
+      value={{
+        isBooting,
+        token,
+        user,
+        mode,   
+        setMode,
+        toggleMode,
+        login,
+        logout,
+        register,
+      }}
+    >
       {children}
     </AuthCtx.Provider>
   );

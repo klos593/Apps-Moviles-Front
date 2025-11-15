@@ -23,6 +23,7 @@ import { BottomWhiteMask } from "./BottomWhiteMask";
 import LoadingArc from "./LoadingAnimation";
 
 export default function Profile() {
+  const { mode, toggleMode } = useAuth();
   const router = useRouter();
   const { email } = useAuthUser();
   const { logout } = useAuth();
@@ -145,10 +146,10 @@ export default function Profile() {
             <Text style={styles.rowSubtitle}>Preferencias y datos</Text>
           </Pressable>
 
-          <Pressable 
+          <Pressable
             style={styles.row}
             onPress={() => router.push("/perfil/paginaEditarProfesiones")}
-            >
+          >
             <View style={styles.rowLeft}>
               <View style={styles.iconStub}>
                 <MaterialIcons name="work-outline" size={22} color="#6B7A90" />
@@ -165,6 +166,13 @@ export default function Profile() {
               </View>
               <Text style={[styles.rowTitle, styles.logoutText]}>Cerrar sesión</Text>
             </View>
+          </Pressable>
+          <Text>Modo actual: {mode === "user" ? "Usuario" : "Proveedor"}</Text>
+
+          <Pressable onPress={toggleMode}>
+            <Text>
+              {mode === "user" ? "Cambiar a proveedor" : "Cambiar a usuario"}
+            </Text>
           </Pressable>
         </View>
       </Animated.ScrollView>
