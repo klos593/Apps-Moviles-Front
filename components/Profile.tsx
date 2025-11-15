@@ -137,7 +137,7 @@ export default function Profile() {
                 <Text style={styles.rowSubtitle}>{getTagText(mode)}</Text>
               </View>
               
-              <View style={{flex:0.2, justifyContent: "center"}}>
+              <View style={{justifyContent: "center"}}>
                 <Switch value={mode === "user"} onValueChange={toggleMode} />
               </View>
 
