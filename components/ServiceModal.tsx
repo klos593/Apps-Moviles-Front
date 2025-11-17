@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   profileButton: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#5b8266',
     paddingVertical: 14,
     borderRadius: 14,
     alignItems: 'center',

@@ -3,7 +3,7 @@ import { useAuthUser } from '@/src/auth/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from "react";
-import { Alert, FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import DateTimeSelector from './DateTimeSelector';
 import ErrorModal from './ErorrAnimation';
 import LoadingArc from './LoadingAnimation';
@@ -193,20 +193,20 @@ export default function Profesional({ data }: ProfesionalProps) {
               )}
             </View>
             <View style={styles.actionsRow}>
-              <TouchableOpacity
+              <Pressable
                 style={[styles.actionButton, styles.cancelButton]}
                 onPress={closeModal}
               >
                 <Text style={styles.actionTextCancel}>Cancelar</Text>
-              </TouchableOpacity>
+              </Pressable>
 
-              <TouchableOpacity
+              <Pressable
                 style={[styles.actionButton, styles.primaryButton]}
                 onPress={handleContact}
                 disabled={createServiceMutation.isPending}
               >
                 <Text style={styles.actionTextPrimary}>Solicitar servicio</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} />
             <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} />

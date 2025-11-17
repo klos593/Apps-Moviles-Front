@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import Card from "./TarjetaProfesional";
 import { ProfessionalCardData } from "./Types/ProfessionalCardData";
+import { BottomWhiteMask } from "./BottomWhiteMask";
 
 type ProfessionalProps = {
     data: ProfessionalCardData[];
@@ -15,7 +16,7 @@ type ProfessionalProps = {
 
 export default function Profesionales({ data }: ProfessionalProps) {
     return (
-        <View style={styles.container}>
+        <><View style={styles.container}>
             <FlatList
                 data={data}
                 key={1}
@@ -32,6 +33,7 @@ export default function Profesionales({ data }: ProfessionalProps) {
                 ListEmptyComponent={<Text style={styles.empty}>No hay resultados.</Text>}
             />
         </View>
+        <BottomWhiteMask /></>
     );
 
 }

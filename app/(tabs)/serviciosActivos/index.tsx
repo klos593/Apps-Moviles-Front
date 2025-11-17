@@ -71,7 +71,7 @@ export default function Index() {
             <View style={styles.container}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
-                        Historial
+                        Próximos servicios
                     </Text>
                 </View>
                 <View style={styles.searchBarAndFilterContainer}>

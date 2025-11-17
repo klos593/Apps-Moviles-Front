@@ -255,6 +255,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     elevation: 2,
   },
+  
   rowLeft: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 6 },
   iconStub: { width: 28, height: 28, borderRadius: 8, backgroundColor: "#E5ECFF", alignItems: "center", justifyContent: "center" },
   rowTitle: { fontSize: 16, fontWeight: "700", color: "#1F2D3D" },
