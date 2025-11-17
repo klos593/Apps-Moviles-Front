@@ -1,5 +1,6 @@
-import { getProfessionals, getProfessions } from "@/api/api";
+import { getProfessionals, getProfessions, getUser } from "@/api/api";
 import SearchBar from "@/components/SearchBar";
+import { useAuthUser } from "@/src/auth/AuthContext";
 import { useQuery } from '@tanstack/react-query';
 import { router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -17,14 +18,30 @@ import Card from "./TarjetaProfesional";
 
 export default function HomeScreen() {
 
+  const { email } = useAuthUser();
+
+  const user = useQuery({
+    queryKey: ["User", email],
+    queryFn: () => getUser(email),
+    refetchInterval: 1000,
+    refetchIntervalInBackground: false
+  });
+
+  const rawUserId = user.data?.id;
+
+  const userId = rawUserId != null ? String(rawUserId) : undefined;
+
   const professionsQuery = useQuery({
     queryKey: ["professions"],
     queryFn: getProfessions,
   });
 
   const professionalsQuery = useQuery({
-    queryKey: ["professionals"],
-    queryFn: getProfessionals,
+    queryKey: ["professionals", userId],
+    queryFn: () => getProfessionals(userId as string),
+    refetchInterval: 1000,
+    refetchIntervalInBackground: false,
+    enabled: !!userId
   });
 
   const professionsData = professionsQuery.data ?? [];

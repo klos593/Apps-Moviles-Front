@@ -32,6 +32,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     const professionsQuery = useQuery({
         queryKey: ["serviceInfo", data.id],
         queryFn: () => getServiceInfoById(data.id),
+        refetchInterval: 1000,
+        refetchIntervalInBackground: false
     });
 
     const openModal = () => {
@@ -40,37 +42,37 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     }
 
     const handleCancelService = () => {
-    console.log('Cancelar servicio');
-    // Aquí implementas la lógica para cancelar
-  };
+        console.log('Cancelar servicio');
+        // Aquí implementas la lógica para cancelar
+    };
 
-  const handleContactProvider = () => {
-    console.log('Contactar proveedor');
-    // Aquí abres tu modal de contacto
-  };
+    const handleContactProvider = () => {
+        console.log('Contactar proveedor');
+        // Aquí abres tu modal de contacto
+    };
 
     const exampleService = {
-    id: 1,
-    provider: {
-      name: 'Juan',
-      lastName: 'Pérez',
-    },
-    profession: {
-      name: 'Plomero',
-    },
-    date: '2025-11-20T14:30:00',
-    state: 'PENDING',
-    address: {
-      street: 'Av. Corrientes',
-      number: 1234,
-      floor: '3A',
-      province: 'Buenos Aires',
-      country: 'Argentina',
-    },
-    price: 5000,
-    rating: 4.5,
-    comment: 'Excelente trabajo, muy profesional',
-  };
+        id: 1,
+        provider: {
+            name: 'Juan',
+            lastName: 'Pérez',
+        },
+        profession: {
+            name: 'Plomero',
+        },
+        date: '2025-11-20T14:30:00',
+        state: 'PENDING',
+        address: {
+            street: 'Av. Corrientes',
+            number: 1234,
+            floor: '3A',
+            province: 'Buenos Aires',
+            country: 'Argentina',
+        },
+        price: 5000,
+        rating: 4.5,
+        comment: 'Excelente trabajo, muy profesional',
+    };
 
     return (
         <>

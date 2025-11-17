@@ -39,11 +39,13 @@ export default function Profesional({ data }: ProfesionalProps) {
   const [selectedProfession, setSelectedProfession] = useState<ProfessionCardData | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const createServiceMutation = useCreateService();
-  const {email} = useAuthUser()
+  const { email } = useAuthUser()
 
   const professionsQuery = useQuery({
     queryKey: ["professionalProfessions", data.id.toString()],
     queryFn: () => getProfessionalProfessions(data.id.toString()),
+    refetchInterval: 1000,
+    refetchIntervalInBackground: false
   });
   const professionsData = professionsQuery.data ?? [];
 
@@ -53,6 +55,8 @@ export default function Profesional({ data }: ProfesionalProps) {
   const userQuery = useQuery({
     queryKey: ["userInfo", email],
     queryFn: () => getUserIdAndAddressId(email),
+    refetchInterval: 1000,
+    refetchIntervalInBackground: false
   });
 
   const handleContact = async () => {
@@ -64,7 +68,7 @@ export default function Profesional({ data }: ProfesionalProps) {
     if (!selectedDate) {
       Alert.alert('Error', 'Debes seleccionar una fecha');
       return;
-    }else if (selectedDate < new Date()){
+    } else if (selectedDate < new Date()) {
       Alert.alert('Error', 'La fecha seleccionada ya no esta disponible')
     }
 
@@ -73,15 +77,15 @@ export default function Profesional({ data }: ProfesionalProps) {
       return;
     }
     const serviceData = {
-      professionId: parseInt(selectedProfession.id,10),
-      userId: userQuery.data.userId, 
-      providerId: data.id, 
-      rating: null, 
-      price: null, 
-      comment: null, 
-      date: selectedDate, 
-      addressId: userQuery.data.addressId, 
-      state: 'PENDING', 
+      professionId: parseInt(selectedProfession.id, 10),
+      userId: userQuery.data.userId,
+      providerId: data.id,
+      rating: null,
+      price: null,
+      comment: null,
+      date: selectedDate,
+      addressId: userQuery.data.addressId,
+      state: 'PENDING',
     };
 
     try {
@@ -204,8 +208,8 @@ export default function Profesional({ data }: ProfesionalProps) {
                 <Text style={styles.actionTextPrimary}>Solicitar servicio</Text>
               </TouchableOpacity>
             </View>
-            <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => {setSuccessOpen(false)}}/>
-            <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => {setErrorOpen(false)}}/>
+            <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} />
+            <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} />
             {createServiceMutation.isPending &&
               <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <LoadingArc />

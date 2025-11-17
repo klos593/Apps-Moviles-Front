@@ -16,6 +16,12 @@ type CardProps = {
 };
 
 export default function Card({ data, onPress }: CardProps) {
+  let rating = 0
+  if (data.rating == null){
+    rating = 0
+  }else{
+    rating = data.rating
+  }
   return (
     <Pressable onPress={() => onPress?.(parseInt(data.id))} style={styles.card}>
       <View style={styles.cardHeader}>
@@ -26,7 +32,7 @@ export default function Card({ data, onPress }: CardProps) {
           <Text style={styles.name}>{data.name} {data.lastName}</Text>
           <View style={styles.rating}>
             <Rating rating={data.rating} />
-            <Text style={styles.numberedRating}>{(data.rating).toString().slice(0, 3)}</Text>
+            <Text style={styles.numberedRating}>{(rating).toString().slice(0, 3)}</Text>
           </View>
         </View>
         <View style={styles.tag}>

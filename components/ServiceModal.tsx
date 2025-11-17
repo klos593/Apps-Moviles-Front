@@ -1,15 +1,16 @@
+import { useAuth } from '@/src/auth/AuthContext';
+import { FontAwesome, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Modal,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-    Pressable,
-    Linking,
-    Alert
+  Alert,
+  Linking,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
-import { FontAwesome, FontAwesome5, Fontisto, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const handlePressWhatsapp = async () => {
   const url = `https://wa.me/2477465180?text=Hello%20I%20would%20like%20more%20information`;
@@ -53,7 +54,13 @@ const ServiceDetailsModal = ({
   onClose,
   service,
   onCancelService,
+  onRejectService,
+  onAcceptService,
+  onReviewService,
+  onGoToProfile,
 }) => {
+  const { mode } = useAuth(); 
+  
   if (!service) return null;
 
   const getStateColor = (state) => {
@@ -116,6 +123,118 @@ const ServiceDetailsModal = ({
       }
     }
     return stars.join(' ');
+  };
+
+  const renderActionButtons = () => {
+    const { state } = service;
+
+    if (mode === 'user') {
+      switch (state) {
+        case 'COMPLETED':
+          return (
+            <>
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </Pressable>
+              <Pressable style={styles.profileButton} onPress={onGoToProfile}>
+                <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
+              </Pressable>
+              <Pressable style={styles.reviewButton} onPress={onReviewService}>
+                <Text style={styles.reviewButtonText}>Reseñar</Text>
+              </Pressable>
+            </>
+          );
+
+        case 'PENDING':
+          return (
+            <>
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </Pressable>
+              <Pressable style={styles.profileButton} onPress={onGoToProfile}>
+                <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
+              </Pressable>
+              <Pressable style={styles.cancelButton} onPress={onCancelService}>
+                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </Pressable>
+            </>
+          );
+
+        case 'ACCEPTED':
+          return (
+            <>
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </Pressable>
+              <Pressable style={styles.profileButton} onPress={onGoToProfile}>
+                <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
+              </Pressable>
+              <Pressable style={styles.cancelButton} onPress={onCancelService}>
+                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </Pressable>
+            </>
+          );
+
+        case 'CANCELED':
+        case 'REJECTED':
+          return (
+            <>
+              <Pressable style={styles.profileButton} onPress={onGoToProfile}>
+                <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
+              </Pressable>
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </Pressable>
+            </>
+          );
+
+        default:
+          return (
+            <Pressable style={styles.closeButton} onPress={onClose}>
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </Pressable>
+          );
+      }
+    } else if (mode === 'provider') {
+      switch (state) {
+        case 'PENDING':
+          return (
+            <>
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </Pressable>
+              <Pressable style={styles.rejectButton} onPress={onRejectService}>
+                <Text style={styles.rejectButtonText}>Rechazar</Text>
+              </Pressable>
+              <Pressable style={styles.acceptButton} onPress={onAcceptService}>
+                <Text style={styles.acceptButtonText}>Aceptar</Text>
+              </Pressable>
+            </>
+          );
+
+        case 'ACCEPTED':
+          return (
+            <>
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </Pressable>
+              <Pressable style={styles.cancelButton} onPress={onCancelService}>
+                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </Pressable>
+            </>
+          );
+
+        case 'COMPLETED':
+        case 'CANCELED':
+        case 'REJECTED':
+        default:
+          return (
+            <Pressable style={styles.closeButton} onPress={onClose}>
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </Pressable>
+          );
+      }
+    }
   };
 
   return (
@@ -231,7 +350,7 @@ const ServiceDetailsModal = ({
               </View>
             </View>
 
-            {/* Botones de Acción */}
+            {/* Botones de Contacto */}
             <View style={styles.buttonsContainer}>
               <Text style={styles.sectionTitle}>Contacto</Text>
               <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
@@ -247,21 +366,9 @@ const ServiceDetailsModal = ({
                   <FontAwesome5 name="phone-alt" size={25} color="white" />
                 </Pressable>
               </View>
-              {(service.state === 'PENDING' || service.state === 'ACCEPTED') && (
-                <Pressable
-                  style={styles.cancelButton}
-                  onPress={onCancelService}
-                >
-                  <Text style={styles.cancelButtonText}>Cancelar Servicio</Text>
-                </Pressable>
-              )}
 
-              <Pressable
-                style={styles.closeButton}
-                onPress={onClose}
-              >
-                <Text style={styles.closeButtonText}>Cerrar</Text>
-              </Pressable>
+              {/* Botones de Acción Condicionales */}
+              {renderActionButtons()}
             </View>
           </ScrollView>
         </View>
@@ -373,21 +480,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     gap: 10,
   },
-  contactButton: {
-    backgroundColor: '#00cb58b3',
-    paddingVertical: 14,
-    borderRadius: 14,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  contactButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '700',
-  },
   cancelButton: {
     backgroundColor: '#ff4444',
     paddingVertical: 14,
@@ -414,6 +506,66 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
   },
+  profileButton: {
+    backgroundColor: '#4A90E2',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  profileButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  reviewButton: {
+    backgroundColor: '#FFA500',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  reviewButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  acceptButton: {
+    backgroundColor: '#00cb58',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  acceptButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  rejectButton: {
+    backgroundColor: '#ff6b6b',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  rejectButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '700',
+  },
   iconStub: { 
     width: 48, 
     height: 48, 
@@ -422,13 +574,6 @@ const styles = StyleSheet.create({
     alignItems: "center", 
     justifyContent: "center" 
   },
-  contactIconsContainer: {
-    flex:1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly"
-  }
-
 });
 
 export default ServiceDetailsModal;

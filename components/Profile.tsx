@@ -11,22 +11,22 @@ import {
   Image,
   Pressable,
   StyleSheet,
+  Switch,
   Text,
   View,
-  Switch,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomWhiteMask } from "./BottomWhiteMask";
 import LoadingArc from "./LoadingAnimation";
 
-  const getTagText = (mode) => {
-    switch (mode) {
-      case 'user':
-        return 'Usuario';
-      case 'provider':
-        return 'Proveedor';
-    }
-  };
+const getTagText = (mode) => {
+  switch (mode) {
+    case 'user':
+      return 'Usuario';
+    case 'provider':
+      return 'Proveedor';
+  }
+};
 
 export default function Profile() {
   const { mode, toggleMode } = useAuth();
@@ -39,6 +39,8 @@ export default function Profile() {
   const user = useQuery({
     queryKey: ["User", email],
     queryFn: () => getUser(email),
+    refetchInterval: 1000,
+    refetchIntervalInBackground: false
   });
 
   const MAX_HEADER = useMemo(() => 110 + insets.top * 0.5, [insets.top]);
@@ -128,12 +130,12 @@ export default function Profile() {
                 <Ionicons name="invert-mode" size={21} color="#6B7A90" />
               </View>
 
-              <View style={{flex:1, flexDirection:"column"}}>
+              <View style={{ flex: 1, flexDirection: "column" }}>
                 <Text style={styles.rowTitle}>Modo</Text>
                 <Text style={styles.rowSubtitle}>{getTagText(mode)}</Text>
               </View>
-              
-              <View style={{justifyContent: "center"}}>
+
+              <View style={{ justifyContent: "center" }}>
                 <Switch value={mode === "user"} onValueChange={toggleMode} />
               </View>
 
@@ -149,7 +151,7 @@ export default function Profile() {
                 <MaterialCommunityIcons name="account-details" size={20} color="#6B7A90" />
               </View>
 
-              <View style={{flex:1, flexDirection:"column"}}>
+              <View style={{ flex: 1, flexDirection: "column" }}>
                 <Text style={styles.rowTitle}>Datos personales</Text>
                 <Text style={styles.rowSubtitle}>Ver y editar tus datos</Text>
               </View>
@@ -162,7 +164,7 @@ export default function Profile() {
                 <Ionicons name="notifications" size={20} color="#6B7A90" />
               </View>
 
-              <View style={{flex:1, flexDirection:"column"}}>
+              <View style={{ flex: 1, flexDirection: "column" }}>
                 <Text style={styles.rowTitle}>Notificaciones</Text>
                 <Text style={styles.rowSubtitle}>Preferencias y datos</Text>
               </View>
@@ -178,7 +180,7 @@ export default function Profile() {
                 <MaterialIcons name="work" size={21} color="#6B7A90" />
               </View>
 
-              <View style={{flex:1, flexDirection:"column"}}>
+              <View style={{ flex: 1, flexDirection: "column" }}>
                 <Text style={styles.rowTitle}>Profesiones</Text>
                 <Text style={styles.rowSubtitle}>Ver y editar tus profesiones</Text>
               </View>

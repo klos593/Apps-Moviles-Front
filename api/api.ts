@@ -7,8 +7,8 @@ import { UserData } from "@/components/Types/UserData";
 import { URL } from "./url";
 
 
-export async function getProfessionals(): Promise<ProfessionalCardData[]> {
-    const response = await fetch(`${URL}/professionals`);
+export async function getProfessionals(userId: string): Promise<ProfessionalCardData[]> {
+    const response = await fetch(`${URL}/professionals/${encodeURIComponent(userId)}`);
     return response.json();
 }
 
@@ -19,6 +19,11 @@ export async function getProfessions(): Promise<ProfessionCardData[]> {
 
 export async function getProfessionalProfessions(id: string): Promise<ProfessionCardData[]> {
     const response = await fetch(`${URL}/professionalProfessions/${encodeURIComponent(id)}`)
+    return response.json()
+}
+
+export async function getProfessionalAvailableProfessions(id: string): Promise<ProfessionCardData[]> {
+    const response = await fetch(`${URL}/professionalAvailableProfessions/${encodeURIComponent(id)}`)
     return response.json()
 }
 
@@ -33,8 +38,8 @@ export async function getUser(email: string): Promise<UserData> {
     return response.json();
 }
 
-export async function getProfessionalsWithProfession(profession: string): Promise<ProfessionalCardData[]> {
-    const response = await fetch(`${URL}/professionals/${encodeURIComponent(profession)}`);
+export async function getProfessionalsWithProfession(profession: string, id: string): Promise<ProfessionalCardData[]> {
+    const response = await fetch(`${URL}/professionalsWithProfession/${encodeURIComponent(profession)}/${encodeURIComponent(id)}`);
     return response.json();
 }
 
@@ -69,23 +74,55 @@ export async function getProviderActiveServices(email: string): Promise<ServiceC
     return response.json();
 }
 
-export async function  createService(serviceData: ServiceData) {
-  const response = await fetch(`${URL}/createService`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(serviceData),
-  });
+export async function createService(serviceData: ServiceData) {
+    const response = await fetch(`${URL}/createService`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(serviceData),
+    });
 
-  if (!response.ok) {
-    throw new Error('Error al crear el servicio');
-  }
+    if (!response.ok) {
+        throw new Error('Error al crear el servicio');
+    }
 
-  return response.json();
+    return response.json();
 };
 
-export async function getUserIdAndAddressId(email: string): Promise<{userId: number, addressId: number}>{
+export async function getUserIdAndAddressId(email: string): Promise<{ userId: number, addressId: number }> {
     const response = await fetch(`${URL}/userIdAndAddress/${encodeURIComponent(email)}`);
     return response.json();
 }
+
+export async function addProfession(data: {userId: string | undefined, professionId: string}) {
+    const response = await fetch(`${URL}/addProfession`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al agregar profesion');
+    }
+
+    return response.json();
+};
+
+export async function deleteProfession(data: {userId: string | undefined, professionId: string}) {
+    const response = await fetch(`${URL}/deleteProfession`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al eliminar profesion');
+    }
+
+    return response.json();
+};
