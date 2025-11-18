@@ -77,7 +77,7 @@ export default function Index() {
         if (filters.fromDate) {
             const from = new Date(filters.fromDate);
             data = data.filter((element: any) => {
-                const d = new Date(element.date); // ajustá el campo de fecha
+                const d = new Date(element.date); 
                 return d >= from;
             });
         }
@@ -85,7 +85,7 @@ export default function Index() {
         if (filters.toDate) {
             const to = new Date(filters.toDate);
             data = data.filter((element: any) => {
-                const d = new Date(element.date); // ajustá el campo de fecha
+                const d = new Date(element.date); 
                 return d <= to;
             });
         }

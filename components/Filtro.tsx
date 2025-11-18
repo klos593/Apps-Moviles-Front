@@ -26,7 +26,7 @@ type Props = {
   visible: boolean;
   onClose: () => void;
   onApply: (filters: HistoryFilters) => void;
-  statuses: string[]; // ej: ["COMPLETED", "CANCELED"]
+  statuses: string[]; 
 };
 
 const PROFESSIONS = ["plomero", "gasista", "paseador"];
@@ -77,13 +77,11 @@ export default function Filtro({
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[styles.modalContainer, { maxHeight: "85%", paddingBottom: insets.bottom + 12 }]}>
-              {/* Usamos ScrollView para que el contenido sea desplazable cuando aparece el teclado */}
               <ScrollView
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
                 keyboardShouldPersistTaps="handled"
               >
-                {/* Header */}
                 <View style={styles.header}>
                   <Text style={styles.title}>Filtros</Text>
                   <Pressable onPress={onClose} hitSlop={10}>
@@ -91,7 +89,6 @@ export default function Filtro({
                   </Pressable>
                 </View>
 
-                {/* Rango de fechas */}
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Rango de fechas</Text>
                   <View style={styles.row}>
@@ -120,7 +117,6 @@ export default function Filtro({
                   </View>
                 </View>
 
-                {/* Estado */}
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Estado</Text>
                   <View style={styles.chipRow}>
@@ -151,7 +147,6 @@ export default function Filtro({
                   </View>
                 </View>
 
-                {/* Profesión */}
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Profesión</Text>
                   <View style={styles.chipRow}>
@@ -183,7 +178,6 @@ export default function Filtro({
                 </View>
               </ScrollView>
 
-              {/* Botones abajo: siempre visibles y accesibles */}
               <View style={[styles.footer, { paddingBottom: 4 }]}>
                 <Pressable style={styles.clearButton} onPress={handleClear}>
                   <Text style={styles.clearText}>Limpiar</Text>

@@ -51,11 +51,9 @@ export default function Index() {
   const [filters, setFilters] = useState<Filtrados>({});
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
 
-  // recalcular filtros cada vez que cambie data / búsqueda / filtros
   useEffect(() => {
     let data = [...serviceData];
 
-    // filtro por texto (nombre + apellido)
     if (searchTerm.trim()) {
       const lower = searchTerm.toLowerCase();
       data = data.filter((element: any) =>
@@ -63,22 +61,19 @@ export default function Index() {
       );
     }
 
-    // filtro por estado
     if (filters.status) {
       data = data.filter((element: any) => element.state === filters.status);
     }
 
-    // filtro por profesión
     if (filters.profession) {
       data = data.filter((element: any) => element.profession === filters.profession);
       // si tu profesión está en otro lado, ej: element.profession.name, cambialo acá
     }
 
-    // filtro por rango de fechas
     if (filters.fromDate) {
       const from = new Date(filters.fromDate);
       data = data.filter((element: any) => {
-        const d = new Date(element.date); // ajustá el campo de fecha
+        const d = new Date(element.date); 
         return d >= from;
       });
     }
@@ -86,7 +81,7 @@ export default function Index() {
     if (filters.toDate) {
       const to = new Date(filters.toDate);
       data = data.filter((element: any) => {
-        const d = new Date(element.date); // ajustá el campo de fecha
+        const d = new Date(element.date);
         return d <= to;
       });
     }

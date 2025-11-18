@@ -141,7 +141,7 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
     return (
         <View style={styles.container}>
             <View style={styles.pickersContainer}>
-                {/* Día */}
+
                 <View style={styles.pickerColumn}>
                     <Text style={styles.label}>Día</Text>
                     {renderPicker(
@@ -151,7 +151,6 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
                     )}
                 </View>
 
-                {/* Mes */}
                 <View style={styles.pickerColumn}>
                     <Text style={styles.label}>Mes</Text>
                     {renderPicker(
@@ -176,7 +175,6 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
                     )}
                 </View>
 
-                {/* Hora */}
                 <View style={styles.pickerColumn}>
                     <Text style={styles.label}>Hora</Text>
                     {renderPicker(
@@ -187,7 +185,6 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
                     )}
                 </View>
 
-                {/* Minutos */}
                 <View style={styles.pickerColumn}>
                     <Text style={styles.label}>Min</Text>
                     {renderPicker(
