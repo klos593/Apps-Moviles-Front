@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { Platform, StyleSheet, TextInput, View } from "react-native";
 
 type SearchBarProps = {
     onSearch: (text: string) => void;
@@ -8,15 +8,15 @@ type SearchBarProps = {
 export default function SearchBar({ onSearch }: SearchBarProps) {
     return (
         <View style={styles.searchWrap}>
-        <TextInput
-            onChangeText={onSearch}
-            placeholder="Buscar..."
-            style={styles.search}
-            returnKeyType="search"
-        />
+            <TextInput
+                onChangeText={onSearch}
+                placeholder="Buscar..."
+                style={styles.search}
+                returnKeyType="search"
+            />
         </View>
     );
-    }
+}
 
 const styles = StyleSheet.create({
     searchWrap: {
@@ -24,18 +24,19 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         paddingHorizontal: 15,
-        paddingVertical: 8
+        paddingVertical: 8,
     },
-    
+
     search: {
         flex: 1,
         backgroundColor: "white",
         borderRadius: 16,
         paddingHorizontal: 16,
-        paddingVertical: 12,
+        paddingVertical: Platform.OS === "android" ? 7 : 9, 
+        textAlignVertical: "center", 
         borderWidth: 1,
         borderColor: "#DDE2E5",
         color: "#0E0E0E",
-        fontSize: 15,
+        fontSize: 14,
     },
 });
