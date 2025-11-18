@@ -52,6 +52,7 @@ export default function HomeScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      if (!userId) return;
       professionalsQuery.refetch();
     }, [])
   );

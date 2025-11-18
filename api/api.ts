@@ -1,12 +1,13 @@
 import { ProfessionalCardData } from "@/components/Types/ProfessionalCardData";
 import { ProfessionalData } from "@/components/Types/ProfessionalData";
 import { ProfessionCardData } from "@/components/Types/ProfessionCardData";
+import { Review } from "@/components/Types/Review";
 import ServiceCardData from "@/components/Types/ServiceCardData";
 import { ServiceData } from "@/components/Types/ServiceData";
+import { ServiceInfo } from "@/components/Types/ServiceInfo";
 import { UserData } from "@/components/Types/UserData";
 import { QueryClient } from "@tanstack/react-query";
 import { URL } from "./url";
-import { ServiceInfo } from "@/components/Types/ServiceInfo";
 
 const queryClient = new QueryClient()
 
@@ -196,4 +197,14 @@ export async function deleteProfession(data: { userId: string | undefined, profe
 export async function getServiceInfoById(id: string): Promise<ServiceInfo> {
     const response = await fetch(`${URL}/serviceInfo/${encodeURIComponent(id)}`);
     return response.json();
+}
+
+export async function getProfessionalReviews(professionalId: string): Promise<Review[]> {
+  const res = await fetch(`${URL}/serviceInfo/providerReviews/${professionalId}`);
+
+  if (!res.ok) {
+    throw new Error('Error al obtener reviews');
+  }
+
+  return res.json();
 }
