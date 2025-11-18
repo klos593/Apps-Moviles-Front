@@ -20,6 +20,13 @@
     "plugins": [
       "expo-router",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow app to access your photos",
+          "cameraPermission": "Allow app to access your camera"
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "imageWidth": 200,
@@ -38,3 +45,4 @@
     }
   }
 }
+

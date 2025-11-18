@@ -4,7 +4,7 @@ import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import {
   Alert,
   Animated,
@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomWhiteMask } from "./BottomWhiteMask";
+import ImagePickerModal from "./ImagePickerModal";
 import LoadingArc from "./LoadingAnimation";
 
 const getTagText = (mode: "user" | "provider") => {
@@ -35,6 +36,7 @@ export default function Profile() {
   const { logout } = useAuth();
   const insets = useSafeAreaInsets();
   const tabBarHeight = useBottomTabBarHeight();
+  const [changePictureModal,setChangePictureModal] = useState(false)
 
   const user = useQuery({
     queryKey: ["User", email],
@@ -56,6 +58,10 @@ export default function Profile() {
     outputRange: [1, 0.92],
     extrapolate: "clamp",
   });
+
+  const handleImage = (url: string) => {
+    console.log("imagen agregada", url)
+  }
 
   const handleLogout = () => {
     Alert.alert(
@@ -100,15 +106,16 @@ export default function Profile() {
         )}
       >
         <View style={[styles.profileCard, { marginTop: -60 }]}>
-          <Animated.View style={[styles.avatarWrap, { transform: [{ scale: avatarScale }] }]}>
-            <Image
-              source={{
-                uri:
-                  "https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/UsuarioPlaceHolder_bzqamd.png",
-              }}
-              style={styles.avatar}
-            />
-          </Animated.View>
+          <Pressable onPress={() => setChangePictureModal(true)}>
+            <Animated.View style={[styles.avatarWrap, { transform: [{ scale: avatarScale }] }]}>
+              <Image
+                source={{
+                  uri: user.data?.picture
+                }}
+                style={styles.avatar}
+              />
+            </Animated.View>
+          </Pressable>
 
           {user.data && (
             <>
@@ -181,10 +188,11 @@ export default function Profile() {
             </View>
           </Pressable>
         </View>
-      </Animated.ScrollView>
+      </Animated.ScrollView >
 
       <BottomWhiteMask />
-    </View>
+      <ImagePickerModal visible={changePictureModal} onClose={() => setChangePictureModal(false)} onImageUploaded={handleImage}/>
+    </View >
   );
 }
 
@@ -240,7 +248,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     elevation: 2,
   },
-  
+
   rowLeft: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 6 },
   iconStub: { width: 28, height: 28, borderRadius: 8, backgroundColor: "#E5ECFF", alignItems: "center", justifyContent: "center" },
   rowTitle: { fontSize: 16, fontWeight: "700", color: "#1F2D3D" },

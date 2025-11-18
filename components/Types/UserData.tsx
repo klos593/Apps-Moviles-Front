@@ -1,4 +1,3 @@
-import { ImageSourcePropType } from "react-native";
 import Address from "./Address";
 
 export type UserData = {
@@ -8,7 +7,7 @@ export type UserData = {
   lastName: string;
   phone: string;
   rating: number;
-  picture?: ImageSourcePropType;
+  picture: string;
   description: string;
   address: Address
 };
