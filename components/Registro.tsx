@@ -90,10 +90,9 @@ export default function Registro() {
         address: {
           country: country.trim(),
           province: province.trim(),
-          // city: city.trim(), // <- no existe en Prisma; si lo agregás, descomentá
           street: street.trim(),
           number: Number(number.trim()),
-          floor: floor.trim() || "",          // piso opcional -> mando "" para tu schema actual
+          floor: floor.trim() || "",  
           postalCode: Number(postalCode.trim()),
         },
       };
