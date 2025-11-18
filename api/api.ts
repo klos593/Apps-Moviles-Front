@@ -6,6 +6,7 @@ import { ServiceData } from "@/components/Types/ServiceData";
 import { UserData } from "@/components/Types/UserData";
 import { QueryClient } from "@tanstack/react-query";
 import { URL } from "./url";
+import { ServiceInfo } from "@/components/Types/ServiceInfo";
 
 const queryClient = new QueryClient()
 
@@ -191,3 +192,8 @@ export async function deleteProfession(data: { userId: string | undefined, profe
 
     return response.json();
 };
+
+export async function getServiceInfoById(id: string): Promise<ServiceInfo> {
+    const response = await fetch(`${URL}/serviceInfo/${encodeURIComponent(id)}`);
+    return response.json();
+}

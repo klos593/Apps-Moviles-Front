@@ -1,10 +1,9 @@
 import { createService, getProfessionalProfessions, getUserIdAndAddressId } from '@/api/api';
 import { useAuthUser } from '@/src/auth/AuthContext';
-import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useState } from "react";
-import { Alert, FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import DateTimeSelector from './DateTimeSelector';
 import ErrorModal from './ErorrAnimation';
 import LoadingArc from './LoadingAnimation';
@@ -12,12 +11,11 @@ import Rating from "./Rating";
 import SuccessModal from "./SuccesAnimation";
 import { ProfessionalData } from "./Types/ProfessionalData";
 import { ProfessionCardData } from './Types/ProfessionCardData';
+import { DateTime } from 'luxon'
 
 type ProfesionalProps = {
   data: ProfessionalData;
 };
-
-
 
 const useCreateService = () => {
   const queryClient = useQueryClient();
@@ -38,7 +36,7 @@ export default function Profesional({ data }: ProfesionalProps) {
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [selectedProfession, setSelectedProfession] = useState<ProfessionCardData | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState(null);
   const createServiceMutation = useCreateService();
   const { email } = useAuthUser()
 
@@ -186,7 +184,13 @@ export default function Profesional({ data }: ProfesionalProps) {
 
                 {selectedDate && (
                   <Text style={styles.selectedDateText}>
-                    Turno: {selectedDate.toString()}
+                      Turno: {
+                        selectedDate
+                          ? DateTime.fromISO(selectedDate, { zone: "utc" })
+                              .setZone("America/Argentina/Buenos_Aires")
+                              .toFormat("dd/MM/yyyy HH:mm")
+                          : "No asignado"
+                      }
                   </Text>
                 )}
               </View>
