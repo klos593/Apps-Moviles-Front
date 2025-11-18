@@ -2,8 +2,8 @@ import { getProfessionals, getProfessions, getUser } from "@/api/api";
 import SearchBar from "@/components/SearchBar";
 import { useAuthUser } from "@/src/auth/AuthContext";
 import { useQuery } from '@tanstack/react-query';
-import { router, Stack } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { router, Stack, useFocusEffect } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -23,8 +23,6 @@ export default function HomeScreen() {
   const user = useQuery({
     queryKey: ["User", email],
     queryFn: () => getUser(email),
-    refetchInterval: 1000,
-    refetchIntervalInBackground: false
   });
 
   const rawUserId = user.data?.id;
@@ -39,10 +37,14 @@ export default function HomeScreen() {
   const professionalsQuery = useQuery({
     queryKey: ["professionals", userId],
     queryFn: () => getProfessionals(userId as string),
-    refetchInterval: 1000,
-    refetchIntervalInBackground: false,
     enabled: !!userId
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      professionalsQuery.refetch();
+    }, [])
+  );
 
   const professionsData = professionsQuery.data ?? [];
   const professionalsData = professionalsQuery.data ?? [];

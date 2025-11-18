@@ -2,8 +2,8 @@ import { getProfessionalWithId } from "@/api/api";
 import LoadingWheel from "@/components/LoadingAnimation";
 import Profesional from "@/components/Profesional";
 import { useQuery } from "@tanstack/react-query";
-import { useLocalSearchParams } from "expo-router";
-import React from "react";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import React, { useCallback } from "react";
 import { View } from "react-native";
 
 
@@ -13,9 +13,13 @@ export default function UserScreen() {
     const professionalData = useQuery({
         queryKey: ['professional', id], queryFn: () => getProfessionalWithId(id),
         enabled: !!id,
-        refetchInterval: 1000,
-        refetchIntervalInBackground: false
     })
+
+    useFocusEffect(
+        useCallback(() => {
+            professionalData.refetch();
+        }, [])
+    );
 
     if (professionalData.isLoading) {
         return (

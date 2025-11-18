@@ -20,7 +20,8 @@ const useAddProfession = () => {
     return useMutation({
         mutationFn: addProfession,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professionalActiveProfessions', 'professionalAvailableProfessions'] });
+            queryClient.invalidateQueries({ queryKey: ['professionalAvailableProfessions'] });
+            queryClient.invalidateQueries({ queryKey: ['professionalActiveProfessions'] })
         },
         onError: (error) => {
             console.error('Error al agregar profesion:', error);
@@ -34,7 +35,8 @@ const useDeleteProfession = () => {
     return useMutation({
         mutationFn: deleteProfession,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professionalAvailableProfessions', 'professionalActiveProfessions'] });
+            queryClient.invalidateQueries({ queryKey: ['professionalAvailableProfessions'] });
+            queryClient.invalidateQueries({ queryKey: ['professionalActiveProfessions'] })
         },
         onError: (error) => {
             console.error('Error al eliminar profesion:', error);
@@ -66,16 +68,12 @@ export default function ServiceTypeScreen() {
         queryKey: ["professionalActiveProfessions", userId],
         queryFn: () => getProfessionalProfessions(userId as string),
         enabled: !!userId,
-        refetchInterval: 1000,
-        refetchIntervalInBackground: false,
     });
 
     const AvailableProfessionsQuery = useQuery({
         queryKey: ["professionalAvailableProfessions", userId],
         queryFn: () => getProfessionalAvailableProfessions(userId as string),
         enabled: !!userId,
-        refetchInterval: 1000,
-        refetchIntervalInBackground: false,
     });
 
     const activeProfessionData = ActiveProfessionsQuery.data ?? [];

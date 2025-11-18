@@ -5,7 +5,8 @@ import ServiceCard from '@/components/ServiceCard';
 import { useAuth, useAuthUser } from '@/src/auth/AuthContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -16,18 +17,21 @@ export default function Index() {
   const finishedUsedServicesQuery = useQuery({
     queryKey: ["FinishedUsedServices", email],
     queryFn: () => getFinishedUsedServices(email),
-    refetchInterval: 1000,
-    refetchIntervalInBackground: false,
-    enabled: mode === "user",
+    enabled: mode === "user"
   });
 
   const finishedProvidedServicesQuery = useQuery({
     queryKey: ["FinishedProvidedServices", email],
     queryFn: () => getFinishedProvidedServices(email),
-    refetchInterval: 1000,
-    refetchIntervalInBackground: false,
     enabled: mode === "provider",
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      finishedUsedServicesQuery.refetch();
+      finishedProvidedServicesQuery.refetch();
+    }, [])
+  );
 
   const activeQuery =
     mode === "user" ? finishedUsedServicesQuery : finishedProvidedServicesQuery;

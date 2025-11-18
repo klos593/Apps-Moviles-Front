@@ -3,8 +3,8 @@ import LoadingArc from "@/components/LoadingAnimation";
 import Profesionales from "@/components/Profesionales";
 import { useAuthUser } from "@/src/auth/AuthContext";
 import { useQuery } from "@tanstack/react-query";
-import { useLocalSearchParams } from "expo-router";
-import React from "react";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import React, { useCallback } from "react";
 import { View } from "react-native";
 
 
@@ -17,8 +17,6 @@ export default function ProfessionalsScreen() {
   const user = useQuery({
     queryKey: ["User", email],
     queryFn: () => getUser(email),
-    refetchInterval: 1000,
-    refetchIntervalInBackground: false,
   });
 
   const rawUserId = user.data?.id;
@@ -28,9 +26,13 @@ export default function ProfessionalsScreen() {
   const professionalsData = useQuery({
     queryKey: [`${profession}Professionals`, profession, userId], queryFn: () => getProfessionalsWithProfession(profession, userId as string),
     enabled: !!userId,
-    refetchInterval: 1000,
-    refetchIntervalInBackground: false,
   })
+
+  useFocusEffect(
+    useCallback(() => {
+      professionalsData.refetch();
+    }, [])
+  );
 
   if (professionalsData.isLoading) {
     return (

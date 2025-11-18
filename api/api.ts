@@ -4,8 +4,10 @@ import { ProfessionCardData } from "@/components/Types/ProfessionCardData";
 import ServiceCardData from "@/components/Types/ServiceCardData";
 import { ServiceData } from "@/components/Types/ServiceData";
 import { UserData } from "@/components/Types/UserData";
+import { QueryClient } from "@tanstack/react-query";
 import { URL } from "./url";
 
+const queryClient = new QueryClient()
 
 export async function getProfessionals(userId: string): Promise<ProfessionalCardData[]> {
     const response = await fetch(`${URL}/professionals/${encodeURIComponent(userId)}`);
@@ -33,7 +35,6 @@ export async function getProfessionalWithId(id: string): Promise<ProfessionalDat
 }
 
 export async function getUser(email: string): Promise<UserData> {
-
     const response = await fetch(`${URL}/user/${encodeURIComponent(email)}`);
     return response.json();
 }
@@ -50,7 +51,21 @@ export async function updateUser(email: string, body: { name: string; lastName: 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
     });
-    if (!res.ok) throw new Error("No se pudo actualizar");
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    } else {
+        queryClient.invalidateQueries({ queryKey: ["FinishedUsedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["FinishedProvidedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["User"] });
+        queryClient.invalidateQueries({ queryKey: ["professional"] });
+        queryClient.invalidateQueries({ queryKey: ["ProviderActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["UserActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["professionalProfessions"] });
+        queryClient.invalidateQueries({ queryKey: ["professionals"] });
+        queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["professions"] });
+    }
     return res.json();
 }
 
@@ -85,6 +100,18 @@ export async function createService(serviceData: ServiceData) {
 
     if (!response.ok) {
         throw new Error('Error al crear el servicio');
+    } else {
+        queryClient.invalidateQueries({ queryKey: ["FinishedUsedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["FinishedProvidedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["User"] });
+        queryClient.invalidateQueries({ queryKey: ["professional"] });
+        queryClient.invalidateQueries({ queryKey: ["ProviderActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["UserActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["professionalProfessions"] });
+        queryClient.invalidateQueries({ queryKey: ["professionals"] });
+        queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["professions"] });
     }
 
     return response.json();
@@ -95,7 +122,7 @@ export async function getUserIdAndAddressId(email: string): Promise<{ userId: nu
     return response.json();
 }
 
-export async function addProfession(data: {userId: string | undefined, professionId: string}) {
+export async function addProfession(data: { userId: string | undefined, professionId: string }) {
     const response = await fetch(`${URL}/addProfession`, {
         method: 'POST',
         headers: {
@@ -106,12 +133,31 @@ export async function addProfession(data: {userId: string | undefined, professio
 
     if (!response.ok) {
         throw new Error('Error al agregar profesion');
+    }else{
+        queryClient.invalidateQueries({ queryKey: ["FinishedUsedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["FinishedProvidedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["User"] });
+        queryClient.invalidateQueries({ queryKey: ["professional"] });
+        queryClient.invalidateQueries({ queryKey: ["ProviderActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["UserActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["professionalProfessions"] });
+        queryClient.invalidateQueries({ queryKey: ["professionals"] });
+        queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["professions"] });
+        queryClient.invalidateQueries({ queryKey: ["pintorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["plomeroProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["limpiezaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["gasistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["paseadorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["electricistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["entrenadorProfessionals"] });
     }
 
     return response.json();
 };
 
-export async function deleteProfession(data: {userId: string | undefined, professionId: string}) {
+export async function deleteProfession(data: { userId: string | undefined, professionId: string }) {
     const response = await fetch(`${URL}/deleteProfession`, {
         method: 'POST',
         headers: {
@@ -122,6 +168,25 @@ export async function deleteProfession(data: {userId: string | undefined, profes
 
     if (!response.ok) {
         throw new Error('Error al eliminar profesion');
+    }else{
+        queryClient.invalidateQueries({ queryKey: ["FinishedUsedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["FinishedProvidedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["User"] });
+        queryClient.invalidateQueries({ queryKey: ["professional"] });
+        queryClient.invalidateQueries({ queryKey: ["ProviderActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["UserActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["professionalProfessions"] });
+        queryClient.invalidateQueries({ queryKey: ["professionals"] });
+        queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["professions"] });
+        queryClient.invalidateQueries({ queryKey: ["pintorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["plomeroProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["limpiezaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["gasistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["paseadorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["electricistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["entrenadorProfessionals"] });
     }
 
     return response.json();

@@ -39,8 +39,6 @@ export default function Profile() {
   const user = useQuery({
     queryKey: ["User", email],
     queryFn: () => getUser(email),
-    refetchInterval: 1000,
-    refetchIntervalInBackground: false
   });
 
   const MAX_HEADER = useMemo(() => 110 + insets.top * 0.5, [insets.top]);

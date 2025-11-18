@@ -2,7 +2,8 @@ import { createService, getProfessionalProfessions, getUserIdAndAddressId } from
 import { useAuthUser } from '@/src/auth/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useState } from "react";
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from "react";
 import { Alert, FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import DateTimeSelector from './DateTimeSelector';
 import ErrorModal from './ErorrAnimation';
@@ -44,9 +45,14 @@ export default function Profesional({ data }: ProfesionalProps) {
   const professionsQuery = useQuery({
     queryKey: ["professionalProfessions", data.id.toString()],
     queryFn: () => getProfessionalProfessions(data.id.toString()),
-    refetchInterval: 1000,
-    refetchIntervalInBackground: false
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      professionsQuery.refetch();
+    }, [])
+  );
+
   const professionsData = professionsQuery.data ?? [];
 
   const showModal = () => setModal(true);
@@ -55,8 +61,6 @@ export default function Profesional({ data }: ProfesionalProps) {
   const userQuery = useQuery({
     queryKey: ["userInfo", email],
     queryFn: () => getUserIdAndAddressId(email),
-    refetchInterval: 1000,
-    refetchIntervalInBackground: false
   });
 
   const handleContact = async () => {

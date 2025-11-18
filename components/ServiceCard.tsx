@@ -1,6 +1,7 @@
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import ServiceDetailsModal from "./ServiceModal";
 import ServiceCardData from "./Types/ServiceCardData";
@@ -32,9 +33,13 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     const professionsQuery = useQuery({
         queryKey: ["serviceInfo", data.id],
         queryFn: () => getServiceInfoById(data.id),
-        refetchInterval: 1000,
-        refetchIntervalInBackground: false
     });
+
+    useFocusEffect(
+        useCallback(() => {
+            professionsQuery.refetch();
+        }, [])
+    );
 
     const openModal = () => {
         setModal(true)
