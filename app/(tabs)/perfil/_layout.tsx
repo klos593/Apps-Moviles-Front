@@ -16,7 +16,8 @@ export default function HomeLayout() {
                 headerStyle: { backgroundColor: "#294936" },
                 headerBackVisible: true,
                 headerBackTitle: "Volver",
-                headerTintColor: "white"
+                headerTintColor: "white",
+                gestureEnabled: false
             }}
         />
     );
