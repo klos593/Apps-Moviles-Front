@@ -1,8 +1,9 @@
-import { createService, getProfessionalProfessions, getUserIdAndAddressId } from '@/api/api';
+import { createService, getProfessionalProfessions, getProfessionalReviews, getUserIdAndAddressId } from '@/api/api';
 import { useAuthUser } from '@/src/auth/AuthContext';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFocusEffect } from 'expo-router';
-import React, { useCallback, useState } from "react";
+import { DateTime } from 'luxon';
+import React, { useCallback, useMemo, useState } from "react";
 import { Alert, FlatList, Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import DateTimeSelector from './DateTimeSelector';
 import ErrorModal from './ErorrAnimation';
@@ -11,7 +12,6 @@ import Rating from "./Rating";
 import SuccessModal from "./SuccesAnimation";
 import { ProfessionalData } from "./Types/ProfessionalData";
 import { ProfessionCardData } from './Types/ProfessionCardData';
-import { DateTime } from 'luxon'
 
 type ProfesionalProps = {
   data: ProfessionalData;
@@ -31,6 +31,7 @@ const useCreateService = () => {
   });
 };
 
+
 export default function Profesional({ data }: ProfesionalProps) {
   const [modal, setModal] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -45,12 +46,20 @@ export default function Profesional({ data }: ProfesionalProps) {
     queryFn: () => getProfessionalProfessions(data.id.toString()),
   });
 
+  const professionalReviewsQuery = useQuery({
+    queryKey: ["professionalReviews", data.id.toString],
+    queryFn: () => getProfessionalReviews(data.id.toString()),
+  });
+
+
   useFocusEffect(
     useCallback(() => {
       professionsQuery.refetch();
+      professionalReviewsQuery.refetch();
     }, [])
   );
 
+  const serviceData = useMemo(() => professionalReviewsQuery.data ?? [], [professionalReviewsQuery.data]);
   const professionsData = professionsQuery.data ?? [];
 
   const showModal = () => setModal(true);
@@ -136,9 +145,33 @@ export default function Profesional({ data }: ProfesionalProps) {
             </Pressable>
           </View>
           <View style={styles.reviewsContainer}>
-            <Text style={styles.reviewsPlaceholder}>
-              ACA VAN REVIEWS (un flatlist horizontal)
-            </Text>
+            <Text style={styles.sectionTitle}>OPINIONES</Text>
+
+            {serviceData && serviceData.length === 0 && (
+              <Text style={{ marginTop: 4 }}>Este profesional aún no tiene reseñas.</Text>
+            )}
+
+            {serviceData && serviceData.length > 0 && (
+              <FlatList
+                data={serviceData}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id.toString()}
+                contentContainerStyle={{ gap: 8, paddingVertical: 6 }}
+                renderItem={({ item }) => (
+                  <View style={styles.reviewCard}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                      <Rating rating={item.rating} />
+                      <Text style={styles.reviewRatingText}>{item.rating.toFixed(1)}</Text>
+                    </View>
+                    <Text numberOfLines={3} style={styles.reviewComment}>
+                      {item.comment}
+                    </Text>
+                    <Text style={styles.reviewUser}>{item.userName}</Text>
+                  </View>
+                )}
+              />
+            )}
           </View>
         </View>
       </View>
@@ -152,27 +185,27 @@ export default function Profesional({ data }: ProfesionalProps) {
         <View style={styles.overlay}>
           <View style={styles.modal}>
             <View style={styles.titleContainer}>
-                <Text style={styles.title}>
-                    Solicitar Servicio
-                </Text>
+              <Text style={styles.title}>
+                Solicitar Servicio
+              </Text>
             </View>
 
             <Text style={styles.sectionTitle}>PROFESIONES DISPONIBLES</Text>
-              <View style={styles.gridContainer}>
-                  {professionsData.map((opt) => {
-                      const isSelected = selectedProfession === opt;
-                      return (
-                          <Pressable
-                              key={opt.id}
-                              style={[styles.card, isSelected && styles.cardSelected]}
-                              onPress={() => setSelectedProfession(opt)}
-                          >
-                              <Text style={styles.serviceText}>{opt.name}</Text>
-                          </Pressable>
-                      );
-                  })}
-              </View>
-            
+            <View style={styles.gridContainer}>
+              {professionsData.map((opt) => {
+                const isSelected = selectedProfession === opt;
+                return (
+                  <Pressable
+                    key={opt.id}
+                    style={[styles.card, isSelected && styles.cardSelected]}
+                    onPress={() => setSelectedProfession(opt)}
+                  >
+                    <Text style={styles.serviceText}>{opt.name}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+
             <Text style={styles.sectionTitle}>SELECCIONAR FECHA Y HORA</Text>
             <View style={styles.gridContainer}>
               <View style={styles.dateSection}>
@@ -184,13 +217,13 @@ export default function Profesional({ data }: ProfesionalProps) {
 
                 {selectedDate && (
                   <Text style={styles.selectedDateText}>
-                      Turno: {
-                        selectedDate
-                          ? DateTime.fromISO(selectedDate, { zone: "utc" })
-                              .setZone("America/Argentina/Buenos_Aires")
-                              .toFormat("dd/MM/yyyy HH:mm")
-                          : "No asignado"
-                      }
+                    Turno: {
+                      selectedDate
+                        ? DateTime.fromISO(selectedDate, { zone: "utc" })
+                          .setZone("America/Argentina/Buenos_Aires")
+                          .toFormat("dd/MM/yyyy HH:mm")
+                        : "No asignado"
+                    }
                   </Text>
                 )}
               </View>
@@ -198,18 +231,18 @@ export default function Profesional({ data }: ProfesionalProps) {
 
             <View style={styles.buttonContainer}>
               <Pressable
-                style={[styles.button, {backgroundColor: "#2f6b45"}]}
+                style={[styles.button, { backgroundColor: "#2f6b45" }]}
                 onPress={handleContact}
                 disabled={createServiceMutation.isPending}
               >
                 <Text style={styles.buttonText}>Solicitar servicio</Text>
               </Pressable>
-              
+
               <Pressable
-                style={[styles.button, {backgroundColor: "#e6ebf2"}]}
+                style={[styles.button, { backgroundColor: "#e6ebf2" }]}
                 onPress={closeModal}
               >
-                <Text style={[styles.buttonText, {color: "#516072"}]}>Cancelar</Text>
+                <Text style={[styles.buttonText, { color: "#516072" }]}>Cancelar</Text>
               </Pressable>
             </View>
 
@@ -335,8 +368,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 
-  // ===== Modal de "Contratar" =====
-
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
@@ -350,7 +381,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 16,
-    height: "60%",      
+    height: "60%",
   },
 
   titleContainer: {
@@ -362,21 +393,21 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 22, 
-    fontWeight: "800", 
-    marginTop: 6, 
+    fontSize: 22,
+    fontWeight: "800",
+    marginTop: 6,
     color: "#1F2D3D"
   },
 
-  sectionTitle: { 
-    color: "#6B7A90", 
-    fontWeight: "700", 
-    marginBottom: 10, 
-    letterSpacing: 0.5 
+  sectionTitle: {
+    color: "#6B7A90",
+    fontWeight: "700",
+    marginBottom: 10,
+    letterSpacing: 0.5
   },
 
   buttonContainer: {
-    backgroundColor: "#F5F6FA", 
+    backgroundColor: "#F5F6FA",
     gap: 14,
     marginTop: 15
   },
@@ -411,17 +442,17 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "white", 
-    fontSize: 16, 
+    color: "white",
+    fontSize: 16,
     fontWeight: "700"
   },
 
   button: {
-      paddingVertical: 14,
-      paddingHorizontal: 10,
-      borderRadius: 14,
-      alignItems: "center",
-      justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   cardSelected: {
@@ -445,6 +476,38 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     color: "#374151",
+  },
+
+  reviewCard: {
+    width: 220,
+    padding: 10,
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+    marginRight: 4,
+  },
+
+  reviewRatingText: {
+    marginLeft: 6,
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#111827',
+  },
+
+  reviewComment: {
+    fontSize: 13,
+    color: '#4B5563',
+    marginBottom: 6,
+  },
+
+  reviewUser: {
+    fontSize: 12,
+    color: '#6B7280',
+    fontStyle: 'italic',
   },
 
 });

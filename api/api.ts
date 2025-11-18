@@ -1,6 +1,7 @@
 import { ProfessionalCardData } from "@/components/Types/ProfessionalCardData";
 import { ProfessionalData } from "@/components/Types/ProfessionalData";
 import { ProfessionCardData } from "@/components/Types/ProfessionCardData";
+import { Review } from "@/components/Types/Review";
 import ServiceCardData from "@/components/Types/ServiceCardData";
 import { ServiceData } from "@/components/Types/ServiceData";
 import { ServiceInfo } from "@/components/Types/ServiceInfo";
@@ -232,3 +233,38 @@ export async function updatePicture(data: {userId: number, pictureUrl: string}) 
 
     return response.json();
 };
+
+export async function getProfessionalReviews(professionalId: string): Promise<Review[]> {
+  const res = await fetch(`${URL}/serviceInfo/providerReviews/${professionalId}`);
+
+  if (!res.ok) {
+    throw new Error('Error al obtener reviews');
+  }
+
+  return res.json();
+}
+
+export async function updateService(id: string, body: { state: string }): Promise<ServiceInfo> {
+    const userId = parseInt(id, 10)
+    const res = await fetch(`${URL}/serviceInfo/${encodeURIComponent(userId)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    } else {
+        queryClient.invalidateQueries({ queryKey: ["FinishedUsedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["FinishedProvidedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["User"] });
+        queryClient.invalidateQueries({ queryKey: ["professional"] });
+        queryClient.invalidateQueries({ queryKey: ["ProviderActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["UserActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["professionalProfessions"] });
+        queryClient.invalidateQueries({ queryKey: ["professionals"] });
+        queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["professions"] });
+    }
+    return res.json();
+}

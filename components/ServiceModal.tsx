@@ -1,5 +1,6 @@
 import { useAuth } from '@/src/auth/AuthContext';
 import { FontAwesome, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { DateTime } from 'luxon';
 import React from 'react';
 import {
@@ -57,8 +58,9 @@ const ServiceDetailsModal = ({
   onCancelService,
   onRejectService,
   onAcceptService,
-  onReviewService,
+  onCompleteService,
   onGoToProfile,
+  onReviewService
 }) => {
   const { mode } = useAuth(); 
   
@@ -98,17 +100,6 @@ const ServiceDetailsModal = ({
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('es-AR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   const renderStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -128,20 +119,23 @@ const ServiceDetailsModal = ({
 
   const renderActionButtons = () => {
     const { state } = service;
+    const providerId = service.provider.id;
 
     if (mode === 'user') {
       switch (state) {
         case 'COMPLETED':
           return (
             <>
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
-              </Pressable>
               <Pressable style={styles.profileButton} onPress={onGoToProfile}>
                 <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
               </Pressable>
+
               <Pressable style={styles.reviewButton} onPress={onReviewService}>
                 <Text style={styles.reviewButtonText}>Reseñar</Text>
+              </Pressable>
+
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -149,14 +143,16 @@ const ServiceDetailsModal = ({
         case 'PENDING':
           return (
             <>
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
-              </Pressable>
               <Pressable style={styles.profileButton} onPress={onGoToProfile}>
                 <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
               </Pressable>
+
               <Pressable style={styles.cancelButton} onPress={onCancelService}>
                 <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </Pressable>
+
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -164,14 +160,16 @@ const ServiceDetailsModal = ({
         case 'ACCEPTED':
           return (
             <>
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
-              </Pressable>
               <Pressable style={styles.profileButton} onPress={onGoToProfile}>
                 <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
               </Pressable>
+
               <Pressable style={styles.cancelButton} onPress={onCancelService}>
                 <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </Pressable>
+
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -183,6 +181,7 @@ const ServiceDetailsModal = ({
               <Pressable style={styles.profileButton} onPress={onGoToProfile}>
                 <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
               </Pressable>
+
               <Pressable style={styles.closeButton} onPress={onClose}>
                 <Text style={styles.closeButtonText}>Cerrar</Text>
               </Pressable>
@@ -201,14 +200,16 @@ const ServiceDetailsModal = ({
         case 'PENDING':
           return (
             <>
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
+              <Pressable style={styles.acceptButton} onPress={onAcceptService}>
+                <Text style={styles.acceptButtonText}>Aceptar</Text>
               </Pressable>
+
               <Pressable style={styles.rejectButton} onPress={onRejectService}>
                 <Text style={styles.rejectButtonText}>Rechazar</Text>
               </Pressable>
-              <Pressable style={styles.acceptButton} onPress={onAcceptService}>
-                <Text style={styles.acceptButtonText}>Aceptar</Text>
+
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -216,11 +217,16 @@ const ServiceDetailsModal = ({
         case 'ACCEPTED':
           return (
             <>
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
+              <Pressable style={styles.acceptButton} onPress={onCompleteService}>
+                <Text style={styles.acceptButtonText}>Completar</Text>
               </Pressable>
+
               <Pressable style={styles.cancelButton} onPress={onCancelService}>
                 <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </Pressable>
+
+              <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -318,7 +324,6 @@ const ServiceDetailsModal = ({
               </View>
             </View>
 
-            {/* Precio y Rating */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Valoración</Text>
               <View style={styles.card}>

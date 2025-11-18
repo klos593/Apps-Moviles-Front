@@ -1,4 +1,5 @@
 import { getProviderActiveServices, getUserActiveServices } from '@/api/api';
+import { BottomWhiteMask } from '@/components/BottomWhiteMask';
 import Filtro from '@/components/Filtro';
 import LoadingArc from '@/components/LoadingAnimation';
 import SearchBar from '@/components/SearchBar';
@@ -71,7 +72,6 @@ export default function Index() {
 
         if (filters.profession) {
             data = data.filter((element: any) => element.profession === filters.profession);
-            // si tu profesión está en otro lado, ej: element.profession.name, cambialo acá
         }
 
         if (filters.fromDate) {
@@ -151,7 +151,7 @@ export default function Index() {
                 </View>
                 <View style={{ flex: 10 }}>
                     <FlatList data={filteredData} renderItem={({ item }) => (
-                        <ServiceCard data={item} />
+                        <ServiceCard data={item}/>
                     )} />
                 </View>
                 <View style={{ flex: 1.7 }}></View>
@@ -164,28 +164,6 @@ export default function Index() {
                 statuses={statusOptions}
             />
         </QueryClientProvider>
-    );
-}
-
-function BottomWhiteMask() {
-    const insets = useSafeAreaInsets();
-    const tabBarHeight = useBottomTabBarHeight();
-
-    return (
-        <>
-            <View
-                pointerEvents="none"
-                style={{
-                    position: "absolute",
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    height: tabBarHeight + insets.bottom - 10,
-                    backgroundColor: "#F5F6FA",
-                    zIndex: 5,
-                }}
-            />
-        </>
     );
 }
 
