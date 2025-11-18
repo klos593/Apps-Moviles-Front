@@ -13,8 +13,8 @@ import {
   View
 } from 'react-native';
 
-const handlePressWhatsapp = async () => {
-  const url = `https://wa.me/2477465180?text=Hello%20I%20would%20like%20more%20information`;
+const handlePressWhatsapp = async (phone:string, profession:string) => {
+  const url = `https://wa.me/${phone}?text=Hola%20quisiera%20averiguar%20sobre%20tu%20servicio%20de%20${profession.toLowerCase()}`;
 
   const supported = await Linking.canOpenURL(url);
 
@@ -25,8 +25,8 @@ const handlePressWhatsapp = async () => {
   }
 }
 
-const handlePressMail = async () => {
-  const url = `mailto:support@example.com`;
+const handlePressMail = async (email: string) => {
+  const url = `mailto:${email}`;
 
   const supported = await Linking.canOpenURL(url);
 
@@ -37,8 +37,8 @@ const handlePressMail = async () => {
   }
 }
 
-const handlePressPhone = async () => {
-  const url = `tel:2477465180`;
+const handlePressPhone = async (phone:string) => {
+  const url = `tel:${phone}`;
 
   const supported = await Linking.canOpenURL(url);
 
@@ -360,20 +360,38 @@ const ServiceDetailsModal = ({
           )}
 
             <View style={styles.buttonsContainer}>
-              <Text style={styles.sectionTitle}>Contacto</Text>
-              <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
-                <Pressable style={[styles.iconStub, { backgroundColor: "#59cc55ff" }]} onPress={handlePressWhatsapp}>
-                  <FontAwesome name="whatsapp" size={37} color="white" />
-                </Pressable>
+              
+            {mode === 'user' && (
+              <>
+                <Text style={styles.sectionTitle}>Contacto</Text>
 
-                <Pressable style={[styles.iconStub, { backgroundColor: "#65a8faff" }]} onPress={handlePressMail}>
-                  <MaterialCommunityIcons name="email" size={34} color="white" />
-                </Pressable>
+                <View style={{ 
+                  flexDirection: "row", 
+                  justifyContent: "space-evenly" 
+                }}>
+                  <Pressable 
+                    style={[styles.iconStub, { backgroundColor: "#59cc55ff" }]}
+                    onPress={() => handlePressWhatsapp(service.provider.phone, service.profession.name)}
+                  >
+                    <FontAwesome name="whatsapp" size={37} color="white" />
+                  </Pressable>
 
-                <Pressable style={[styles.iconStub, { backgroundColor: "#50b94cff" }]} onPress={handlePressPhone}>
-                  <FontAwesome5 name="phone-alt" size={25} color="white" />
-                </Pressable>
-              </View>
+                  <Pressable 
+                    style={[styles.iconStub, { backgroundColor: "#65a8faff" }]}
+                    onPress={() => handlePressMail(service.provider.email)}
+                  >
+                    <MaterialCommunityIcons name="email" size={34} color="white" />
+                  </Pressable>
+
+                  <Pressable 
+                    style={[styles.iconStub, { backgroundColor: "#50b94cff" }]}
+                    onPress={() => handlePressPhone(service.provider.phone)}
+                  >
+                    <FontAwesome5 name="phone-alt" size={25} color="white" />
+                  </Pressable>
+                </View>
+              </>
+            )}
 
               {renderActionButtons()}
             </View>

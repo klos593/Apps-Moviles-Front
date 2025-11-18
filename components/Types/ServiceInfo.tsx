@@ -6,6 +6,8 @@ export type ServiceInfo = {
             id: number;
             name: string;
             lastName: string;
+            phone: string;
+            email: string;
         },
         user: {
             name: string;
