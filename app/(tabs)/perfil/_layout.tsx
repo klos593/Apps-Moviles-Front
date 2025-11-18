@@ -7,19 +7,27 @@ export default function HomeLayout() {
         <Stack
             screenOptions={{
                 headerTitle: () => (
-                <Text style={styles.brand}>
-                    <Text style={{ color: "#aef6c7" }}>Fix</Text>
-                    <Text style={{color: "white"}}>It</Text>
-                </Text>
+                    <Text style={styles.brand}>
+                        <Text style={{ color: "#aef6c7" }}>Fix</Text>
+                        <Text style={{ color: "white" }}>It</Text>
+                    </Text>
                 ),
                 headerTitleAlign: "center",
                 headerStyle: { backgroundColor: "#294936" },
                 headerBackVisible: true,
                 headerBackTitle: "Volver",
                 headerTintColor: "white",
-                gestureEnabled: false
             }}
-        />
+        >
+            <Stack.Screen
+                name="index"
+                options={{
+                    headerBackVisible: false,   // oculta la flecha
+                    gestureEnabled: false,      // desactiva el gesto
+                    animation: "none",
+                }}
+            />
+        </Stack>
     );
 }
 

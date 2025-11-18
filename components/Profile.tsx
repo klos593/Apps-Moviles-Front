@@ -79,6 +79,7 @@ export default function Profile() {
     );
 
   const handleImage = async (url: string) => {
+    if (!user.data) return;
 
     const insertData = {
       userId: user.data.id,
