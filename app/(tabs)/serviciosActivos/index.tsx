@@ -6,7 +6,7 @@ import { useAuth, useAuthUser } from '@/src/auth/AuthContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { useFocusEffect } from 'expo-router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -39,7 +39,7 @@ export default function Index() {
     const activeQuery =
         mode === "user" ? userActiveServicesQuery : providerActiveServicesQuery;
 
-    const serviceData = activeQuery.data ?? [];
+    const serviceData = useMemo(() => activeQuery.data ?? [], [activeQuery.data]);
 
     const [filteredData, setFilteredData] = useState(serviceData);
 
