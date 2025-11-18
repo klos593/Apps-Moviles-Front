@@ -119,7 +119,6 @@ const ServiceDetailsModal = ({
 
   const renderActionButtons = () => {
     const { state } = service;
-    const providerId = service.provider.id;
 
     if (mode === 'user') {
       switch (state) {
@@ -324,15 +323,18 @@ const ServiceDetailsModal = ({
               </View>
             </View>
 
+            {(service.rating > 0 || service.comment) && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Valoración</Text>
               <View style={styles.card}>
+
                 {service.price > 0 && (
                   <InfoRow 
                     label="Precio" 
                     value={`$${Number(service.price).toFixed(2)}`} 
                   />
                 )}
+
                 {service.rating > 0 && (
                   <View style={styles.row}>
                     <Text style={styles.rowLabel}>Rating</Text>
@@ -346,14 +348,17 @@ const ServiceDetailsModal = ({
                     </View>
                   </View>
                 )}
+
                 {service.comment && (
                   <View style={[styles.row, { borderBottomWidth: 0 }]}>
                     <Text style={styles.rowLabel}>Comentario</Text>
                     <Text style={styles.commentText}>{service.comment}</Text>
                   </View>
                 )}
+
               </View>
             </View>
+          )}
 
             <View style={styles.buttonsContainer}>
               <Text style={styles.sectionTitle}>Contacto</Text>
