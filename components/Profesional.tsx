@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 16,
-    height: "60%",
+    height: "70%",
   },
 
   titleContainer: {

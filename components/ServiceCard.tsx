@@ -72,8 +72,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         serviceQuery.refetch()
     };
 
-    const handleAcceptService = async () => {
-        await onPressUpdateState(data.id, 'ACCEPTED')
+    const handleAcceptService = () => {
+        onPressUpdateState(data.id, 'ACCEPTED')
         serviceQuery.refetch()
     };
 
