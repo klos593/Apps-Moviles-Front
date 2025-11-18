@@ -156,19 +156,6 @@ export default function Profile() {
             </View>
           </Pressable>
 
-          <Pressable style={styles.row}>
-            <View style={styles.rowLeft}>
-              <View style={styles.iconStub}>
-                <Ionicons name="notifications" size={20} color="#6B7A90" />
-              </View>
-
-              <View style={{ flex: 1, flexDirection: "column" }}>
-                <Text style={styles.rowTitle}>Notificaciones</Text>
-                <Text style={styles.rowSubtitle}>Preferencias y datos</Text>
-              </View>
-            </View>
-          </Pressable>
-
           <Pressable
             style={styles.row}
             onPress={() => router.push("/perfil/paginaEditarProfesiones")}
