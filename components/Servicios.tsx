@@ -1,6 +1,6 @@
 import { getProfessionals, getProfessions, getUser } from "@/api/api";
 import SearchBar from "@/components/SearchBar";
-import { useAuthUser } from "@/src/auth/AuthContext";
+import { useAuthUserOptional } from "@/src/auth/AuthContext";
 import { useQuery } from '@tanstack/react-query';
 import { router, Stack, useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -18,11 +18,21 @@ import Card from "./TarjetaProfesional";
 
 export default function HomeScreen() {
 
-  const { email } = useAuthUser();
+  const { user: authUser, isBooting } = useAuthUserOptional();
+  const email = authUser?.email;
+
+  if (isBooting) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <LoadingArc />
+      </View>
+    );
+  }
 
   const user = useQuery({
     queryKey: ["User", email],
-    queryFn: () => getUser(email),
+    queryFn: () => getUser(email as string),
+    enabled: !!email
   });
 
   const rawUserId = user.data?.id;

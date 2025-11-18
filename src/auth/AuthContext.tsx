@@ -164,3 +164,7 @@ export const useAuthUser = () => {
 
   return user;
 };
+export const useAuthUserOptional = () => {
+  const { user, isBooting } = useAuth();
+  return { user, isBooting };
+};
