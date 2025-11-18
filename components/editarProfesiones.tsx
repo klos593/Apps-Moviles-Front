@@ -239,7 +239,8 @@ const styles = StyleSheet.create({
         color: "#6B7A90", 
         fontWeight: "700", 
         marginBottom: 10, 
-        letterSpacing: 0.5 },
+        letterSpacing: 0.5 
+    },
 
     titleContainer: {
         justifyContent: 'center',

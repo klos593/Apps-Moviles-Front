@@ -98,7 +98,7 @@ export default function Profesional({ data }: ProfesionalProps) {
     } catch (error) {
       setErrorOpen(true)
     }
-
+    setModal(false)
   };
 
   return (
@@ -153,65 +153,62 @@ export default function Profesional({ data }: ProfesionalProps) {
       >
         <View style={styles.overlay}>
           <View style={styles.modal}>
-            <View style={styles.modalHandle} />
-            <Text style={styles.modalTitle}>Solicitar servicio</Text>
-            <View style={{ flex: 2 }}>
-              <ScrollView
-                style={styles.modalScroll}
-                contentContainerStyle={styles.modalScrollContent}
-                showsVerticalScrollIndicator={false}
-              >
-                <View style={styles.gridContainer}>
-                  {professionsData.map((opt) => {
-                    const isSelected = selectedProfession === opt;
-                    return (
-                      <Pressable
-                        key={opt.id}
-                        style={[styles.card, isSelected && styles.cardSelected]}
-                        onPress={() => setSelectedProfession(opt)}
-                      >
-                        <Image source={{ uri: opt.picture }} style={styles.serviceIcon} />
-                        <Text style={styles.serviceText}>{opt.name}</Text>
-                        {isSelected && (
-                          <View style={styles.checkBadge}>
-                            <Ionicons name="checkmark" size={14} color="#fff" />
-                          </View>
-                        )}
-                      </Pressable>
-                    );
-                  })}
-                </View>
-              </ScrollView>
-            </View>
-            <View style={styles.dateSection}>
-              <DateTimeSelector
-                onDateChange={(date) => {
-                  setSelectedDate(date);
-                }}
-              />
-
-              {selectedDate && (
-                <Text style={styles.selectedDateText}>
-                  Turno: {selectedDate.toString()}
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                    Solicitar Servicio
                 </Text>
-              )}
             </View>
-            <View style={styles.actionsRow}>
-              <Pressable
-                style={[styles.actionButton, styles.cancelButton]}
-                onPress={closeModal}
-              >
-                <Text style={styles.actionTextCancel}>Cancelar</Text>
-              </Pressable>
 
+            <Text style={styles.sectionTitle}>PROFESIONES DISPONIBLES</Text>
+              <View style={styles.gridContainer}>
+                  {professionsData.map((opt) => {
+                      const isSelected = selectedProfession === opt;
+                      return (
+                          <Pressable
+                              key={opt.id}
+                              style={[styles.card, isSelected && styles.cardSelected]}
+                              onPress={() => setSelectedProfession(opt)}
+                          >
+                              <Text style={styles.serviceText}>{opt.name}</Text>
+                          </Pressable>
+                      );
+                  })}
+              </View>
+            
+            <Text style={styles.sectionTitle}>SELECCIONAR FECHA Y HORA</Text>
+            <View style={styles.gridContainer}>
+              <View style={styles.dateSection}>
+                <DateTimeSelector
+                  onDateChange={(date) => {
+                    setSelectedDate(date);
+                  }}
+                />
+
+                {selectedDate && (
+                  <Text style={styles.selectedDateText}>
+                    Turno: {selectedDate.toString()}
+                  </Text>
+                )}
+              </View>
+            </View>
+
+            <View style={styles.buttonContainer}>
               <Pressable
-                style={[styles.actionButton, styles.primaryButton]}
+                style={[styles.button, {backgroundColor: "#2f6b45"}]}
                 onPress={handleContact}
                 disabled={createServiceMutation.isPending}
               >
-                <Text style={styles.actionTextPrimary}>Solicitar servicio</Text>
+                <Text style={styles.buttonText}>Solicitar servicio</Text>
+              </Pressable>
+              
+              <Pressable
+                style={[styles.button, {backgroundColor: "#e6ebf2"}]}
+                onPress={closeModal}
+              >
+                <Text style={[styles.buttonText, {color: "#516072"}]}>Cancelar</Text>
               </Pressable>
             </View>
+
             <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} />
             <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} />
             {createServiceMutation.isPending &&
@@ -342,95 +339,98 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
 
-  // el modal ocupa casi toda la pantalla, dejando un margen arriba
   modal: {
-    backgroundColor: "white",
+    backgroundColor: "#F5F6FA",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 16,
-    height: "90%",      // casi toda la pantalla
+    height: "60%",      
   },
 
-  modalHandle: {
-    width: 48,
-    height: 5,
-    borderRadius: 999,
-    backgroundColor: "#E5E7EB",
-    alignSelf: "center",
-    marginBottom: 12,
+  titleContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingTop: 10,
+    paddingBottom: 7,
+    backgroundColor: "#F5F6FA"
   },
 
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: 12,
-    color: "#111827",
+  title: {
+    fontSize: 22, 
+    fontWeight: "800", 
+    marginTop: 6, 
+    color: "#1F2D3D"
   },
 
-  modalScroll: {
-    flex: 1
+  sectionTitle: { 
+    color: "#6B7A90", 
+    fontWeight: "700", 
+    marginBottom: 10, 
+    letterSpacing: 0.5 
   },
 
-  modalScrollContent: {
-    paddingBottom: 8,
+  buttonContainer: {
+    backgroundColor: "#F5F6FA", 
+    gap: 14,
+    marginTop: 15
   },
 
   gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginBottom: 1,
+    justifyContent: "center",
+    backgroundColor: "white",
+    borderRadius: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+    gap: 14
   },
 
   card: {
     width: 110,
-    height: 110,
+    height: 40,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: "#E0E0F0",
+    borderColor: "#beffc7ff",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 18,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#beffc7ff",
     position: "relative",
+  },
+
+  buttonText: {
+    color: "white", 
+    fontSize: 16, 
+    fontWeight: "700"
+  },
+
+  button: {
+      paddingVertical: 14,
+      paddingHorizontal: 10,
+      borderRadius: 14,
+      alignItems: "center",
+      justifyContent: "center",
   },
 
   cardSelected: {
     borderColor: "#00cb58b3",
-    backgroundColor: "#ffffffff",
-  },
-
-  checkBadge: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    width: 20,
-    height: 20,
-    borderRadius: 999,
-    backgroundColor: "#5b8266",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  serviceIcon: {
-    width: 70,
-    height: 70,
-    resizeMode: "contain",
-    borderRadius: 15,
+    backgroundColor: "#beffc7ff",
   },
 
   serviceText: {
     fontWeight: "600",
     fontSize: 15,
-    marginTop: 10,
-    textAlign: "center",
   },
 
   dateSection: {
-    marginTop: 13,
     flex: 2,
     alignItems: 'center',
     justifyContent: 'center'
@@ -441,43 +441,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     color: "#374151",
-  },
-
-  actionsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginTop: 0,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-
-  actionButton: {
-    flex: 1,
-    height: 48,
-    borderRadius: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  cancelButton: {
-    backgroundColor: "#E5E7EB",
-  },
-
-  primaryButton: {
-    backgroundColor: "#3E6259",
-  },
-
-  actionTextCancel: {
-    color: "#111827",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-
-  actionTextPrimary: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
   },
 
 });

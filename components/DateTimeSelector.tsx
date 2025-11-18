@@ -56,7 +56,7 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
     const getValidYears = () => {
         const years = [];
         const currentYear = now.getFullYear();
-        for (let i = currentYear; i <= currentYear + 10; i++) {
+        for (let i = currentYear; i <= currentYear + 1; i++) {
             years.push(i);
         }
         return years;
@@ -140,8 +140,6 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Seleccionar Fecha y Hora</Text>
-
             <View style={styles.pickersContainer}>
                 {/* Día */}
                 <View style={styles.pickerColumn}>
@@ -207,18 +205,10 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        marginTop: 4,
-    },
-    title: {
-        fontSize: 16,
-        fontWeight: "600",
-        marginBottom: 8,
-        textAlign: "center",
-        color: "#111827",
     },
     pickersContainer: {
         flexDirection: "row",
-        height: 160,   // más bajo para que entre cómodo en el modal
+        height: 150, 
     },
     pickerColumn: {
         flex: 1,
@@ -235,7 +225,6 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 10,
         backgroundColor: "#F3F4F6",
-        paddingVertical: 4,
     },
     pickerItem: {
         paddingVertical: 6,
