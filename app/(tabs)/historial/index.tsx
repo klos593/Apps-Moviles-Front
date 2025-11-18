@@ -1,4 +1,5 @@
 import { getFinishedProvidedServices, getFinishedUsedServices } from '@/api/api';
+import Filtro from '@/components/Filtro';
 import LoadingArc from '@/components/LoadingAnimation';
 import SearchBar from '@/components/SearchBar';
 import ServiceCard from '@/components/ServiceCard';
@@ -7,8 +8,15 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useQuery } from '@tanstack/react-query';
 import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+type Filtrados = {
+  fromDate?: string | null;
+  toDate?: string | null;
+  status?: string | null;
+  profession?: string | null;
+};
 
 export default function Index() {
   const { email } = useAuthUser();
@@ -39,6 +47,48 @@ export default function Index() {
   const serviceData = useMemo(() => activeQuery.data ?? [], [activeQuery.data]);
 
   const [filteredData, setFilteredData] = useState(serviceData);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState<Filtrados>({});
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+
+  useEffect(() => {
+    let data = [...serviceData];
+
+    if (searchTerm.trim()) {
+      const lower = searchTerm.toLowerCase();
+      data = data.filter((element: any) =>
+        (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(lower)
+      );
+    }
+
+    if (filters.status) {
+      data = data.filter((element: any) => element.state === filters.status);
+    }
+
+    if (filters.profession) {
+      data = data.filter((element: any) => element.profession === filters.profession);
+      // si tu profesión está en otro lado, ej: element.profession.name, cambialo acá
+    }
+
+    if (filters.fromDate) {
+      const from = new Date(filters.fromDate);
+      data = data.filter((element: any) => {
+        const d = new Date(element.date); 
+        return d >= from;
+      });
+    }
+
+    if (filters.toDate) {
+      const to = new Date(filters.toDate);
+      data = data.filter((element: any) => {
+        const d = new Date(element.date);
+        return d <= to;
+      });
+    }
+
+    setFilteredData(data);
+  }, [serviceData, searchTerm, filters]);
+
 
   useEffect(() => {
     setFilteredData(serviceData);
@@ -59,6 +109,12 @@ export default function Index() {
     setFilteredData(filtered);
   };
 
+  const handleApplyFilters = (newFilters: Filtrados) => {
+    setFilters(newFilters);
+    setIsFilterModalVisible(false);
+  };
+
+
   if (activeQuery.isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -66,6 +122,8 @@ export default function Index() {
       </View>
     );
   }
+
+  const statusOptions = ["COMPLETED", "CANCELED"];
 
   return (
     <View style={styles.container}>
@@ -78,7 +136,9 @@ export default function Index() {
           <SearchBar onSearch={handleSearch} />
         </View>
         <View style={styles.filterContainer}>
-          <Pressable style={styles.filterButton}>
+          <Pressable 
+          style={styles.filterButton}
+          onPress={() => setIsFilterModalVisible(true)}>
             <Text style={styles.filterText}>Filtrar</Text>
           </Pressable>
         </View>
@@ -93,6 +153,12 @@ export default function Index() {
 
       <View style={{ flex: 1.7 }} />
       <BottomWhiteMask />
+      <Filtro
+        visible={isFilterModalVisible}
+        onClose={() => setIsFilterModalVisible(false)}
+        onApply={handleApplyFilters}
+        statuses={statusOptions}
+      />
     </View>
   );
 }
@@ -153,8 +219,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#20d88fff',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: Platform.OS === "android" ? 7 : 9,
+    paddingHorizontal: Platform.OS === "android" ? 10 : 12,
   },
   filterText: {
     color: 'white',

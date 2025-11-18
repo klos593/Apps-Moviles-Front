@@ -5,9 +5,9 @@ import { Animated, Modal, Pressable, StyleSheet, Text, View } from "react-native
 type Props = {
     visible: boolean;
     onClose?: () => void;
-    autoCloseMs?: number;       // opcional: se cierra solo
-    message?: string;           // opcional: texto debajo del tilde
-    dismissOnBackdrop?: boolean; // opcional: tocar afuera cierra
+    autoCloseMs?: number;       
+    message?: string;           
+    dismissOnBackdrop?: boolean; 
 };
 
 export default function SuccessModal({
@@ -22,7 +22,6 @@ export default function SuccessModal({
 
     useEffect(() => {
         if (visible) {
-            // Animación de entrada (pop + fade)
             scaleAnim.setValue(0);
             opacityAnim.setValue(0);
             Animated.parallel([
@@ -30,7 +29,6 @@ export default function SuccessModal({
                 Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
             ]).start();
 
-            // Autocierre opcional
             const t = setTimeout(() => onClose && onClose(), autoCloseMs);
             return () => clearTimeout(t);
         }
@@ -48,7 +46,6 @@ export default function SuccessModal({
                 style={styles.backdrop}
                 onPress={dismissOnBackdrop ? onClose : undefined}
             >
-                {/* Evitar que el tap pase al contenido */}
                 <Pressable style={{ width: "100%" }} onPress={() => { }}>
                     <View style={styles.center}>
                         <Animated.View

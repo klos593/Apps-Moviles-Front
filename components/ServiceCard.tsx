@@ -5,6 +5,8 @@ import React, { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import ServiceDetailsModal from "./ServiceModal";
 import ServiceCardData from "./Types/ServiceCardData";
+import { DateTime } from 'luxon'
+import { getServiceInfoById } from "@/api/api";
 
 type ServiceCardProps = {
     data: ServiceCardData
@@ -30,53 +32,29 @@ export default function ServiceCard({ data }: ServiceCardProps) {
 
     const [modal, setModal] = useState(false)
 
-    const professionsQuery = useQuery({
+    const serviceQuery = useQuery({
         queryKey: ["serviceInfo", data.id],
         queryFn: () => getServiceInfoById(data.id),
     });
 
     useFocusEffect(
         useCallback(() => {
-            professionsQuery.refetch();
+            serviceQuery.refetch();
         }, [])
     );
 
+    const serviceData = serviceQuery.data
+
     const openModal = () => {
         setModal(true)
-
     }
 
     const handleCancelService = () => {
         console.log('Cancelar servicio');
-        // Aquí implementas la lógica para cancelar
     };
 
     const handleContactProvider = () => {
         console.log('Contactar proveedor');
-        // Aquí abres tu modal de contacto
-    };
-
-    const exampleService = {
-        id: 1,
-        provider: {
-            name: 'Juan',
-            lastName: 'Pérez',
-        },
-        profession: {
-            name: 'Plomero',
-        },
-        date: '2025-11-20T14:30:00',
-        state: 'PENDING',
-        address: {
-            street: 'Av. Corrientes',
-            number: 1234,
-            floor: '3A',
-            province: 'Buenos Aires',
-            country: 'Argentina',
-        },
-        price: 5000,
-        rating: 4.5,
-        comment: 'Excelente trabajo, muy profesional',
     };
 
     return (
@@ -99,7 +77,10 @@ export default function ServiceCard({ data }: ServiceCardProps) {
 
                         <View style={styles.infoView}>
                             <View style={styles.iconStub}><FontAwesome name="calendar-o" size={18} color="#6B7A90" /></View>
-                            <Text>{data.date.slice(0, 10)} - {data.date.slice(11, 16)}</Text>
+                            <Text>{DateTime.fromISO(data.date, { zone: "utc" })
+                                            .setZone("America/Argentina/Buenos_Aires")
+                                            .toFormat("dd/MM/yyyy HH:mm")}
+                            </Text>
                         </View>
 
                         <View style={styles.infoView}>
@@ -112,7 +93,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             <ServiceDetailsModal
                 visible={modal}
                 onClose={() => setModal(false)}
-                service={exampleService}
+                service={serviceData}
                 onCancelService={handleCancelService}
                 onContactProvider={handleContactProvider}
             />

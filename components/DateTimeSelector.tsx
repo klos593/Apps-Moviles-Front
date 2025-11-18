@@ -1,33 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
+    Pressable,
     ScrollView,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
-} from 'react-native';
+} from "react-native";
+import { DateTime } from "luxon";
 
-const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
-    const now = new Date();
+const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
+
+    const now = DateTime.local();
+
+    // Inicializa desde Luxon
     const [selectedDate, setSelectedDate] = useState({
-        day: initialDate.getDate(),
-        month: initialDate.getMonth(),
-        year: initialDate.getFullYear(),
-        hour: initialDate.getHours(),
-        minute: initialDate.getMinutes(),
+        day: initialDate.day,
+        month: initialDate.month - 1, // Luxon usa 1-12, tú usabas 0-11
+        year: initialDate.year,
+        hour: initialDate.hour,
+        minute: initialDate.minute,
     });
 
     const months = [
-        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
 
     const getDaysInMonth = (month, year) => {
-        return new Date(year, month + 1, 0).getDate();
+        return DateTime.local(year, month + 1).daysInMonth;
     };
 
     const isDateValid = (day, month, year, hour, minute) => {
-        const selected = new Date(year, month, day, hour, minute);
+        const selected = DateTime.local(year, month + 1, day, hour, minute);
         return selected >= now;
     };
 
@@ -55,8 +59,8 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
 
     const getValidYears = () => {
         const years = [];
-        const currentYear = now.getFullYear();
-        for (let i = currentYear; i <= currentYear + 10; i++) {
+        const currentYear = now.year;
+        for (let i = currentYear; i <= currentYear + 1; i++) {
             years.push(i);
         }
         return years;
@@ -64,11 +68,13 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
 
     const getValidHours = () => {
         const hours = [];
-        const isToday = selectedDate.day === now.getDate() &&
-            selectedDate.month === now.getMonth() &&
-            selectedDate.year === now.getFullYear();
+        const isToday =
+            selectedDate.day === now.day &&
+            selectedDate.month === now.month - 1 &&
+            selectedDate.year === now.year;
 
-        const startHour = isToday ? now.getHours() : 0;
+        const startHour = isToday ? now.hour : 0;
+
         for (let i = startHour; i < 24; i++) {
             hours.push(i);
         }
@@ -76,36 +82,39 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
     };
 
     const getValidMinutes = () => {
-    const minutes = [];
-    const isNow =
-        selectedDate.day === now.getDate() &&
-        selectedDate.month === now.getMonth() &&
-        selectedDate.year === now.getFullYear() &&
-        selectedDate.hour === now.getHours();
+        const minutes = [];
+        const isNow =
+            selectedDate.day === now.day &&
+            selectedDate.month === now.month - 1 &&
+            selectedDate.year === now.year &&
+            selectedDate.hour === now.hour;
 
-    const quarters = [0, 15, 30, 45];
-    const currentMinute = now.getMinutes();
+        const quarters = [0, 15, 30, 45];
+        const currentMinute = now.minute;
 
-    quarters.forEach((q) => {
-        if (!isNow || q >= currentMinute) {
-            minutes.push(q);
-        }
-    });
+        quarters.forEach((q) => {
+            if (!isNow || q >= currentMinute) {
+                minutes.push(q);
+            }
+        });
 
-    return minutes;
-};
+        return minutes;
+    };
 
     const handleDateChange = (newDate) => {
         setSelectedDate(newDate);
+
         if (onDateChange) {
-            const date = new Date(
+            const dt = DateTime.local(
                 newDate.year,
-                newDate.month,
+                newDate.month + 1,
                 newDate.day,
                 newDate.hour,
                 newDate.minute
             );
-            onDateChange(date);
+
+            // PASO FINAL → convertir a UTC antes de mandar al backend
+            onDateChange(dt.toUTC().toISO());
         }
     };
 
@@ -113,10 +122,10 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
         <ScrollView
             style={styles.picker}
             showsVerticalScrollIndicator={false}
-            nestedScrollEnabled  
+            nestedScrollEnabled
         >
             {items.map((item) => (
-                <TouchableOpacity
+                <Pressable
                     key={item}
                     style={[
                         styles.pickerItem,
@@ -132,18 +141,15 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
                     >
                         {format(item)}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             ))}
         </ScrollView>
     );
 
-
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Seleccionar Fecha y Hora</Text>
-
             <View style={styles.pickersContainer}>
-                {/* Día */}
+
                 <View style={styles.pickerColumn}>
                     <Text style={styles.label}>Día</Text>
                     {renderPicker(
@@ -153,7 +159,6 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
                     )}
                 </View>
 
-                {/* Mes */}
                 <View style={styles.pickerColumn}>
                     <Text style={styles.label}>Mes</Text>
                     {renderPicker(
@@ -168,7 +173,6 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
                     )}
                 </View>
 
-                {/* Año */}
                 <View style={styles.pickerColumn}>
                     <Text style={styles.label}>Año</Text>
                     {renderPicker(
@@ -178,25 +182,23 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
                     )}
                 </View>
 
-                {/* Hora */}
                 <View style={styles.pickerColumn}>
                     <Text style={styles.label}>Hora</Text>
                     {renderPicker(
                         getValidHours(),
                         selectedDate.hour,
                         (hour) => handleDateChange({ ...selectedDate, hour }),
-                        (h) => h.toString().padStart(2, '0')
+                        (h) => h.toString().padStart(2, "0")
                     )}
                 </View>
 
-                {/* Minutos */}
                 <View style={styles.pickerColumn}>
                     <Text style={styles.label}>Min</Text>
                     {renderPicker(
                         getValidMinutes(),
                         selectedDate.minute,
                         (minute) => handleDateChange({ ...selectedDate, minute }),
-                        (m) => m.toString().padStart(2, '0')
+                        (m) => m.toString().padStart(2, "0")
                     )}
                 </View>
             </View>
@@ -205,25 +207,9 @@ const DateTimeSelector = ({ onDateChange, initialDate = new Date() }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        marginTop: 4,
-    },
-    title: {
-        fontSize: 16,
-        fontWeight: "600",
-        marginBottom: 8,
-        textAlign: "center",
-        color: "#111827",
-    },
-    pickersContainer: {
-        flexDirection: "row",
-        height: 160,   // más bajo para que entre cómodo en el modal
-    },
-    pickerColumn: {
-        flex: 1,
-        marginHorizontal: 2,
-    },
+    container: { width: "100%" },
+    pickersContainer: { flexDirection: "row", height: 150 },
+    pickerColumn: { flex: 1, marginHorizontal: 2 },
     label: {
         fontSize: 11,
         fontWeight: "600",
@@ -231,12 +217,7 @@ const styles = StyleSheet.create({
         marginBottom: 4,
         color: "#6B7280",
     },
-    picker: {
-        flex: 1,
-        borderRadius: 10,
-        backgroundColor: "#F3F4F6",
-        paddingVertical: 4,
-    },
+    picker: { flex: 1, borderRadius: 10, backgroundColor: "#F3F4F6" },
     pickerItem: {
         paddingVertical: 6,
         paddingHorizontal: 4,
@@ -244,19 +225,9 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginVertical: 2,
     },
-    pickerItemSelected: {
-        backgroundColor: "#00cb58b3",
-    },
-    pickerText: {
-        fontSize: 13,
-        color: "#374151",
-    },
-    pickerTextSelected: {
-        color: "white",
-        fontWeight: "600",
-    },
+    pickerItemSelected: { backgroundColor: "#00cb58b3" },
+    pickerText: { fontSize: 13, color: "#374151" },
+    pickerTextSelected: { color: "white", fontWeight: "600" },
 });
-
-
 
 export default DateTimeSelector;

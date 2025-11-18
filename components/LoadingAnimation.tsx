@@ -6,8 +6,8 @@ import Svg, { G, Path } from "react-native-svg";
 type Props = {
   size?: number;
   strokeWidth?: number;
-  colors?: string[]; // se usan en orden alrededor del aro
-  speedMs?: number;  // duración de una vuelta
+  colors?: string[]; 
+  speedMs?: number;  
 };
 
 export default function LoadingArc({
@@ -38,7 +38,6 @@ export default function LoadingArc({
   const cx = size / 2;
   const cy = size / 2;
 
-  // util para generar arcos
   const arc = (startDeg: number, sweepDeg: number) => {
     const start = polarToCartesian(cx, cy, r, startDeg);
     const end = polarToCartesian(cx, cy, r, startDeg + sweepDeg);
@@ -46,9 +45,8 @@ export default function LoadingArc({
     return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 1 ${end.x} ${end.y}`;
   };
 
-  // tres arcos distribuidos (tipo “cola” gruesa que da la vuelta)
-  const segmentSweep = 90;      // largo de cada segmento (ajustable)
-  const gap = 10;               // pequeño hueco entre colores (ajustable)
+  const segmentSweep = 90;      
+  const gap = 10;               
   const step = (segmentSweep + gap);
 
   return (
@@ -56,8 +54,6 @@ export default function LoadingArc({
       <Animated.View style={{ transform: [{ rotate: rotation }] }}>
         <Svg width={size} height={size}>
           <G fill="none" strokeWidth={strokeWidth} strokeLinecap="round">
-            {/* Puedes quitar este track si no querés fondo */}
-            {/* <Path d={arc(0, 359.999)} stroke="rgba(0,0,0,0.08)" /> */}
 
             <Path d={arc(0, segmentSweep)} stroke={colors[0]} />
             <Path d={arc(step, segmentSweep)} stroke={colors[1 % colors.length]} />
