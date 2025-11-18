@@ -87,8 +87,9 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         serviceQuery.refetch()
     };
 
-    const handleReviewService = () => {
-        console.log('hacer review');
+    const handleReviewService = (id: number) => {
+        setModal(false)
+        router.push(`/home/profesional/${id}`)
     };
     
     const handleGoToProfile = (id: number) => {
@@ -138,7 +139,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
                 onAcceptService={() => handleAcceptService()}
                 onCompleteService={() => handleCompleteService()}
                 onGoToProfile={() => handleGoToProfile(serviceData.provider.id)}
-                onReviewService={() => handleReviewService()}
+                onReviewService={() => handleReviewService(serviceData.provider.id)}
             />
         </>
     )

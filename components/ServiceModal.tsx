@@ -1,6 +1,5 @@
 import { useAuth } from '@/src/auth/AuthContext';
 import { FontAwesome, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 import { DateTime } from 'luxon';
 import React from 'react';
 import {

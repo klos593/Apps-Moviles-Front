@@ -31,7 +31,6 @@ const useCreateService = () => {
   });
 };
 
-
 export default function Profesional({ data }: ProfesionalProps) {
   const [modal, setModal] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
