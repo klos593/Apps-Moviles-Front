@@ -100,7 +100,12 @@ export default function ServiceTypeScreen() {
 
     const handleAdd = async () => {
         if (!selectedAvailableProfession) {
-            Alert.alert('Error', 'Debes seleccionar una profesión');
+            setErrorOpen(true)
+            return;
+        }
+
+        if (activeProfessionData.length >= 3) {
+            setErrorOpen(true)
             return;
         }
 
