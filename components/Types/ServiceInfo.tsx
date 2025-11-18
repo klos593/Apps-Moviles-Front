@@ -3,6 +3,7 @@ import Address from "./Address";
 export type ServiceInfo = {        
         id: string;
         provider: {
+            id: number;
             name: string;
             lastName: string;
         },

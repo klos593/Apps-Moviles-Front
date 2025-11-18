@@ -1,12 +1,12 @@
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
-import { useFocusEffect } from "expo-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { router, useFocusEffect } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import ServiceDetailsModal from "./ServiceModal";
 import ServiceCardData from "./Types/ServiceCardData";
 import { DateTime } from 'luxon'
-import { getServiceInfoById } from "@/api/api";
+import { getServiceInfoById, updateService } from "@/api/api";
 
 type ServiceCardProps = {
     data: ServiceCardData
@@ -31,6 +31,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     }
 
     const [modal, setModal] = useState(false)
+    const qc = useQueryClient();
 
     const serviceQuery = useQuery({
         queryKey: ["serviceInfo", data.id],
@@ -43,6 +44,23 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         }, [])
     );
 
+    const mutation = useMutation({
+        mutationFn: (payload: { id: string; state: string }) =>
+            updateService(data.id, payload),
+        onSuccess: async (updated) => {
+            await qc.invalidateQueries({ queryKey: ['service', updated.id] });
+            await qc.invalidateQueries({ queryKey: ['activeServices'] });
+            setModal(false);
+        },
+    });
+
+    const onPressUpdateState = (id: string, newState: string) => {
+        mutation.mutate({
+            id: id,
+            state: newState,
+        });
+    };
+
     const serviceData = serviceQuery.data
 
     const openModal = () => {
@@ -50,12 +68,33 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     }
 
     const handleCancelService = () => {
-        console.log('Cancelar servicio');
+        onPressUpdateState(data.id, 'CANCELED')
+        serviceQuery.refetch()
     };
 
-    const handleContactProvider = () => {
-        console.log('Contactar proveedor');
+    const handleAcceptService = async () => {
+        await onPressUpdateState(data.id, 'ACCEPTED')
+        serviceQuery.refetch()
     };
+
+    const handleRejectService = () => {
+        onPressUpdateState(data.id, 'REJECTED')
+        serviceQuery.refetch()
+    };
+
+    const handleCompleteService = () => {
+        onPressUpdateState(data.id, 'COMPLETED')
+        serviceQuery.refetch()
+    };
+
+    const handleReviewService = () => {
+        console.log('hacer review');
+    };
+    
+    const handleGoToProfile = (id: number) => {
+        setModal(false)
+        router.push(`/home/profesional/${id}`)
+    }
 
     return (
         <>
@@ -94,8 +133,12 @@ export default function ServiceCard({ data }: ServiceCardProps) {
                 visible={modal}
                 onClose={() => setModal(false)}
                 service={serviceData}
-                onCancelService={handleCancelService}
-                onContactProvider={handleContactProvider}
+                onCancelService={() => handleCancelService()}
+                onRejectService={() => handleRejectService()}
+                onAcceptService={() => handleAcceptService()}
+                onCompleteService={() => handleCompleteService()}
+                onGoToProfile={() => handleGoToProfile(serviceData.provider.id)}
+                onReviewService={() => handleReviewService()}
             />
         </>
     )

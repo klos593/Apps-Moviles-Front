@@ -41,12 +41,12 @@ export default function Profesionales({ data }: ProfessionalProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#F5F6FA",
     },
 
     flatList: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#F5F6FA",
     },
 
     flatListContent: {
