@@ -1,10 +1,10 @@
-import { getUser } from "@/api/api";
+import { getUser, updatePicture } from "@/api/api";
 import { useAuth, useAuthUser } from "@/src/auth/AuthContext";
 import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
-import React, { useMemo, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   Alert,
   Animated,
@@ -17,8 +17,10 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomWhiteMask } from "./BottomWhiteMask";
+import ErrorModal from "./ErorrAnimation";
 import ImagePickerModal from "./ImagePickerModal";
 import LoadingArc from "./LoadingAnimation";
+import SuccessModal from "./SuccesAnimation";
 
 const getTagText = (mode: "user" | "provider") => {
   switch (mode) {
@@ -29,6 +31,14 @@ const getTagText = (mode: "user" | "provider") => {
   }
 };
 
+const useUpdatePicture = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updatePicture,
+  });
+};
+
 export default function Profile() {
   const { mode, toggleMode } = useAuth();
   const router = useRouter();
@@ -36,7 +46,10 @@ export default function Profile() {
   const { logout } = useAuth();
   const insets = useSafeAreaInsets();
   const tabBarHeight = useBottomTabBarHeight();
-  const [changePictureModal,setChangePictureModal] = useState(false)
+  const [changePictureModal, setChangePictureModal] = useState(false)
+  const updatePictureMutation = useUpdatePicture();
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
 
   const user = useQuery({
     queryKey: ["User", email],
@@ -59,8 +72,25 @@ export default function Profile() {
     extrapolate: "clamp",
   });
 
-  const handleImage = (url: string) => {
-    console.log("imagen agregada", url)
+  useFocusEffect(
+      useCallback(() => {
+        user.refetch();
+      }, [])
+    );
+
+  const handleImage = async (url: string) => {
+
+    const insertData = {
+      userId: user.data.id,
+      pictureUrl: url
+    }
+    try {
+      await updatePictureMutation.mutateAsync(insertData)
+      setSuccessOpen(true)
+      user.refetch();
+    } catch (error) {
+      setErrorOpen(true)
+    }
   }
 
   const handleLogout = () => {
@@ -191,7 +221,9 @@ export default function Profile() {
       </Animated.ScrollView >
 
       <BottomWhiteMask />
-      <ImagePickerModal visible={changePictureModal} onClose={() => setChangePictureModal(false)} onImageUploaded={handleImage}/>
+      <ImagePickerModal visible={changePictureModal} onClose={() => setChangePictureModal(false)} onImageUploaded={handleImage} />
+      <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} message="Operacion realizada con exito!" />
+      <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} message="Error al realizar la operacion!" />
     </View >
   );
 }

@@ -3,10 +3,10 @@ import { ProfessionalData } from "@/components/Types/ProfessionalData";
 import { ProfessionCardData } from "@/components/Types/ProfessionCardData";
 import ServiceCardData from "@/components/Types/ServiceCardData";
 import { ServiceData } from "@/components/Types/ServiceData";
+import { ServiceInfo } from "@/components/Types/ServiceInfo";
 import { UserData } from "@/components/Types/UserData";
 import { QueryClient } from "@tanstack/react-query";
 import { URL } from "./url";
-import { ServiceInfo } from "@/components/Types/ServiceInfo";
 
 const queryClient = new QueryClient()
 
@@ -197,3 +197,38 @@ export async function getServiceInfoById(id: string): Promise<ServiceInfo> {
     const response = await fetch(`${URL}/serviceInfo/${encodeURIComponent(id)}`);
     return response.json();
 }
+
+export async function updatePicture(data: {userId: number, pictureUrl: string}) {
+    const response = await fetch(`${URL}/user/picture`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al cambiar la foto de perfil');
+    }else{
+        queryClient.invalidateQueries({ queryKey: ["FinishedUsedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["FinishedProvidedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["User"] });
+        queryClient.invalidateQueries({ queryKey: ["professional"] });
+        queryClient.invalidateQueries({ queryKey: ["ProviderActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["UserActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["professionalProfessions"] });
+        queryClient.invalidateQueries({ queryKey: ["professionals"] });
+        queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["professions"] });
+        queryClient.invalidateQueries({ queryKey: ["pintorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["plomeroProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["limpiezaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["gasistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["paseadorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["electricistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["entrenadorProfessionals"] });
+    }
+
+    return response.json();
+};

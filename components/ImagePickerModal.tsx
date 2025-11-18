@@ -4,10 +4,10 @@ import {
     ActivityIndicator,
     Alert,
     Modal,
+    Pressable,
     StyleSheet,
     Text,
-    TouchableOpacity,
-    View,
+    View
 } from 'react-native';
 
 interface ImagePickerModalProps {
@@ -124,7 +124,7 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          <Text style={styles.title}>Select Image Source</Text>
+          <Text style={styles.title}>Cargar Imagen</Text>
           
           {uploading ? (
             <View style={styles.loadingContainer}>
@@ -133,26 +133,26 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
             </View>
           ) : (
             <>
-              <TouchableOpacity
+              <Pressable
                 style={styles.option}
                 onPress={pickFromGallery}
               >
-                <Text style={styles.optionText}>📷 Choose from Gallery</Text>
-              </TouchableOpacity>
+                <Text style={styles.optionText}>Desde la Galeria</Text>
+              </Pressable>
 
-              <TouchableOpacity
+              <Pressable
                 style={styles.option}
                 onPress={takePhoto}
               >
-                <Text style={styles.optionText}>📸 Take Photo</Text>
-              </TouchableOpacity>
+                <Text style={styles.optionText}>Tomar Foto</Text>
+              </Pressable>
 
-              <TouchableOpacity
+              <Pressable
                 style={[styles.option, styles.cancelButton]}
                 onPress={onClose}
               >
                 <Text style={[styles.optionText, styles.cancelText]}>Cancel</Text>
-              </TouchableOpacity>
+              </Pressable>
             </>
           )}
         </View>
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   option: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#5b8266',
     padding: 16,
     borderRadius: 8,
     marginBottom: 12,
