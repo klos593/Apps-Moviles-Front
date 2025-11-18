@@ -38,7 +38,7 @@ export default function ProfileNotifications() {
   const [country, setCountry] = useState("")
   const [description, setDescription] = useState("")
 
-  const MAX_HEADER = useMemo(() => 110 + insets.top * 0.5, [insets.top]);
+  const MAX_HEADER = useMemo(() =>  insets.top * 0.5, [insets.top]);
   const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
