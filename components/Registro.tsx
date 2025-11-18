@@ -21,7 +21,6 @@ const isPhone = (v: string) => /^\+?\d{7,15}$/.test(v.replace(/\s|-/g, ""));
 export default function Registro() {
   const { register } = useAuth();
 
-  // --- Datos de cuenta ---
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -33,16 +32,14 @@ export default function Registro() {
   const [loading, setLoading] = useState(false);
   const [acepta, setAcepta] = useState(false);
 
-  // --- Dirección (obligatoria) ---
   const [country, setCountry] = useState("");
   const [province, setProvince] = useState("");
   const [city, setCity] = useState("");
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
-  const [floor, setFloor] = useState(""); // opcional
+  const [floor, setFloor] = useState(""); 
   const [postalCode, setPostalCode] = useState("");
 
-  // Validaciones base
   const nombreOk = nombre.trim().length >= 2;
   const apellidoOk = apellido.trim().length >= 2;
   const telefonoOk = isPhone(telefono);
@@ -50,7 +47,6 @@ export default function Registro() {
   const passOk = pass.length >= 6;
   const matchOk = pass === pass2 && pass2.length > 0;
 
-  // Dirección obligatoria (sin piso)
   const addressOk = useMemo(() => {
     const numOk = /^\d+$/.test(number.trim());
     const cpOk = /^\d+$/.test(postalCode.trim());
@@ -120,7 +116,6 @@ export default function Registro() {
             </Text>
             <Text style={styles.title}>Crear cuenta</Text>
 
-            {/* Nombre */}
             <View className="field" style={styles.field}>
               <Text style={styles.label}>Nombre</Text>
               <TextInput
@@ -134,7 +129,6 @@ export default function Registro() {
               {!nombreOk && nombre.length > 0 && <Text style={styles.helper}>Mínimo 2 caracteres.</Text>}
             </View>
 
-            {/* Apellido */}
             <View style={styles.field}>
               <Text style={styles.label}>Apellido</Text>
               <TextInput
@@ -148,7 +142,6 @@ export default function Registro() {
               {!apellidoOk && apellido.length > 0 && <Text style={styles.helper}>Mínimo 2 caracteres.</Text>}
             </View>
 
-            {/* Teléfono */}
             <View style={styles.field}>
               <Text style={styles.label}>Teléfono</Text>
               <TextInput
@@ -164,7 +157,6 @@ export default function Registro() {
               )}
             </View>
 
-            {/* Email */}
             <View style={styles.field}>
               <Text style={styles.label}>Email</Text>
               <TextInput
@@ -179,7 +171,6 @@ export default function Registro() {
               {!emailOk && email.length > 0 && <Text style={styles.helper}>Ingresá un email válido.</Text>}
             </View>
 
-            {/* Contraseña */}
             <View style={styles.field}>
               <Text style={styles.label}>Contraseña</Text>
               <View style={{ position: "relative" }}>
@@ -296,7 +287,7 @@ export default function Registro() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
-  scrollContent: { paddingBottom: 24 }, // espacio al final para teclado
+  scrollContent: { paddingBottom: 24 }, 
   inner: { flexGrow: 1, padding: 20, gap: 16, paddingTop: 32 },
   brand: { fontSize: 20, fontWeight: "700", textAlign: "center" },
   title: { fontSize: 24, fontWeight: "800", textAlign: "center", marginTop: 8 },

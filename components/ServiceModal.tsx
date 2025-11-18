@@ -249,7 +249,6 @@ const ServiceDetailsModal = ({
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Detalles del Servicio</Text>
 
-            {/* Proveedor */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Proveedor</Text>
               <View style={styles.card}>
@@ -265,7 +264,6 @@ const ServiceDetailsModal = ({
               </View>
             </View>
 
-            {/* Estado y Fecha */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Información del Turno</Text>
               <View style={styles.card}>
@@ -290,7 +288,6 @@ const ServiceDetailsModal = ({
               </View>
             </View>
 
-            {/* Dirección */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Dirección</Text>
               <View style={styles.card}>
@@ -350,7 +347,6 @@ const ServiceDetailsModal = ({
               </View>
             </View>
 
-            {/* Botones de Contacto */}
             <View style={styles.buttonsContainer}>
               <Text style={styles.sectionTitle}>Contacto</Text>
               <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
@@ -367,7 +363,6 @@ const ServiceDetailsModal = ({
                 </Pressable>
               </View>
 
-              {/* Botones de Acción Condicionales */}
               {renderActionButtons()}
             </View>
           </ScrollView>

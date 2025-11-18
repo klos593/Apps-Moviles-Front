@@ -48,12 +48,10 @@ export default function ServiceCard({ data }: ServiceCardProps) {
 
     const handleCancelService = () => {
         console.log('Cancelar servicio');
-        // Aquí implementas la lógica para cancelar
     };
 
     const handleContactProvider = () => {
         console.log('Contactar proveedor');
-        // Aquí abres tu modal de contacto
     };
 
     const exampleService = {
