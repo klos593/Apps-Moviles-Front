@@ -1,5 +1,6 @@
 import { useAuth } from '@/src/auth/AuthContext';
 import { FontAwesome, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import { DateTime } from 'luxon';
 import React from 'react';
 import {
   Alert,
@@ -282,7 +283,9 @@ const ServiceDetailsModal = ({
                 </View>
                 <InfoRow 
                   label="Fecha y Hora" 
-                  value={formatDate(service.date)} 
+                  value={DateTime.fromISO(service.date, { zone: "utc" })
+                          .setZone("America/Argentina/Buenos_Aires")
+                          .toFormat("dd/MM/yyyy HH:mm")} 
                   last 
                 />
               </View>
