@@ -1,22 +1,26 @@
 import { getUser, updateUser } from "@/api/api";
 import { useAuthUser } from "@/src/auth/AuthContext";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
+  Animated,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
   View
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BottomWhiteMask } from "./BottomWhiteMask";
 import LoadingArc from "./LoadingAnimation";
-
 
 export default function ProfileNotifications() {
   const { email } = useAuthUser();
   const router = useRouter();
   const qc = useQueryClient();
+  const insets = useSafeAreaInsets();
 
   const { data: user } = useQuery({
     queryKey: ["User", email],
@@ -30,9 +34,12 @@ export default function ProfileNotifications() {
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState<string>("");
   const [floor, setFloor] = useState("");
-  const [province,setProvince] = useState("")
-  const [country,setCountry] = useState("")
-  const [description,setDescription] = useState("")
+  const [province, setProvince] = useState("")
+  const [country, setCountry] = useState("")
+  const [description, setDescription] = useState("")
+
+  const MAX_HEADER = useMemo(() => 110 + insets.top * 0.5, [insets.top]);
+  const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
     if (user && !editing) {
@@ -87,46 +94,58 @@ export default function ProfileNotifications() {
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>Datos Personales</Text>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingTop: MAX_HEADER - 40,
+          paddingHorizontal: 16,
+          paddingBottom: tabBarHeight + insets.bottom + 12,
+        }}
+        scrollEventThrottle={16}
 
-      <View style={styles.card}>
-        <Row label="Nombre" value={name} editable={editing} onChangeText={setName} />
-        <Row label="Apellido" value={lastName} editable={editing} onChangeText={setLastName} />
-        <Row label="Mail" value={user?.mail} />
-        <Row label="Teléfono" value={phone} editable={editing} onChangeText={setPhone} keyboardType="phone-pad" />
-        <Row label="Calle" value={street} editable={editing} onChangeText={setStreet} />
-        <Row label="Número" value={number} editable={editing} onChangeText={setNumber} keyboardType="numeric" last />
-        <Row label="Piso" value={floor} editable={editing} onChangeText={setFloor} />
-        <Row label="Provincia" value={province} editable={editing} onChangeText={setProvince} />
-        <Row label="Pais" value={country} editable={editing} onChangeText={setCountry} />
-        <Row label="Descripcion" value={description} editable={editing} onChangeText={setDescription} />
-      </View>
-
-      <Pressable
-        style={[styles.editButton, editing && styles.saveButton]}
-        onPress={onPressMain}
-        disabled={mutation.isPending}
       >
-        {mutation.isPending ? (
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <LoadingArc size={72} strokeWidth={10} />
-          </View>
-        ) : (
-          <Text style={styles.editButtonText}>
-            {editing ? "Guardar cambios" : "Editar información"}
-          </Text>
-        )}
-      </Pressable>
+        <Text style={styles.title}>Datos Personales</Text>
 
-      {editing && (
+        <View style={styles.card}>
+          <Row label="Nombre" value={name} editable={editing} onChangeText={setName} />
+          <Row label="Apellido" value={lastName} editable={editing} onChangeText={setLastName} />
+          <Row label="Mail" value={user?.mail} />
+          <Row label="Teléfono" value={phone} editable={editing} onChangeText={setPhone} keyboardType="phone-pad" />
+          <Row label="Calle" value={street} editable={editing} onChangeText={setStreet} />
+          <Row label="Número" value={number} editable={editing} onChangeText={setNumber} keyboardType="numeric" last />
+          <Row label="Piso" value={floor} editable={editing} onChangeText={setFloor} />
+          <Row label="Provincia" value={province} editable={editing} onChangeText={setProvince} />
+          <Row label="Pais" value={country} editable={editing} onChangeText={setCountry} />
+          <Row label="Descripcion" value={description} editable={editing} onChangeText={setDescription} />
+        </View>
+
         <Pressable
-          style={styles.cancelButton}
-          onPress={() => setEditing(false)}
+          style={[styles.editButton, editing && styles.saveButton]}
+          onPress={onPressMain}
           disabled={mutation.isPending}
         >
-          <Text style={styles.cancelButtonText}>Cancelar</Text>
+          {mutation.isPending ? (
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <LoadingArc size={72} strokeWidth={10} />
+            </View>
+          ) : (
+            <Text style={styles.editButtonText}>
+              {editing ? "Guardar cambios" : "Editar información"}
+            </Text>
+          )}
         </Pressable>
-      )}
+
+        {editing && (
+          <Pressable
+            style={styles.cancelButton}
+            onPress={() => setEditing(false)}
+            disabled={mutation.isPending}
+          >
+            <Text style={styles.cancelButtonText}>Cancelar</Text>
+          </Pressable>
+        )}
+      </Animated.ScrollView>
+      <BottomWhiteMask />
     </View>
   );
 }

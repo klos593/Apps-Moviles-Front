@@ -19,7 +19,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomWhiteMask } from "./BottomWhiteMask";
 import LoadingArc from "./LoadingAnimation";
 
-const getTagText = (mode) => {
+const getTagText = (mode: "user" | "provider") => {
   switch (mode) {
     case 'user':
       return 'Usuario';

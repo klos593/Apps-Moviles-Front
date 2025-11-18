@@ -85,6 +85,7 @@ export default function Registro() {
         lastName: apellido.trim(),
         phone: telefono.replace(/\s|-/g, ""),
         email: email.trim().toLowerCase(),
+        picture: "https://res.cloudinary.com/dvdw8zjel/image/upload/v1761153295/UsuarioPlaceHolder_bzqamd.png",
         password: pass,
         address: {
           country: country.trim(),
