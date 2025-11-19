@@ -9,6 +9,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import ServiceDetailsModal from "./ServiceModal";
 import SuccessModal from "./SuccesAnimation";
 import ServiceCardData from "./Types/ServiceCardData";
+import ReviewModal from "./ReviewModal";
 
 type ServiceCardProps = {
     data: ServiceCardData,
@@ -57,8 +58,6 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     }
 
     const [modal, setModal] = useState(false)
-    const { email } = useAuthUser()
-    const qc = useQueryClient();
     const updateStatusMutation = useUpdateStatus()
     const updateServiceReviewMutation = useUpdateReviews()
     const updateProfessionalRatingMutation = useUpdateProfessionalRating()
@@ -68,11 +67,6 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     const serviceQuery = useQuery({
         queryKey: ["serviceInfo", data.id],
         queryFn: () => getServiceInfoById(data.id),
-    });
-
-    const userReviewsQuery = useQuery({
-        queryKey: ["userReviewsInfo", email],
-        queryFn: () => getUserPendingReviews(email),
     });
 
     useFocusEffect(
@@ -95,21 +89,12 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     }
 
     const ReviewService = async (rating: number, comment: string) => {
-
         const serviceReview = {
             id: data.id,
             rating: rating,
             comment: comment
         }
         await updateServiceReviewMutation.mutateAsync(serviceReview)
-
-        if (userReviewsQuery.data?.pendingReviewsServicesId.length === 0) {
-            const userReviewsData = {
-                id: serviceData.user.id,
-                state: false
-            }
-            updateUserPendingReviews(userReviewsData)
-        }
     }
 
     const handleCancelService = async () => {
@@ -185,6 +170,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             await serviceQuery.refetch();
             setSuccessOpen(true)
             setModal(false)
+            setReviewModal(false)
         } catch (error) {
             //setErrorOpen(true)
         }
@@ -238,7 +224,13 @@ export default function ServiceCard({ data }: ServiceCardProps) {
                 onAcceptService={() => handleAcceptService()}
                 onCompleteService={() => handleCompleteService()}
                 onGoToProfile={() => handleGoToProfile(serviceData.provider.id)}
-                onReviewService={handleReviewService}
+                onReviewService={() => {setModal(false); setReviewModal(true)}}
+            />
+
+            <ReviewModal
+                visible={reviewModal}
+                onClose={() => setReviewModal(false)}
+                accept={handleReviewService}
             />
         </>
     )

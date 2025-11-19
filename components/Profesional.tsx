@@ -69,11 +69,6 @@ export default function Profesional({ data }: ProfesionalProps) {
     queryFn: () => getUserIdAndAddressId(email),
   });
 
-  const userReviewsQuery = useQuery({
-    queryKey: ["userReviewsInfo", email],
-    queryFn: () => getUserPendingReviews(email),
-  });
-
   const handleContact = async () => {
     if (!selectedProfession) {
       Alert.alert('Error', 'Debes seleccionar una profesión');
@@ -90,10 +85,6 @@ export default function Profesional({ data }: ProfesionalProps) {
     if (!userQuery.data?.userId || !userQuery.data?.addressId) {
       Alert.alert('Error', 'No se pudo obtener la información del usuario');
       return;
-    }
-
-    if (userReviewsQuery.data?.hasPendingReviews){
-      Alert.alert('Error', 'Debes completar tus reseñas pendientes antes de pode contratar a un profesional')
     }
 
     const serviceData = {
