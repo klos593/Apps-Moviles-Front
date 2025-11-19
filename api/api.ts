@@ -68,6 +68,13 @@ export async function updateUser(email: string, body: { name: string; lastName: 
         queryClient.invalidateQueries({ queryKey: ["userInfo"] });
         queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
         queryClient.invalidateQueries({ queryKey: ["professions"] });
+        queryClient.invalidateQueries({ queryKey: ["pintorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["plomeroProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["limpiezaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["gasistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["paseadorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["electricistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["entrenadorProfessionals"] });
     }
     return res.json();
 }
@@ -115,6 +122,13 @@ export async function createService(serviceData: ServiceData) {
         queryClient.invalidateQueries({ queryKey: ["userInfo"] });
         queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
         queryClient.invalidateQueries({ queryKey: ["professions"] });
+        queryClient.invalidateQueries({ queryKey: ["pintorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["plomeroProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["limpiezaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["gasistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["paseadorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["electricistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["entrenadorProfessionals"] });
     }
 
     return response.json();
@@ -265,6 +279,13 @@ export async function updateService(data: {id: string, state: string }): Promise
         queryClient.invalidateQueries({ queryKey: ["userInfo"] });
         queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
         queryClient.invalidateQueries({ queryKey: ["professions"] });
+        queryClient.invalidateQueries({ queryKey: ["pintorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["plomeroProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["limpiezaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["gasistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["paseadorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["electricistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["entrenadorProfessionals"] });
     }
     return res.json();
 }
@@ -299,6 +320,13 @@ export async function updateUserPendingReviews(data: {id: number, state: boolean
         queryClient.invalidateQueries({ queryKey: ["userInfo"] });
         queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
         queryClient.invalidateQueries({ queryKey: ["professions"] });
+        queryClient.invalidateQueries({ queryKey: ["pintorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["plomeroProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["limpiezaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["gasistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["paseadorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["electricistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["entrenadorProfessionals"] });
     }
     return res.json();
 }
@@ -323,12 +351,19 @@ export async function updateServiceReview(data: {id: string, rating: number, com
         queryClient.invalidateQueries({ queryKey: ["userInfo"] });
         queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
         queryClient.invalidateQueries({ queryKey: ["professions"] });
+        queryClient.invalidateQueries({ queryKey: ["pintorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["plomeroProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["limpiezaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["gasistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["paseadorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["electricistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["entrenadorProfessionals"] });
     }
     return res.json();
 }
 
 export async function updateRating(data: {id: number | undefined}){
-    const res = await fetch(`${URL}/professional/updateRating`, {
+    const res = await fetch(`${URL}/user/updateR`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -347,6 +382,13 @@ export async function updateRating(data: {id: number | undefined}){
         queryClient.invalidateQueries({ queryKey: ["userInfo"] });
         queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
         queryClient.invalidateQueries({ queryKey: ["professions"] });
+        queryClient.invalidateQueries({ queryKey: ["pintorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["plomeroProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["limpiezaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["gasistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["paseadorProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["electricistaProfessionals"] });
+        queryClient.invalidateQueries({ queryKey: ["entrenadorProfessionals"] });
     }
     return res.json();
 }

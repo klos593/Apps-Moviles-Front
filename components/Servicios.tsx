@@ -3,7 +3,7 @@ import SearchBar from "@/components/SearchBar";
 import { useAuthUserOptional } from "@/src/auth/AuthContext";
 import { useQuery } from '@tanstack/react-query';
 import { router, Stack, useFocusEffect } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -47,7 +47,9 @@ export default function HomeScreen() {
   const professionalsQuery = useQuery({
     queryKey: ["professionals", userId],
     queryFn: () => getProfessionals(userId as string),
-    enabled: !!userId
+    enabled: !!userId,
+    refetchInterval: 10000
+
   });
 
   useFocusEffect(
@@ -57,8 +59,8 @@ export default function HomeScreen() {
     }, [])
   );
 
-  const professionsData = useMemo(() => professionsQuery.data ?? [], [professionsQuery.data]);
-  const professionalsData = useMemo(() => professionalsQuery.data ?? [], [professionalsQuery.data]);
+  const professionsData = professionsQuery.data ?? [];
+  const professionalsData = professionalsQuery.data ?? [];
   const [filteredData, setFilteredData] = useState(professionalsData);
 
   useEffect(() => {
