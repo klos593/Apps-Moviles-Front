@@ -192,7 +192,7 @@ export default function Profesional({ data }: ProfesionalProps) {
         animationType="fade"
         onRequestClose={closeModal}
       >
-        <View style={styles.overlay}>
+        <Pressable style={styles.overlay} onPress={() => setModal(false)}/>
           <View style={styles.modal}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>
@@ -263,7 +263,6 @@ export default function Profesional({ data }: ProfesionalProps) {
                 <LoadingArc />
               </View>}
           </View>
-        </View>
       </Modal>
     </>
   );
@@ -391,7 +390,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 16,
-    height: "70%",
+    height: "75%",
   },
 
   titleContainer: {
