@@ -104,10 +104,15 @@ export default function Registro() {
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
-      <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })} style={{ flex: 1 }}>
+      <KeyboardAvoidingView 
+        behavior={Platform.select({ ios: "padding", android: "height" })} 
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.select({ ios: 0, android: 20 })}
+      >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
           <View style={styles.inner}>
             <Text style={styles.brand}>
