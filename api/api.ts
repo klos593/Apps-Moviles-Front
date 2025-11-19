@@ -363,7 +363,7 @@ export async function updateServiceReview(data: {id: string, rating: number, com
 }
 
 export async function updateRating(data: {id: number | undefined}){
-    const res = await fetch(`${URL}/user/updateR`, {
+    const res = await fetch(`${URL}/professional/updateRating`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
