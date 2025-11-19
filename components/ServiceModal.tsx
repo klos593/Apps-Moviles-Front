@@ -249,7 +249,7 @@ const ServiceDetailsModal = ({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={styles.overlay}>
+      <Pressable style={styles.overlay} onPress={onClose}/>
         <View style={styles.modal}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Detalles del Servicio</Text>
@@ -397,7 +397,6 @@ const ServiceDetailsModal = ({
             </View>
           </ScrollView>
         </View>
-      </View>
     </Modal>
   );
 };

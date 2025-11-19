@@ -122,7 +122,7 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
       animationType="fade"
       onRequestClose={onClose}
     >
-      <View style={styles.overlay}>
+      <Pressable style={styles.overlay} onPress={onClose}>
         <View style={styles.modalContainer}>
           <Text style={styles.title}>Cargar Imagen</Text>
           
@@ -156,7 +156,7 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
             </>
           )}
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 };
