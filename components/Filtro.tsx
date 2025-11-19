@@ -69,7 +69,7 @@ export default function Filtro({
       transparent
       onRequestClose={onClose}
     >
-      <View style={styles.backdrop}>
+      <Pressable style={styles.backdrop} onPress={onClose}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[styles.modalContainer, { maxHeight: "85%", paddingBottom: insets.bottom + 12 }]}>
               <ScrollView
@@ -184,7 +184,7 @@ export default function Filtro({
               </View>
             </View>
           </TouchableWithoutFeedback>
-      </View>
+      </Pressable>
     </Modal>
   );
 }
