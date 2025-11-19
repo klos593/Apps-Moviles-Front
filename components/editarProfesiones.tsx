@@ -3,7 +3,6 @@ import { useAuthUser } from "@/src/auth/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import {
-    Alert,
     Pressable,
     StyleSheet,
     Text,
@@ -81,7 +80,7 @@ export default function ServiceTypeScreen() {
 
     const handleDelete = async () => {
         if (!selectedActiveProfession) {
-            Alert.alert('Error', 'Debes seleccionar una profesión');
+            setErrorOpen(true)
             return;
         }
 

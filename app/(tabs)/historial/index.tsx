@@ -123,7 +123,7 @@ export default function Index() {
     );
   }
 
-  const statusOptions = ["COMPLETED", "CANCELED"];
+  const statusOptions = ["COMPLETED", "CANCELED", "REJECTED"];
 
   return (
     <View style={styles.container}>
