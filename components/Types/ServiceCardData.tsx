@@ -8,6 +8,7 @@ type ServiceCardData = {
     date: string;
     state: String;
     address: Address;
+    isReviewed: boolean;
 }
 
 export default ServiceCardData;

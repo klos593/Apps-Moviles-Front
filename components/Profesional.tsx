@@ -96,7 +96,6 @@ export default function Profesional({ data }: ProfesionalProps) {
       Alert.alert('Error', 'Debes completar tus reseñas pendientes antes de pode contratar a un profesional')
     }
 
-    console.log(userReviewsQuery.data)
     const serviceData = {
       professionId: parseInt(selectedProfession.id, 10),
       userId: userQuery.data.userId,

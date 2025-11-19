@@ -23,4 +23,5 @@ export type ServiceInfo = {
         price: number;
         rating: number;
         comment:string;
+        isReviewed: boolean
     };

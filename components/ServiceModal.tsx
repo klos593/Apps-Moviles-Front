@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import Rating from './Rating';
 
-const handlePressWhatsapp = async (phone:string, profession:string) => {
+const handlePressWhatsapp = async (phone: string, profession: string) => {
   const url = `https://wa.me/${phone}?text=Hola%20quisiera%20averiguar%20sobre%20tu%20servicio%20de%20${profession.toLowerCase()}`;
 
   const supported = await Linking.canOpenURL(url);
@@ -38,7 +38,7 @@ const handlePressMail = async (email: string) => {
   }
 }
 
-const handlePressPhone = async (phone:string) => {
+const handlePressPhone = async (phone: string) => {
   const url = `tel:${phone}`;
 
   const supported = await Linking.canOpenURL(url);
@@ -62,8 +62,8 @@ const ServiceDetailsModal = ({
   onGoToProfile,
   onReviewService
 }) => {
-  const { mode } = useAuth(); 
-  
+  const { mode } = useAuth();
+
   if (!service) return null;
 
   const getStateColor = (state) => {
@@ -101,23 +101,24 @@ const ServiceDetailsModal = ({
   };
 
   const renderActionButtons = () => {
-    const { state } = service;
-
+    const { state,isReviewed } = service;
+    
     if (mode === 'user') {
       switch (state) {
         case 'COMPLETED':
           return (
             <>
-              <Pressable style={[styles.button, {backgroundColor: '#5b8266'}]} onPress={onGoToProfile}>
+              <Pressable style={[styles.button, { backgroundColor: '#5b8266' }]} onPress={onGoToProfile}>
                 <Text style={styles.buttonText}>Ir al perfil del profesional</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#FFA500'}]} onPress={onReviewService}>
+              {(!isReviewed) && 
+              <Pressable style={[styles.button, { backgroundColor: '#FFA500' }]} onPress={onReviewService}>
                 <Text style={styles.buttonText}>Reseñar</Text>
-              </Pressable>
+              </Pressable>}
 
-              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
-                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
+              <Pressable style={[styles.button, { backgroundColor: '#e6ebf2' }]} onPress={onClose}>
+                <Text style={[styles.buttonText, { color: '#516072' }]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -125,16 +126,16 @@ const ServiceDetailsModal = ({
         case 'PENDING':
           return (
             <>
-              <Pressable style={[styles.button, {backgroundColor: '#5b8266'}]} onPress={onGoToProfile}>
+              <Pressable style={[styles.button, { backgroundColor: '#5b8266' }]} onPress={onGoToProfile}>
                 <Text style={styles.buttonText}>Ir al perfil del profesional</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#ff4444'}]} onPress={onCancelService}>
+              <Pressable style={[styles.button, { backgroundColor: '#ff4444' }]} onPress={onCancelService}>
                 <Text style={styles.buttonText}>Cancelar</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
-                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
+              <Pressable style={[styles.button, { backgroundColor: '#e6ebf2' }]} onPress={onClose}>
+                <Text style={[styles.buttonText, { color: '#516072' }]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -142,16 +143,16 @@ const ServiceDetailsModal = ({
         case 'ACCEPTED':
           return (
             <>
-              <Pressable style={[styles.button, {backgroundColor: '#5b8266'}]} onPress={onGoToProfile}>
+              <Pressable style={[styles.button, { backgroundColor: '#5b8266' }]} onPress={onGoToProfile}>
                 <Text style={styles.buttonText}>Ir al perfil del profesional</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#ff4444'}]} onPress={onCancelService}>
+              <Pressable style={[styles.button, { backgroundColor: '#ff4444' }]} onPress={onCancelService}>
                 <Text style={styles.buttonText}>Cancelar</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
-                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
+              <Pressable style={[styles.button, { backgroundColor: '#e6ebf2' }]} onPress={onClose}>
+                <Text style={[styles.buttonText, { color: '#516072' }]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -160,21 +161,21 @@ const ServiceDetailsModal = ({
         case 'REJECTED':
           return (
             <>
-              <Pressable style={[styles.button, {backgroundColor: '#5b8266'}]} onPress={onGoToProfile}>
+              <Pressable style={[styles.button, { backgroundColor: '#5b8266' }]} onPress={onGoToProfile}>
                 <Text style={styles.buttonText}>Ir al perfil del profesional</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
-                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
+              <Pressable style={[styles.button, { backgroundColor: '#e6ebf2' }]} onPress={onClose}>
+                <Text style={[styles.buttonText, { color: '#516072' }]}>Cerrar</Text>
               </Pressable>
             </>
           );
 
         default:
           return (
-            <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
-                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
-              </Pressable>
+            <Pressable style={[styles.button, { backgroundColor: '#e6ebf2' }]} onPress={onClose}>
+              <Text style={[styles.buttonText, { color: '#516072' }]}>Cerrar</Text>
+            </Pressable>
           );
       }
     } else if (mode === 'provider') {
@@ -182,16 +183,16 @@ const ServiceDetailsModal = ({
         case 'PENDING':
           return (
             <>
-              <Pressable style={[styles.button, {backgroundColor: '#00cb58'}]} onPress={onAcceptService}>
+              <Pressable style={[styles.button, { backgroundColor: '#00cb58' }]} onPress={onAcceptService}>
                 <Text style={styles.buttonText}>Aceptar</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#ff6b6b'}]} onPress={onRejectService}>
+              <Pressable style={[styles.button, { backgroundColor: '#ff6b6b' }]} onPress={onRejectService}>
                 <Text style={styles.buttonText}>Rechazar</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
-                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
+              <Pressable style={[styles.button, { backgroundColor: '#e6ebf2' }]} onPress={onClose}>
+                <Text style={[styles.buttonText, { color: '#516072' }]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -199,16 +200,16 @@ const ServiceDetailsModal = ({
         case 'ACCEPTED':
           return (
             <>
-              <Pressable style={[styles.button, {backgroundColor: '#00cb58'}]} onPress={onCompleteService}>
+              <Pressable style={[styles.button, { backgroundColor: '#00cb58' }]} onPress={onCompleteService}>
                 <Text style={styles.buttonText}>Completar</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#ff4444'}]} onPress={onCancelService}>
+              <Pressable style={[styles.button, { backgroundColor: '#ff4444' }]} onPress={onCancelService}>
                 <Text style={styles.buttonText}>Cancelar</Text>
               </Pressable>
 
-              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
-                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
+              <Pressable style={[styles.button, { backgroundColor: '#e6ebf2' }]} onPress={onClose}>
+                <Text style={[styles.buttonText, { color: '#516072' }]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -218,8 +219,8 @@ const ServiceDetailsModal = ({
         case 'REJECTED':
         default:
           return (
-            <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
-              <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
+            <Pressable style={[styles.button, { backgroundColor: '#e6ebf2' }]} onPress={onClose}>
+              <Text style={[styles.buttonText, { color: '#516072' }]}>Cerrar</Text>
             </Pressable>
           );
       }
@@ -233,88 +234,88 @@ const ServiceDetailsModal = ({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <Pressable style={styles.overlay} onPress={onClose}/>
-        <View style={styles.modal}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={styles.title}>Detalles del Servicio</Text>
+      <Pressable style={styles.overlay} onPress={onClose} />
+      <View style={styles.modal}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text style={styles.title}>Detalles del Servicio</Text>
 
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Proveedor</Text>
-              <View style={styles.card}>
-                <InfoRow 
-                  label="Nombre" 
-                  value={`${service.provider.name} ${service.provider.lastName}`} 
-                />
-                <InfoRow 
-                  label="Profesión" 
-                  value={service.profession.name} 
-                  last 
-                />
-              </View>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Proveedor</Text>
+            <View style={styles.card}>
+              <InfoRow
+                label="Nombre"
+                value={`${service.provider.name} ${service.provider.lastName}`}
+              />
+              <InfoRow
+                label="Profesión"
+                value={service.profession.name}
+                last
+              />
             </View>
+          </View>
 
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Información del Turno</Text>
-              <View style={styles.card}>
-                <View style={styles.row}>
-                  <Text style={styles.rowLabel}>Estado</Text>
-                  <View
-                    style={[
-                      styles.stateBadge,
-                      { backgroundColor: getStateColor(service.state) },
-                    ]}
-                  >
-                    <Text style={styles.stateText}>
-                      {getStateText(service.state)}
-                    </Text>
-                  </View>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Información del Turno</Text>
+            <View style={styles.card}>
+              <View style={styles.row}>
+                <Text style={styles.rowLabel}>Estado</Text>
+                <View
+                  style={[
+                    styles.stateBadge,
+                    { backgroundColor: getStateColor(service.state) },
+                  ]}
+                >
+                  <Text style={styles.stateText}>
+                    {getStateText(service.state)}
+                  </Text>
                 </View>
-                <InfoRow 
-                  label="Fecha y Hora" 
-                  value={DateTime.fromISO(service.date, { zone: "utc" })
-                          .setZone("America/Argentina/Buenos_Aires")
-                          .toFormat("dd/MM/yyyy HH:mm")} 
-                  last 
-                />
               </View>
+              <InfoRow
+                label="Fecha y Hora"
+                value={DateTime.fromISO(service.date, { zone: "utc" })
+                  .setZone("America/Argentina/Buenos_Aires")
+                  .toFormat("dd/MM/yyyy HH:mm")}
+                last
+              />
             </View>
+          </View>
 
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Dirección</Text>
-              <View style={styles.card}>
-                <InfoRow 
-                  label="Calle" 
-                  value={service.address.street} 
-                />
-                <InfoRow 
-                  label="Número" 
-                  value={String(service.address.number)} 
-                />
-                <InfoRow 
-                  label="Piso" 
-                  value={service.address.floor} 
-                />
-                <InfoRow 
-                  label="Provincia" 
-                  value={service.address.province} 
-                />
-                <InfoRow 
-                  label="País" 
-                  value={service.address.country} 
-                  last 
-                />
-              </View>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Dirección</Text>
+            <View style={styles.card}>
+              <InfoRow
+                label="Calle"
+                value={service.address.street}
+              />
+              <InfoRow
+                label="Número"
+                value={String(service.address.number)}
+              />
+              <InfoRow
+                label="Piso"
+                value={service.address.floor}
+              />
+              <InfoRow
+                label="Provincia"
+                value={service.address.province}
+              />
+              <InfoRow
+                label="País"
+                value={service.address.country}
+                last
+              />
             </View>
+          </View>
 
-            {(service.rating > 0 || service.comment) && (
+          {(service.rating > 0 || service.comment) && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Valoración</Text>
               <View style={styles.card}>
 
                 {service.price > 0 && (
-                  <InfoRow 
-                    label="Precio" 
-                    value={`$${Number(service.price).toFixed(2)}`} 
+                  <InfoRow
+                    label="Precio"
+                    value={`$${Number(service.price).toFixed(2)}`}
                   />
                 )}
 
@@ -322,7 +323,7 @@ const ServiceDetailsModal = ({
                   <View style={styles.row}>
                     <Text style={styles.rowLabel}>Rating</Text>
                     <View style={styles.ratingContainer}>
-                        <Rating rating={service.rating}/>
+                      <Rating rating={service.rating} />
                       <Text style={styles.ratingNumber}>
                         {Number(service.rating).toFixed(1)}
                       </Text>
@@ -341,31 +342,31 @@ const ServiceDetailsModal = ({
             </View>
           )}
 
-            <View style={styles.buttonsContainer}>
-              
+          <View style={styles.buttonsContainer}>
+
             {mode === 'user' && (
               <>
                 <Text style={styles.sectionTitle}>Contacto</Text>
 
-                <View style={{ 
-                  flexDirection: "row", 
-                  justifyContent: "space-evenly" 
+                <View style={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly"
                 }}>
-                  <Pressable 
+                  <Pressable
                     style={[styles.iconStub, { backgroundColor: "#59cc55ff" }]}
                     onPress={() => handlePressWhatsapp(service.provider.phone, service.profession.name)}
                   >
                     <FontAwesome name="whatsapp" size={37} color="white" />
                   </Pressable>
 
-                  <Pressable 
+                  <Pressable
                     style={[styles.iconStub, { backgroundColor: "#65a8faff" }]}
                     onPress={() => handlePressMail(service.provider.email)}
                   >
                     <MaterialCommunityIcons name="email" size={34} color="white" />
                   </Pressable>
 
-                  <Pressable 
+                  <Pressable
                     style={[styles.iconStub, { backgroundColor: "#50b94cff" }]}
                     onPress={() => handlePressPhone(service.provider.phone)}
                   >
@@ -375,10 +376,10 @@ const ServiceDetailsModal = ({
               </>
             )}
 
-              {renderActionButtons()}
-            </View>
-          </ScrollView>
-        </View>
+            {renderActionButtons()}
+          </View>
+        </ScrollView>
+      </View>
     </Modal>
   );
 };
@@ -514,13 +515,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  iconStub: { 
-    width: 48, 
-    height: 48, 
-    borderRadius: 10, 
-    backgroundColor: "#E5ECFF", 
-    alignItems: "center", 
-    justifyContent: "center" 
+  iconStub: {
+    width: 48,
+    height: 48,
+    borderRadius: 10,
+    backgroundColor: "#E5ECFF",
+    alignItems: "center",
+    justifyContent: "center"
   },
 });
 

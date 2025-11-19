@@ -1,17 +1,17 @@
 // components/HistoryFilterModal.tsx
 import React, { useState } from "react";
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableWithoutFeedback,
-    View,
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -26,10 +26,10 @@ type Props = {
   visible: boolean;
   onClose: () => void;
   onApply: (filters: HistoryFilters) => void;
-  statuses: string[]; 
+  statuses: string[];
 };
 
-const PROFESSIONS = ["plomero", "gasista", "paseador"];
+const PROFESSIONS = ["plomero", "gasista", "paseador","limpieza","pintor","entrenador","electricista"];
 
 export default function Filtro({
   visible,

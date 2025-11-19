@@ -302,3 +302,51 @@ export async function updateUserPendingReviews(data: {id: number, state: boolean
     }
     return res.json();
 }
+
+export async function updateServiceReview(data: {id: string, rating: number, comment: string}){
+    const res = await fetch(`${URL}/service/updateReview`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    } else {
+        queryClient.invalidateQueries({ queryKey: ["FinishedUsedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["FinishedProvidedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["User"] });
+        queryClient.invalidateQueries({ queryKey: ["professional"] });
+        queryClient.invalidateQueries({ queryKey: ["ProviderActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["UserActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["professionalProfessions"] });
+        queryClient.invalidateQueries({ queryKey: ["professionals"] });
+        queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["professions"] });
+    }
+    return res.json();
+}
+
+export async function updateRating(data: {id: number | undefined}){
+    const res = await fetch(`${URL}/professional/updateRating`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    } else {
+        queryClient.invalidateQueries({ queryKey: ["FinishedUsedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["FinishedProvidedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["User"] });
+        queryClient.invalidateQueries({ queryKey: ["professional"] });
+        queryClient.invalidateQueries({ queryKey: ["ProviderActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["UserActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["professionalProfessions"] });
+        queryClient.invalidateQueries({ queryKey: ["professionals"] });
+        queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["professions"] });
+    }
+    return res.json();
+}
