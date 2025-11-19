@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
 
   cardSelected: {
     borderColor: "#00cb58b3",
-    backgroundColor: "#beffc7ff",
+    backgroundColor: "#00cb58b3",
   },
 
   serviceText: {

@@ -67,7 +67,6 @@ export default function Index() {
 
     if (filters.profession) {
       data = data.filter((element: any) => element.profession === filters.profession);
-      // si tu profesión está en otro lado, ej: element.profession.name, cambialo acá
     }
 
     if (filters.fromDate) {

@@ -11,7 +11,6 @@ import ServiceCardData from "./Types/ServiceCardData";
 
 type ServiceCardProps = {
     data: ServiceCardData,
-    onUpdate: () => void
 }
 
 const useUpdateStatus = () => {
@@ -22,7 +21,7 @@ const useUpdateStatus = () => {
     });
 };
 
-export default function ServiceCard({ data, onUpdate }: ServiceCardProps) {
+export default function ServiceCard({ data }: ServiceCardProps) {
 
     var borderColor;
     var backgroundTextColor;
@@ -56,23 +55,6 @@ export default function ServiceCard({ data, onUpdate }: ServiceCardProps) {
         }, [])
     );
 
-    {/*const mutation = useMutation({
-        mutationFn: (payload: { id: string; state: string }) =>
-            updateService(data.id, payload),
-        onSuccess: async (updated) => {
-            await qc.invalidateQueries({ queryKey: ['service', updated.id] });
-            await qc.invalidateQueries({ queryKey: ['activeServices'] });
-            setModal(false);
-        },
-    });
-
-    const onPressUpdateState = (id: string, newState: string) => {
-        mutation.mutate({
-            id: id,
-            state: newState,
-        });
-    };*/}
-
     const serviceData = serviceQuery.data
 
     const openModal = () => {
@@ -86,10 +68,9 @@ export default function ServiceCard({ data, onUpdate }: ServiceCardProps) {
         }
         try {
             await updateStatusMutation.mutateAsync(updateData)
-            onUpdate()
+            await serviceQuery.refetch();
             setSuccessOpen(true)
-            serviceQuery.refetch();
-            //setModal(false)
+            setModal(false)
         } catch (error) {
             //setErrorOpen(true)
         }
@@ -110,13 +91,34 @@ export default function ServiceCard({ data, onUpdate }: ServiceCardProps) {
         }
     };
 
-    const handleRejectService = () => {
-        //onPressUpdateState(data.id, 'REJECTED')
-        serviceQuery.refetch()
+    const handleRejectService = async () => {
+        const updateData = {
+            id: data.id,
+            state: 'REJECTED'
+        }
+        try {
+            await updateStatusMutation.mutateAsync(updateData)
+            await serviceQuery.refetch();
+            setSuccessOpen(true)
+            setModal(false)
+        } catch (error) {
+            //setErrorOpen(true)
+        }
     };
 
-    const handleCompleteService = () => {
-        //onPressUpdateState(data.id, 'COMPLETED')
+    const handleCompleteService = async () => {
+        const updateData = {
+            id: data.id,
+            state: 'COMPLETED'
+        }
+        try {
+            await updateStatusMutation.mutateAsync(updateData)
+            await serviceQuery.refetch();
+            setSuccessOpen(true)
+            setModal(false)
+        } catch (error) {
+            //setErrorOpen(true)
+        }
         const userReviewsData = {
             id: serviceData.user.id,
             state: true
