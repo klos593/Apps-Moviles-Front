@@ -29,7 +29,7 @@ type Props = {
   statuses: string[];
 };
 
-const PROFESSIONS = ["plomero", "gasista", "paseador","limpieza","pintor","entrenador","electricista"];
+const PROFESSIONS = ["Plomero", "Gasista", "Paseador","Limpieza","Pintor","Entrenador","Electricista"];
 
 export default function Filtro({
   visible,
@@ -70,11 +70,6 @@ export default function Filtro({
       onRequestClose={onClose}
     >
       <View style={styles.backdrop}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.avoider}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
-        >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[styles.modalContainer, { maxHeight: "85%", paddingBottom: insets.bottom + 12 }]}>
               <ScrollView
@@ -189,7 +184,6 @@ export default function Filtro({
               </View>
             </View>
           </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
       </View>
     </Modal>
   );
@@ -208,7 +202,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "90%",
-    maxHeight: "80%",
+    maxHeight: "100%",
     borderRadius: 18,
     backgroundColor: "#FFF",
     padding: 16,
