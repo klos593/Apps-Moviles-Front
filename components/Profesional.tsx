@@ -46,7 +46,7 @@ export default function Profesional({ data }: ProfesionalProps) {
   });
 
   const professionalReviewsQuery = useQuery({
-    queryKey: ["professionalReviews", data.id.toString],
+    queryKey: ["professionalReviews", data.id.toString()],
     queryFn: () => getProfessionalReviews(data.id.toString()),
   });
 
@@ -58,7 +58,7 @@ export default function Profesional({ data }: ProfesionalProps) {
     }, [])
   );
 
-  const serviceData = useMemo(() => professionalReviewsQuery.data ?? [], [professionalReviewsQuery.data]);
+  const serviceDataReview = useMemo(() => professionalReviewsQuery.data ?? [], [professionalReviewsQuery.data]);
   const professionsData = professionsQuery.data ?? [];
 
   const showModal = () => setModal(true);
@@ -156,13 +156,13 @@ export default function Profesional({ data }: ProfesionalProps) {
           <View style={styles.reviewsContainer}>
             <Text style={styles.sectionTitle}>OPINIONES</Text>
 
-            {serviceData && serviceData.length === 0 && (
+            {serviceDataReview && serviceDataReview.length === 0 && (
               <Text style={{ marginTop: 4 }}>Este profesional aún no tiene reseñas.</Text>
             )}
 
-            {serviceData && serviceData.length > 0 && (
+            {serviceDataReview && serviceDataReview.length > 0 && (
               <FlatList
-                data={serviceData}
+                data={serviceDataReview}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id.toString()}
@@ -171,7 +171,7 @@ export default function Profesional({ data }: ProfesionalProps) {
                   <View style={styles.reviewCard}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
                       <Rating rating={item.rating} />
-                      <Text style={styles.reviewRatingText}>{item.rating.toFixed(1)}</Text>
+                      <Text style={styles.reviewRatingText}>{item.rating}</Text>
                     </View>
                     <Text numberOfLines={3} style={styles.reviewComment}>
                       {item.comment}
