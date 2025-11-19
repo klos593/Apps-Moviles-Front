@@ -10,6 +10,7 @@ export type ServiceInfo = {
             email: string;
         },
         user: {
+            id: number,
             name: string;
             lastName: string;
         }

@@ -1,13 +1,13 @@
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    View
+  ActivityIndicator,
+  Alert,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
 
 interface ImagePickerModalProps {
@@ -78,7 +78,7 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images'],
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [1, 1],
         quality: 0.8,
       });
 
@@ -102,7 +102,7 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
 
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [1, 1],
         quality: 0.8,
       });
 

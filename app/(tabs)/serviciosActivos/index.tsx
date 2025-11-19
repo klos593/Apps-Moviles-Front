@@ -47,6 +47,10 @@ export default function Index() {
     const activeQuery =
         mode === "user" ? userActiveServicesQuery : providerActiveServicesQuery;
 
+    const updateQuery = () => {
+        activeQuery.refetch()
+    }
+    
     const serviceData = useMemo(() => activeQuery.data ?? [], [activeQuery.data]);
 
     const [filteredData, setFilteredData] = useState(serviceData);
@@ -149,7 +153,7 @@ export default function Index() {
                 </View>
                 <View style={{ flex: 10 }}>
                     <FlatList data={filteredData} renderItem={({ item }) => (
-                        <ServiceCard data={item}/>
+                        <ServiceCard data={item} onUpdate={updateQuery}/>
                     )} />
                 </View>
                 <View style={{ flex: 1.7 }}></View>

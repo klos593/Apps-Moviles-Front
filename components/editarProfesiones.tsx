@@ -53,6 +53,7 @@ export default function ServiceTypeScreen() {
     const deleteProfessionMutation = useDeleteProfession()
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
+    const [maxreached, setMaxReached] = useState(false)
 
     const user = useQuery({
         queryKey: ["User", email],
@@ -104,7 +105,7 @@ export default function ServiceTypeScreen() {
         }
 
         if (activeProfessionData.length >= 3) {
-            setErrorOpen(true)
+            setMaxReached(true)
             return;
         }
 
@@ -153,7 +154,7 @@ export default function ServiceTypeScreen() {
                         );
                     })}
                 </View>
-                
+
                 <Text style={styles.sectionTitle}>PROFESIONES DISPONIBLES</Text>
                 <View style={styles.gridContainer}>
                     {availableProfessionData.map((opt) => {
@@ -169,22 +170,23 @@ export default function ServiceTypeScreen() {
                         );
                     })}
                 </View>
-                
+
                 <View style={styles.buttonContainer}>
-                    <Pressable style={[styles.button, {backgroundColor: "#2f6b45"}]} onPress={handleAdd} disabled={addProfessionMutation.isPending}>
+                    <Pressable style={[styles.button, { backgroundColor: "#2f6b45" }]} onPress={handleAdd} disabled={addProfessionMutation.isPending}>
                         <Text style={styles.buttonText}>
                             {addProfessionMutation.isPending ? "Agregando ..." : "Agregar Profesión"}
                         </Text>
                     </Pressable>
 
-                    <Pressable style={[styles.button, {backgroundColor: "#e6ebf2"}]} onPress={handleDelete} disabled={deleteProfessionMutation.isPending}>
-                        <Text style={[styles.buttonText, {color: "#516072"}]}>
+                    <Pressable style={[styles.button, { backgroundColor: "#e6ebf2" }]} onPress={handleDelete} disabled={deleteProfessionMutation.isPending}>
+                        <Text style={[styles.buttonText, { color: "#516072" }]}>
                             {deleteProfessionMutation.isPending ? "Eliminando ..." : "Eliminar Profesión"}
                         </Text>
                     </Pressable>
                 </View>
                 <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} message="Operacion realizada con exito!" />
                 <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} message="Error al realizar la operacion!" />
+                <ErrorModal visible={maxreached} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setMaxReached(false) }} message="No se puede tener mas de 3 profesiones!" />
             </View>
         </>
     );
@@ -239,11 +241,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
 
-    sectionTitle: { 
-        color: "#6B7A90", 
-        fontWeight: "700", 
-        marginBottom: 10, 
-        letterSpacing: 0.5 
+    sectionTitle: {
+        color: "#6B7A90",
+        fontWeight: "700",
+        marginBottom: 10,
+        letterSpacing: 0.5
     },
 
     titleContainer: {
@@ -254,15 +256,15 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 22, 
-        fontWeight: "800", 
-        marginTop: 6, 
+        fontSize: 22,
+        fontWeight: "800",
+        marginTop: 6,
         color: "#1F2D3D"
     },
 
     buttonText: {
-        color: "white", 
-        fontSize: 16, 
+        color: "white",
+        fontSize: 16,
         fontWeight: "700"
     },
 
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
     },
 
     buttonContainer: {
-        backgroundColor: "#F5F6FA", 
+        backgroundColor: "#F5F6FA",
         gap: 14,
         marginTop: 15
     }

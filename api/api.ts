@@ -1,3 +1,4 @@
+import { PendingReviewsInfo } from "@/components/Types/PendingReviewsInfo";
 import { ProfessionalCardData } from "@/components/Types/ProfessionalCardData";
 import { ProfessionalData } from "@/components/Types/ProfessionalData";
 import { ProfessionCardData } from "@/components/Types/ProfessionCardData";
@@ -235,7 +236,7 @@ export async function updatePicture(data: {userId: number, pictureUrl: string}) 
 };
 
 export async function getProfessionalReviews(professionalId: string): Promise<Review[]> {
-  const res = await fetch(`${URL}/serviceInfo/providerReviews/${professionalId}`);
+  const res = await fetch(`${URL}/serviceInfo/providerReviews/${encodeURIComponent(professionalId)}`);
 
   if (!res.ok) {
     throw new Error('Error al obtener reviews');
@@ -244,12 +245,45 @@ export async function getProfessionalReviews(professionalId: string): Promise<Re
   return res.json();
 }
 
-export async function updateService(id: string, body: { state: string }): Promise<ServiceInfo> {
-    const userId = parseInt(id, 10)
-    const res = await fetch(`${URL}/serviceInfo/${encodeURIComponent(userId)}`, {
+export async function updateService(data: {id: string, state: string }): Promise<ServiceInfo> {
+    const res = await fetch(`${URL}/serviceInfo`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    } else {
+        queryClient.invalidateQueries({ queryKey: ["FinishedUsedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["FinishedProvidedServices"] });
+        queryClient.invalidateQueries({ queryKey: ["User"] });
+        queryClient.invalidateQueries({ queryKey: ["professional"] });
+        queryClient.invalidateQueries({ queryKey: ["ProviderActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["UserActiveServices"] });
+        queryClient.invalidateQueries({ queryKey: ["professionalProfessions"] });
+        queryClient.invalidateQueries({ queryKey: ["professionals"] });
+        queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["serviceInfo"] });
+        queryClient.invalidateQueries({ queryKey: ["professions"] });
+    }
+    return res.json();
+}
+
+export async function getUserPendingReviews(email: string): Promise<PendingReviewsInfo> {
+  const res = await fetch(`${URL}/user/pendingReviews/${encodeURIComponent(email)}`);
+
+  if (!res.ok) {
+    throw new Error('Error al obtener reviews pendientes');
+  }
+
+  return res.json();
+}
+
+export async function updateUserPendingReviews(data: {id: number, state: boolean}) {
+    const res = await fetch(`${URL}/user/pendingReviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
     });
     if (!res.ok) {
         throw new Error("No se pudo actualizar")

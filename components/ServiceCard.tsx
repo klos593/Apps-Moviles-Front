@@ -1,18 +1,28 @@
+import { getServiceInfoById, updateService, updateUserPendingReviews } from "@/api/api";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useFocusEffect } from "expo-router";
+import { DateTime } from 'luxon';
 import React, { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import ServiceDetailsModal from "./ServiceModal";
+import SuccessModal from "./SuccesAnimation";
 import ServiceCardData from "./Types/ServiceCardData";
-import { DateTime } from 'luxon'
-import { getServiceInfoById, updateService } from "@/api/api";
 
 type ServiceCardProps = {
-    data: ServiceCardData
+    data: ServiceCardData,
+    onUpdate: () => void
 }
 
-export default function ServiceCard({ data }: ServiceCardProps) {
+const useUpdateStatus = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: updateService,
+    });
+};
+
+export default function ServiceCard({ data, onUpdate }: ServiceCardProps) {
 
     var borderColor;
     var backgroundTextColor;
@@ -32,6 +42,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
 
     const [modal, setModal] = useState(false)
     const qc = useQueryClient();
+    const updateStatusMutation = useUpdateStatus()
+    const [successOpen, setSuccessOpen] = useState(false);
 
     const serviceQuery = useQuery({
         queryKey: ["serviceInfo", data.id],
@@ -44,7 +56,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         }, [])
     );
 
-    const mutation = useMutation({
+    {/*const mutation = useMutation({
         mutationFn: (payload: { id: string; state: string }) =>
             updateService(data.id, payload),
         onSuccess: async (updated) => {
@@ -59,7 +71,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             id: id,
             state: newState,
         });
-    };
+    };*/}
 
     const serviceData = serviceQuery.data
 
@@ -67,23 +79,49 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         setModal(true)
     }
 
-    const handleCancelService = () => {
-        onPressUpdateState(data.id, 'CANCELED')
-        serviceQuery.refetch()
+    const handleCancelService = async () => {
+        const updateData = {
+            id: data.id,
+            state: 'CANCELED'
+        }
+        try {
+            await updateStatusMutation.mutateAsync(updateData)
+            onUpdate()
+            setSuccessOpen(true)
+            serviceQuery.refetch();
+            //setModal(false)
+        } catch (error) {
+            //setErrorOpen(true)
+        }
     };
 
-    const handleAcceptService = () => {
-        onPressUpdateState(data.id, 'ACCEPTED')
-        serviceQuery.refetch()
+    const handleAcceptService = async () => {
+        const updateData = {
+            id: data.id,
+            state: 'ACCEPTED'
+        }
+        try {
+            await updateStatusMutation.mutateAsync(updateData)
+            await serviceQuery.refetch();
+            setSuccessOpen(true)
+            setModal(false)
+        } catch (error) {
+            //setErrorOpen(true)
+        }
     };
 
     const handleRejectService = () => {
-        onPressUpdateState(data.id, 'REJECTED')
+        //onPressUpdateState(data.id, 'REJECTED')
         serviceQuery.refetch()
     };
 
     const handleCompleteService = () => {
-        onPressUpdateState(data.id, 'COMPLETED')
+        //onPressUpdateState(data.id, 'COMPLETED')
+        const userReviewsData = {
+            id: serviceData.user.id,
+            state: true
+        }
+        updateUserPendingReviews(userReviewsData)
         serviceQuery.refetch()
     };
 
@@ -91,7 +129,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         setModal(false)
         router.push(`/home/profesional/${id}`)
     };
-    
+
     const handleGoToProfile = (id: number) => {
         setModal(false)
         router.push(`/home/profesional/${id}`)
@@ -118,8 +156,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
                         <View style={styles.infoView}>
                             <View style={styles.iconStub}><FontAwesome name="calendar-o" size={18} color="#6B7A90" /></View>
                             <Text>{DateTime.fromISO(data.date, { zone: "utc" })
-                                            .setZone("America/Argentina/Buenos_Aires")
-                                            .toFormat("dd/MM/yyyy HH:mm")}
+                                .setZone("America/Argentina/Buenos_Aires")
+                                .toFormat("dd/MM/yyyy HH:mm")}
                             </Text>
                         </View>
 
@@ -130,6 +168,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
                     </View>
                 </View>
             </Pressable>
+            <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} message="Operacion realizada con exito!" />
             <ServiceDetailsModal
                 visible={modal}
                 onClose={() => setModal(false)}

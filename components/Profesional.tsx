@@ -1,4 +1,4 @@
-import { createService, getProfessionalProfessions, getProfessionalReviews, getUserIdAndAddressId } from '@/api/api';
+import { createService, getProfessionalProfessions, getProfessionalReviews, getUserIdAndAddressId, getUserPendingReviews } from '@/api/api';
 import { useAuthUser } from '@/src/auth/AuthContext';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFocusEffect } from 'expo-router';
@@ -69,6 +69,11 @@ export default function Profesional({ data }: ProfesionalProps) {
     queryFn: () => getUserIdAndAddressId(email),
   });
 
+  const userReviewsQuery = useQuery({
+    queryKey: ["userReviewsInfo", email],
+    queryFn: () => getUserPendingReviews(email),
+  });
+
   const handleContact = async () => {
     if (!selectedProfession) {
       Alert.alert('Error', 'Debes seleccionar una profesión');
@@ -86,6 +91,12 @@ export default function Profesional({ data }: ProfesionalProps) {
       Alert.alert('Error', 'No se pudo obtener la información del usuario');
       return;
     }
+
+    if (userReviewsQuery.data?.hasPendingReviews){
+      Alert.alert('Error', 'Debes completar tus reseñas pendientes antes de pode contratar a un profesional')
+    }
+
+    console.log(userReviewsQuery.data)
     const serviceData = {
       professionId: parseInt(selectedProfession.id, 10),
       userId: userQuery.data.userId,
