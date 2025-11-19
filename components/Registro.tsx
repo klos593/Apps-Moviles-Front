@@ -34,7 +34,6 @@ export default function Registro() {
 
   const [country, setCountry] = useState("");
   const [province, setProvince] = useState("");
-  const [city, setCity] = useState("");
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
   const [floor, setFloor] = useState(""); 
@@ -291,14 +290,44 @@ export default function Registro() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  scrollContent: { paddingBottom: 24 }, 
-  inner: { flexGrow: 1, padding: 20, gap: 16, paddingTop: 32 },
-  brand: { fontSize: 20, fontWeight: "700", textAlign: "center" },
-  title: { fontSize: 24, fontWeight: "800", textAlign: "center", marginTop: 8 },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#fff" 
+  },
 
-  field: { gap: 8 },
-  label: { fontSize: 14, color: "#444" },
+  scrollContent: { 
+    paddingBottom: 24 
+  }, 
+
+  inner: { 
+    flexGrow: 1, 
+    padding: 20, 
+    gap: 16, 
+    paddingTop: 32 
+  },
+
+  brand: { 
+    fontSize: 20, 
+    fontWeight: "700", 
+    textAlign: "center" 
+  },
+
+  title: { 
+    fontSize: 24, 
+    fontWeight: "800", 
+    textAlign: "center", 
+    marginTop: 8 
+  },
+
+  field: { 
+    gap: 8 
+  },
+
+  label: { 
+    fontSize: 14, 
+    color: "#444" 
+  },
+
   input: {
     height: 48,
     backgroundColor: "#f2f2f2",
@@ -307,8 +336,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "transparent",
   },
-  inputError: { borderColor: "#ff5a5f", backgroundColor: "#fff5f5" },
-  helper: { color: "#ff5a5f", fontSize: 12 },
+
+  inputError: { 
+    borderColor: "#ff5a5f", 
+    backgroundColor: "#fff5f5" 
+  },
+
+  helper: { 
+    color: "#ff5a5f", 
+    fontSize: 12 
+  },
 
   toggle: {
     position: "absolute",
@@ -318,9 +355,19 @@ const styles = StyleSheet.create({
     height: 28,
     justifyContent: "center",
   },
-  toggleText: { color: "#333", fontWeight: "600" },
 
-  row: { flexDirection: "row", alignItems: "center", gap: 10, marginTop: 4 },
+  toggleText: { 
+    color: "#333", 
+    fontWeight: "600" 
+  },
+
+  row: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    gap: 10, 
+    marginTop: 4 
+  },
+
   checkbox: {
     width: 20,
     height: 20,
@@ -329,8 +376,14 @@ const styles = StyleSheet.create({
     borderColor: "#bbb",
     backgroundColor: "#fff",
   },
-  checkboxOn: { backgroundColor: "#3e6259" },
-  rowText: { color: "#333" },
+
+  checkboxOn: { 
+    backgroundColor: "#3e6259" 
+  },
+
+  rowText: { 
+    color: "#333" 
+  },
 
   addressBlock: {
     padding: 12,
@@ -349,8 +402,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 8,
   },
-  primaryText: { color: "#fff", fontSize: 16, fontWeight: "700" },
-  btnDisabled: { opacity: 0.5 },
+
+  primaryText: { 
+    color: "#fff", 
+    fontSize: 16, 
+    fontWeight: "700" 
+  },
+
+  btnDisabled: { 
+    opacity: 0.5 
+  },
 
   secondaryBtn: {
     height: 50,
@@ -360,5 +421,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  secondaryText: { color: "#111", fontSize: 16, fontWeight: "700" },
+
+  secondaryText: { 
+    color: "#111", 
+    fontSize: 16, 
+    fontWeight: "700" 
+  },
 });

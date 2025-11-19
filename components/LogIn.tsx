@@ -135,18 +135,40 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#fff" 
+  },
+
   inner: {
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 32,
     gap: 16,
   },
-  brand: { fontSize: 20, fontWeight: "700", textAlign: "center" },
-  title: { fontSize: 24, fontWeight: "800", marginTop: 8, textAlign: "center" },
 
-  field: { gap: 8 },
-  label: { fontSize: 14, color: "#444" },
+  brand: { 
+    fontSize: 20, 
+    fontWeight: "700", 
+    textAlign: "center" 
+  },
+
+  title: { 
+    fontSize: 24, 
+    fontWeight: "800", 
+    marginTop: 8, 
+    textAlign: "center" 
+  },
+
+  field: { 
+    gap: 8 
+  },
+
+  label: { 
+    fontSize: 14, 
+    color: "#444" 
+  },
+
   input: {
     height: 48,
     backgroundColor: "#f2f2f2",
@@ -155,11 +177,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "transparent",
   },
-  inputNoMargin: { marginBottom: 0 },
-  inputError: { borderColor: "#ff5a5f", backgroundColor: "#fff5f5" },
-  helper: { color: "#ff5a5f", fontSize: 12 },
 
-  passWrap: { position: "relative" },
+  inputNoMargin: { 
+    marginBottom: 0 
+  },
+
+  inputError: { 
+    borderColor: "#ff5a5f", 
+    backgroundColor: "#fff5f5" 
+  },
+
+  helper: { 
+    color: "#ff5a5f", 
+    fontSize: 12 
+  },
+
+  passWrap: { 
+    position: "relative" 
+  },
+
   toggle: {
     position: "absolute",
     right: 10,
@@ -170,7 +206,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
   },
-  toggleText: { color: "#000000ff", fontWeight: "600" },
+  
+  toggleText: { 
+    color: "#000000ff", 
+    fontWeight: "600" 
+  },
 
   primaryBtn: {
     height: 50,
@@ -180,8 +220,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 8,
   },
-  primaryText: { color: "#fff", fontSize: 16, fontWeight: "700" },
-  btnDisabled: { opacity: 0.5 },
+
+  primaryText: { 
+    color: "#fff", 
+    fontSize: 16, 
+    fontWeight: "700" 
+  },
+
+  btnDisabled: { 
+    opacity: 0.5 
+  },
 
   secondaryBtn: {
     height: 50,
@@ -191,5 +239,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  secondaryText: { color: "#000000ff", fontSize: 16, fontWeight: "700" },
+
+  secondaryText: { 
+    color: "#000000ff", 
+    fontSize: 16, 
+    fontWeight: "700" 
+  },
 });

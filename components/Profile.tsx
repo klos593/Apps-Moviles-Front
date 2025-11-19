@@ -232,7 +232,11 @@ export default function Profile() {
 const CARD_RADIUS = 18;
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#F5F6FA" },
+  screen: { 
+    flex: 1, 
+    backgroundColor: "#F5F6FA" 
+  },
+
   headerBg: {
     position: "absolute",
     top: 0, left: 0, right: 0,
@@ -240,6 +244,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 40,
     overflow: "hidden",
   },
+
   profileCard: {
     backgroundColor: "white",
     borderRadius: CARD_RADIUS,
@@ -253,21 +258,45 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 2,
   },
+
   avatarWrap: {
     width: 96, height: 96, borderRadius: 20,
     backgroundColor: "#F1F4F8",
     overflow: "hidden",
     marginBottom: 14,
   },
-  avatar: { width: "100%", height: "100%", resizeMode: "cover" },
-  fullName: {
-    fontSize: 20, fontWeight: "700", color: "#1F2D3D",
-    marginTop: 4, textAlign: "center",
-  },
-  emailText: { fontSize: 14, color: "#6B7A90", marginTop: 4, textAlign: "center" },
 
-  section: { marginTop: 8 },
-  sectionTitle: { color: "#6B7A90", fontWeight: "700", marginBottom: 10, letterSpacing: 0.5 },
+  avatar: { 
+    width: "100%", 
+    height: "100%", 
+    resizeMode: "cover" 
+  },
+
+  fullName: {
+    fontSize: 20, 
+    fontWeight: "700", 
+    color: "#1F2D3D",
+    marginTop: 4, 
+    textAlign: "center",
+  },
+
+  emailText: { 
+    fontSize: 14, 
+    color: "#6B7A90", 
+    marginTop: 4, 
+    textAlign: "center" 
+  },
+
+  section: { 
+    marginTop: 8 
+  },
+
+  sectionTitle: { 
+    color: "#6B7A90", 
+    fontWeight: "700", 
+    marginBottom: 10, 
+    letterSpacing: 0.5 
+  },
 
   row: {
     backgroundColor: "white",
@@ -282,11 +311,43 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
 
-  rowLeft: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 6 },
-  iconStub: { width: 28, height: 28, borderRadius: 8, backgroundColor: "#E5ECFF", alignItems: "center", justifyContent: "center" },
-  rowTitle: { fontSize: 16, fontWeight: "700", color: "#1F2D3D" },
-  rowSubtitle: { fontSize: 13, color: "#708099", marginTop: 3 },
-  logoutRow: { backgroundColor: "#FFF5F5" },
-  logoutIcon: { backgroundColor: "#FFD3D3" },
-  logoutText: { color: "#D72638" },
+  rowLeft: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    gap: 12, 
+    marginBottom: 6 
+  },
+  
+  iconStub: { 
+    width: 28, 
+    height: 28, 
+    borderRadius: 8, 
+    backgroundColor: "#E5ECFF", 
+    alignItems: "center", 
+    justifyContent: "center" 
+  },
+  
+  rowTitle: { 
+    fontSize: 16, 
+    fontWeight: "700", 
+    color: "#1F2D3D" 
+  },
+  
+  rowSubtitle: { 
+    fontSize: 13, 
+    color: "#708099", 
+    marginTop: 3 
+  },
+  
+  logoutRow: { 
+    backgroundColor: "#FFF5F5" 
+  },
+  
+  logoutIcon: { 
+    backgroundColor: "#FFD3D3" 
+  },
+  
+  logoutText: { 
+    color: "#D72638" 
+  },
 });

@@ -93,7 +93,6 @@ const FixItIntro: React.FC<Props> = ({
         ]}
       />
 
-      {/* Centered Title */}
       <Animated.View
         style={{
           alignItems: "center",

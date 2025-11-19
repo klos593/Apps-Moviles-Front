@@ -12,6 +12,7 @@ import {
   Text,
   View
 } from 'react-native';
+import Rating from './Rating';
 
 const handlePressWhatsapp = async (phone:string, profession:string) => {
   const url = `https://wa.me/${phone}?text=Hola%20quisiera%20averiguar%20sobre%20tu%20servicio%20de%20${profession.toLowerCase()}`;
@@ -99,23 +100,6 @@ const ServiceDetailsModal = ({
     }
   };
 
-  const renderStars = (rating) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-
-    for (let i = 0; i < 5; i++) {
-      if (i < fullStars) {
-        stars.push('★');
-      } else if (i === fullStars && hasHalfStar) {
-        stars.push('★');
-      } else {
-        stars.push('☆');
-      }
-    }
-    return stars.join(' ');
-  };
-
   const renderActionButtons = () => {
     const { state } = service;
 
@@ -124,16 +108,16 @@ const ServiceDetailsModal = ({
         case 'COMPLETED':
           return (
             <>
-              <Pressable style={styles.profileButton} onPress={onGoToProfile}>
-                <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#5b8266'}]} onPress={onGoToProfile}>
+                <Text style={styles.buttonText}>Ir al perfil del profesional</Text>
               </Pressable>
 
-              <Pressable style={styles.reviewButton} onPress={onReviewService}>
-                <Text style={styles.reviewButtonText}>Reseñar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#FFA500'}]} onPress={onReviewService}>
+                <Text style={styles.buttonText}>Reseñar</Text>
               </Pressable>
 
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
+                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -141,16 +125,16 @@ const ServiceDetailsModal = ({
         case 'PENDING':
           return (
             <>
-              <Pressable style={styles.profileButton} onPress={onGoToProfile}>
-                <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#5b8266'}]} onPress={onGoToProfile}>
+                <Text style={styles.buttonText}>Ir al perfil del profesional</Text>
               </Pressable>
 
-              <Pressable style={styles.cancelButton} onPress={onCancelService}>
-                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#ff4444'}]} onPress={onCancelService}>
+                <Text style={styles.buttonText}>Cancelar</Text>
               </Pressable>
 
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
+                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -158,16 +142,16 @@ const ServiceDetailsModal = ({
         case 'ACCEPTED':
           return (
             <>
-              <Pressable style={styles.profileButton} onPress={onGoToProfile}>
-                <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#5b8266'}]} onPress={onGoToProfile}>
+                <Text style={styles.buttonText}>Ir al perfil del profesional</Text>
               </Pressable>
 
-              <Pressable style={styles.cancelButton} onPress={onCancelService}>
-                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#ff4444'}]} onPress={onCancelService}>
+                <Text style={styles.buttonText}>Cancelar</Text>
               </Pressable>
 
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
+                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -176,21 +160,21 @@ const ServiceDetailsModal = ({
         case 'REJECTED':
           return (
             <>
-              <Pressable style={styles.profileButton} onPress={onGoToProfile}>
-                <Text style={styles.profileButtonText}>Ir al perfil del profesional</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#5b8266'}]} onPress={onGoToProfile}>
+                <Text style={styles.buttonText}>Ir al perfil del profesional</Text>
               </Pressable>
 
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
+                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
               </Pressable>
             </>
           );
 
         default:
           return (
-            <Pressable style={styles.closeButton} onPress={onClose}>
-              <Text style={styles.closeButtonText}>Cerrar</Text>
-            </Pressable>
+            <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
+                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
+              </Pressable>
           );
       }
     } else if (mode === 'provider') {
@@ -198,16 +182,16 @@ const ServiceDetailsModal = ({
         case 'PENDING':
           return (
             <>
-              <Pressable style={styles.acceptButton} onPress={onAcceptService}>
-                <Text style={styles.acceptButtonText}>Aceptar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#00cb58'}]} onPress={onAcceptService}>
+                <Text style={styles.buttonText}>Aceptar</Text>
               </Pressable>
 
-              <Pressable style={styles.rejectButton} onPress={onRejectService}>
-                <Text style={styles.rejectButtonText}>Rechazar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#ff6b6b'}]} onPress={onRejectService}>
+                <Text style={styles.buttonText}>Rechazar</Text>
               </Pressable>
 
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
+                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -215,16 +199,16 @@ const ServiceDetailsModal = ({
         case 'ACCEPTED':
           return (
             <>
-              <Pressable style={styles.acceptButton} onPress={onCompleteService}>
-                <Text style={styles.acceptButtonText}>Completar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#00cb58'}]} onPress={onCompleteService}>
+                <Text style={styles.buttonText}>Completar</Text>
               </Pressable>
 
-              <Pressable style={styles.cancelButton} onPress={onCancelService}>
-                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#ff4444'}]} onPress={onCancelService}>
+                <Text style={styles.buttonText}>Cancelar</Text>
               </Pressable>
 
-              <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>Cerrar</Text>
+              <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
+                <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
               </Pressable>
             </>
           );
@@ -234,8 +218,8 @@ const ServiceDetailsModal = ({
         case 'REJECTED':
         default:
           return (
-            <Pressable style={styles.closeButton} onPress={onClose}>
-              <Text style={styles.closeButtonText}>Cerrar</Text>
+            <Pressable style={[styles.button, {backgroundColor: '#e6ebf2'}]} onPress={onClose}>
+              <Text style={[styles.buttonText, {color: '#516072'}]}>Cerrar</Text>
             </Pressable>
           );
       }
@@ -338,9 +322,7 @@ const ServiceDetailsModal = ({
                   <View style={styles.row}>
                     <Text style={styles.rowLabel}>Rating</Text>
                     <View style={styles.ratingContainer}>
-                      <Text style={styles.starsText}>
-                        {renderStars(Number(service.rating))}
-                      </Text>
+                        <Rating rating={service.rating}/>
                       <Text style={styles.ratingNumber}>
                         {Number(service.rating).toFixed(1)}
                       </Text>
@@ -414,6 +396,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'flex-end',
   },
+
   modal: {
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
@@ -422,21 +405,25 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     height: '90%',
   },
+
   title: {
     fontSize: 22,
     fontWeight: '800',
     marginBottom: 20,
     color: '#1F2D3D',
   },
+
   section: {
     marginBottom: 16,
   },
+
   sectionTitle: {
     fontSize: 16,
     fontWeight: '700',
     color: '#516072',
     marginBottom: 8,
   },
+
   card: {
     backgroundColor: 'white',
     borderRadius: 16,
@@ -450,6 +437,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E6EAF0',
   },
+
   row: {
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -458,41 +446,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+
   rowLabel: {
     fontWeight: '600',
     color: '#516072',
     fontSize: 14,
   },
+
   rowValue: {
     color: '#1F2D3D',
     fontSize: 14,
     flex: 1,
     textAlign: 'right',
   },
+
   stateBadge: {
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
   },
+
   stateText: {
     color: 'white',
     fontWeight: '700',
     fontSize: 13,
   },
+
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  starsText: {
-    color: '#FFA500',
-    fontSize: 16,
-  },
+
   ratingNumber: {
     color: '#1F2D3D',
     fontWeight: '600',
     fontSize: 14,
   },
+
   commentText: {
     color: '#1F2D3D',
     fontSize: 14,
@@ -500,37 +491,13 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontStyle: 'italic',
   },
+
   buttonsContainer: {
     marginTop: 10,
     gap: 10,
   },
-  cancelButton: {
-    backgroundColor: '#ff4444',
-    paddingVertical: 14,
-    borderRadius: 14,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  cancelButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  closeButton: {
-    backgroundColor: '#e6ebf2',
-    paddingVertical: 14,
-    borderRadius: 14,
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    color: '#516072',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  profileButton: {
+
+  button: {
     backgroundColor: '#5b8266',
     paddingVertical: 14,
     borderRadius: 14,
@@ -540,56 +507,13 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
   },
-  profileButtonText: {
+
+  buttonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: '700',
   },
-  reviewButton: {
-    backgroundColor: '#FFA500',
-    paddingVertical: 14,
-    borderRadius: 14,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  reviewButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  acceptButton: {
-    backgroundColor: '#00cb58',
-    paddingVertical: 14,
-    borderRadius: 14,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  acceptButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  rejectButton: {
-    backgroundColor: '#ff6b6b',
-    paddingVertical: 14,
-    borderRadius: 14,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  rejectButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '700',
-  },
+
   iconStub: { 
     width: 48, 
     height: 48, 

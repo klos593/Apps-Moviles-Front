@@ -22,8 +22,8 @@ export default function HomeLayout() {
             <Stack.Screen
                 name="index"
                 options={{
-                    headerBackVisible: false,   // oculta la flecha
-                    gestureEnabled: false,      // desactiva el gesto
+                    headerBackVisible: false,
+                    gestureEnabled: false,
                     animation: "none",
                 }}
             />

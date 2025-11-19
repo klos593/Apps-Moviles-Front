@@ -185,8 +185,20 @@ function Row({
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#F5F6FA", padding: 16 },
-  title: { fontSize: 22, fontWeight: "800", marginTop: 6, marginBottom: 14, color: "#1F2D3D" },
+  screen: { 
+    flex: 1, 
+    backgroundColor: "#F5F6FA", 
+    padding: 16 
+  },
+
+  title: { 
+    fontSize: 22, 
+    fontWeight: "800", 
+    marginTop: 6, 
+    marginBottom: 14, 
+    color: "#1F2D3D" 
+  },
+
   card: {
     backgroundColor: "white",
     borderRadius: 16,
@@ -199,6 +211,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginBottom: 16,
   },
+
   row: {
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -207,8 +220,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-  rowLabel: { flex: 1, fontWeight: "600", color: "#516072" },
-  rowValue: { flex: 2, color: "#1F2D3D", textAlign: "right" },
+
+  rowLabel: { 
+    flex: 1, 
+    fontWeight: "600", 
+    color: "#516072" 
+  },
+
+  rowValue: { 
+    flex: 2, 
+    color: "#1F2D3D", 
+    textAlign: "right" 
+  },
+
   input: {
     flex: 2,
     textAlign: "right",
@@ -218,6 +242,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: "#1F2D3D",
   },
+
   editButton: {
     backgroundColor: "#5b8266",
     paddingVertical: 14,
@@ -229,8 +254,17 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
   },
-  saveButton: { backgroundColor: "#2f6b45" },
-  editButtonText: { color: "white", fontSize: 16, fontWeight: "700" },
+
+  saveButton: { 
+    backgroundColor: "#2f6b45" 
+  },
+
+  editButtonText: { 
+    color: "white", 
+    fontSize: 16, 
+    fontWeight: "700" 
+  },
+
   cancelButton: {
     marginTop: 10,
     paddingVertical: 12,
@@ -238,5 +272,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#e6ebf2",
   },
-  cancelButtonText: { color: "#516072", fontSize: 15, fontWeight: "600" },
+  cancelButtonText: { 
+    color: "#516072", 
+    fontSize: 15, 
+    fontWeight: "600" 
+  },
 });

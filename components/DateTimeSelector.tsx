@@ -12,10 +12,9 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
 
     const now = DateTime.local();
 
-    // Inicializa desde Luxon
     const [selectedDate, setSelectedDate] = useState({
         day: initialDate.day,
-        month: initialDate.month - 1, // Luxon usa 1-12, tú usabas 0-11
+        month: initialDate.month - 1, 
         year: initialDate.year,
         hour: initialDate.hour,
         minute: initialDate.minute,
@@ -113,7 +112,6 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
                 newDate.minute
             );
 
-            // PASO FINAL → convertir a UTC antes de mandar al backend
             onDateChange(dt.toUTC().toISO());
         }
     };
@@ -207,9 +205,17 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
 };
 
 const styles = StyleSheet.create({
-    container: { width: "100%" },
-    pickersContainer: { flexDirection: "row", height: 150 },
-    pickerColumn: { flex: 1, marginHorizontal: 2 },
+    container: { 
+        width: "100%" 
+    },
+    pickersContainer: { 
+        flexDirection: "row", 
+        height: 150 
+    },
+    pickerColumn: { 
+        flex: 1, 
+        marginHorizontal: 2 
+    },
     label: {
         fontSize: 11,
         fontWeight: "600",
@@ -217,7 +223,11 @@ const styles = StyleSheet.create({
         marginBottom: 4,
         color: "#6B7280",
     },
-    picker: { flex: 1, borderRadius: 10, backgroundColor: "#F3F4F6" },
+    picker: { 
+        flex: 1, 
+        borderRadius: 10, 
+        backgroundColor: "#F3F4F6" 
+    },
     pickerItem: {
         paddingVertical: 6,
         paddingHorizontal: 4,
@@ -225,9 +235,17 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginVertical: 2,
     },
-    pickerItemSelected: { backgroundColor: "#00cb58b3" },
-    pickerText: { fontSize: 13, color: "#374151" },
-    pickerTextSelected: { color: "white", fontWeight: "600" },
+    pickerItemSelected: { 
+        backgroundColor: "#00cb58b3" 
+    },
+    pickerText: { 
+        fontSize: 13, 
+        color: "#374151" 
+    },
+    pickerTextSelected: { 
+        color: "white", 
+        fontWeight: "600" 
+    },
 });
 
 export default DateTimeSelector;

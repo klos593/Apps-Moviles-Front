@@ -74,11 +74,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 24,
     },
+
     center: {
         width: "100%",
         alignItems: "center",
         justifyContent: "center",
     },
+
     card: {
         width: "100%",
         maxWidth: 320,
@@ -92,6 +94,7 @@ const styles = StyleSheet.create({
         shadowRadius: 12,
         elevation: 8,
     },
+
     circle: {
         width: 120,
         height: 120,
@@ -101,6 +104,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: 16,
     },
+    
     text: {
         marginTop: 4,
         fontSize: 17,
