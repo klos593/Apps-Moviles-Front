@@ -32,7 +32,7 @@ export default function SuccessModal({
             const t = setTimeout(() => onClose && onClose(), autoCloseMs);
             return () => clearTimeout(t);
         }
-    }, [visible]);
+    }, [visible, autoCloseMs, onClose, opacityAnim, scaleAnim]);
 
     return (
         <Modal

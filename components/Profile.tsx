@@ -88,6 +88,7 @@ export default function Profile() {
       setSuccessOpen(true)
 
     } catch (error) {
+      console.log(error)
       setErrorOpen(true)
     }
   }

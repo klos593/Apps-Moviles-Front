@@ -39,7 +39,7 @@ export default function Index() {
   const serviceData = useMemo(() => activeQuery.data ?? [], [activeQuery.data]);
 
   const [filteredData, setFilteredData] = useState(serviceData);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
   const [filters, setFilters] = useState<Filtrados>({});
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -135,9 +135,7 @@ export default function Index() {
           <SearchBar onSearch={handleSearch} />
         </View>
         <View style={styles.filterContainer}>
-          <Pressable 
-          style={styles.filterButton}
-          onPress={() => setIsFilterModalVisible(true)}>
+          <Pressable style={styles.filterButton} onPress={() => setIsFilterModalVisible(true)}>
             <Text style={styles.filterText}>Filtrar</Text>
           </Pressable>
         </View>

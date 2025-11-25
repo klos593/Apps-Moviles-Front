@@ -1,14 +1,15 @@
-import { getServiceInfoById, getUserPendingReviews, updateRating, updateService, updateServiceReview, updateUserPendingReviews } from "@/api/api";
+import { getServiceInfoById, updateRating, updateService, updateServiceReview, updateUserPendingReviews } from "@/api/api";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { DateTime } from 'luxon';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import ServiceDetailsModal from "./ServiceModal";
 import SuccessModal from "./SuccesAnimation";
 import ServiceCardData from "./Types/ServiceCardData";
 import ReviewModal from "./ReviewModal";
+import ErrorModal from "./ErorrAnimation";
 
 type ServiceCardProps = {
     data: ServiceCardData,
@@ -49,21 +50,21 @@ const useUpdateProfessionalRating = () => {
 
 export default function ServiceCard({ data }: ServiceCardProps) {
 
-    var borderColor;
-    var backgroundTextColor;
+    useEffect(() => {
     if (data.state === 'CANCELED' || data.state === 'REJECTED') {
-        borderColor = '#7A7F85'
-        backgroundTextColor = '#62666B'
+        setBorderColor('#7A7F85')
+        setBackgroundTextColor('#62666B')
     } else if (data.state === 'COMPLETED') {
-        borderColor = '#294936'
-        backgroundTextColor = '#2b6c5f'
+        setBorderColor('#294936')
+        setBackgroundTextColor('#2b6c5f')
     } else if (data.state === 'PENDING') {
-        borderColor = '#5b8266'
-        backgroundTextColor = '#3f9a7c'
+        setBorderColor('#5b8266')
+        setBackgroundTextColor('#3f9a7c')
     } else if (data.state === 'ACCEPTED') {
-        borderColor = '#3e6259'
-        backgroundTextColor = '#2b6c5f'
+        setBorderColor('#3e6259')
+        setBackgroundTextColor('#2b6c5f')
     }
+}, [data.state])
 
     const [modal, setModal] = useState(false)
     const updateStatusMutation = useUpdateStatus()
@@ -71,6 +72,9 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     const updateProfessionalRatingMutation = useUpdateProfessionalRating()
     const [successOpen, setSuccessOpen] = useState(false);
     const [reviewModal, setReviewModal] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [borderColor, setBorderColor] = useState("")
+    const [backgroundTextColor, setBackgroundTextColor] = useState("")
 
     const serviceQuery = useQuery({
         queryKey: ["serviceInfo", data.id],
@@ -109,7 +113,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             setSuccessOpen(true)
             setModal(false)
         } catch (error) {
-            //setErrorOpen(true)
+            console.log(error)
+            setErrorOpen(true)
         }
     };
 
@@ -123,7 +128,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             setSuccessOpen(true)
             setModal(false)
         } catch (error) {
-            //setErrorOpen(true)
+            console.log(error)
+            setErrorOpen(true)
         }
     };
 
@@ -137,7 +143,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             setSuccessOpen(true)
             setModal(false)
         } catch (error) {
-            //setErrorOpen(true)
+            console.log(error)
+            setErrorOpen(true)
         }
     };
 
@@ -151,7 +158,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             setSuccessOpen(true)
             setModal(false)
         } catch (error) {
-            //setErrorOpen(true)
+            console.log(error)
+            setErrorOpen(true)
         }
         const userReviewsData = {
             id: serviceData.user.id,
@@ -168,7 +176,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             setModal(false)
             setReviewModal(false)
         } catch (error) {
-            //setErrorOpen(true)
+            console.log(error)
+            setErrorOpen(true)
         }
     };
 
@@ -176,6 +185,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         setModal(false)
         router.push(`/home/profesional/${id}`)
     }
+
+    if (!data) return null;
 
     return (
         <>
@@ -228,6 +239,8 @@ export default function ServiceCard({ data }: ServiceCardProps) {
                 onClose={() => setReviewModal(false)}
                 accept={handleReviewService}
             />
+
+            <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} message="Error al realizar la operacion!" />
         </>
     )
 }

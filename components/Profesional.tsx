@@ -91,9 +91,10 @@ export default function Profesional({ data }: ProfesionalProps) {
     };
 
     try {
-      const result = await createServiceMutation.mutateAsync(serviceData);
+      await createServiceMutation.mutateAsync(serviceData);
       setSuccessOpen(true)
     } catch (error) {
+      console.log(error)
       setErrorOpen(true)
     }
     setModal(false)

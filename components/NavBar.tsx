@@ -1,7 +1,7 @@
 import { useAuth } from '@/src/auth/AuthContext';
 import { AntDesign, FontAwesome5, Octicons, Entypo } from '@expo/vector-icons';
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Animated, {
   FadeIn,
@@ -9,7 +9,7 @@ import Animated, {
   LinearTransition,
 } from "react-native-reanimated";
 
-const VISIBLE_TABS = ["perfil", "historial", "home", "serviciosActivos"];
+const VISIBLE_TABS_USER = ["perfil", "historial", "home", "serviciosActivos"];
 const VISIBLE_TABS_PROVIDER = ["perfil", "historial", "serviciosActivos"];
 
 const AnimatedTouchableOpacity =
@@ -20,15 +20,17 @@ const NavBar: React.FC<BottomTabBarProps> = ({
   descriptors,
   navigation,
 }) => {
-
+  const [TABS, setTabs] = useState([""])
   const { mode } = useAuth();
 
-  if (mode === "user"){
-    var TABS = VISIBLE_TABS;
-  }
-  else {
-    var TABS = VISIBLE_TABS_PROVIDER;
-  }
+  useEffect(() => {
+    if (mode === "user"){
+      setTabs(VISIBLE_TABS_USER)
+    }
+    else {
+      setTabs(VISIBLE_TABS_PROVIDER)
+    }
+  }, [mode])
 
   if (["index", "paginaLogIn","paginaRegistro"].includes(state.routes[state.index].name)) {
     return null;

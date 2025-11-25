@@ -37,7 +37,7 @@ export default function Index() {
     const serviceData = useMemo(() => activeQuery.data ?? [], [activeQuery.data]);
 
     const [filteredData, setFilteredData] = useState(serviceData);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm] = useState("");
     const [filters, setFilters] = useState<Filtrados>({});
     const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
