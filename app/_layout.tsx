@@ -8,7 +8,7 @@ import { View } from "react-native";
 const queryClient = new QueryClient();
 
 function AuthGate() {
-  const { isBooting, token } = useAuth();
+  const { isBooting, token, mode } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
@@ -20,9 +20,13 @@ function AuthGate() {
     if (!token && !inAuthGroup) {
       router.replace("/(auth)");
     } else if (token && inAuthGroup) {
-      router.replace("/(tabs)"); 
+      if (mode === "user"){
+        router.replace("/(tabs)");
+      }else{
+        router.replace("/(tabs)/serviciosActivos");
+      }
     }
-  }, [isBooting, token, segments, router]);
+  }, [isBooting, token, segments, router, mode]);
 
   if (isBooting) {
     return (

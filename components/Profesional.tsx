@@ -92,12 +92,13 @@ export default function Profesional({ data }: ProfesionalProps) {
 
     try {
       await createServiceMutation.mutateAsync(serviceData);
+      setModal(false)
       setSuccessOpen(true)
     } catch (error) {
       console.log(error)
+      setModal(false)
       setErrorOpen(true)
     }
-    setModal(false)
   };
 
   return (
@@ -238,14 +239,14 @@ export default function Profesional({ data }: ProfesionalProps) {
               </Pressable>
             </View>
 
-            <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} />
-            <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} />
             {createServiceMutation.isPending &&
               <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <LoadingArc />
               </View>}
           </View>
       </Modal>
+      <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} />
+      <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} />
     </>
   );
 }
@@ -258,7 +259,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 
-  // Fondo verde que llega hasta la mitad de la foto
   header: {
     height: 160,
     backgroundColor: "#294936",
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
 
   avatarWrap: {
     position: "absolute",
-    bottom: -(AVATAR_SIZE / 2), // sobresale la mitad
+    bottom: -(AVATAR_SIZE / 2), 
     height: AVATAR_SIZE,
     width: AVATAR_SIZE,
     borderRadius: AVATAR_SIZE / 2,
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
 
   content: {
     flex: 1,
-    paddingTop: AVATAR_SIZE / 2 + 16, // deja lugar por la superposición
+    paddingTop: AVATAR_SIZE / 2 + 16,
     paddingHorizontal: 16,
     gap: 12,
   },
