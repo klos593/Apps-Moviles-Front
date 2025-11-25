@@ -1,10 +1,10 @@
 type Address = {
-    street: String
-    number: Number
-    postalCode: Number
-    country: String
-    province: String
-    floor: String
+    street: string
+    number: number
+    postalCode: number
+    country: string
+    province: string
+    floor: string
 }
 
 export default Address;

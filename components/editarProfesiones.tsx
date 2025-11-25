@@ -92,6 +92,7 @@ export default function ServiceTypeScreen() {
             await deleteProfessionMutation.mutateAsync(data)
             setSuccessOpen(true)
         } catch (error) {
+            console.log(error)
             setErrorOpen(true)
         }
     };
@@ -116,6 +117,7 @@ export default function ServiceTypeScreen() {
             await addProfessionMutation.mutateAsync(data)
             setSuccessOpen(true)
         } catch (error) {
+            console.log(error)
             setErrorOpen(true)
         }
 

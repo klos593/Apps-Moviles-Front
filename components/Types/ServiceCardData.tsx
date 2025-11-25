@@ -6,7 +6,7 @@ type ServiceCardData = {
     lastName: string;
     profession: string;
     date: string;
-    state: String;
+    state: string;
     address: Address;
     isReviewed: boolean;
 }

@@ -1,12 +1,12 @@
 
 export type ServiceData = {
-    professionId: Number,
-    userId: Number ,
-    providerId: Number,
-    rating: Number | null,
-    price: Number | null,
-    comment: String | null,
+    professionId: number,
+    userId: number ,
+    providerId: number,
+    rating: number | null,
+    price: number | null,
+    comment: string | null,
     date: Date,
-    addressId: Number,
+    addressId: number,
     state: string
 }
