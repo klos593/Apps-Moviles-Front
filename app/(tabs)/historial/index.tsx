@@ -6,9 +6,8 @@ import ServiceCard from '@/components/ServiceCard';
 import { useAuth, useAuthUser } from '@/src/auth/AuthContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useQuery } from '@tanstack/react-query';
-import { useFocusEffect } from 'expo-router';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FlatList, Platform, Pressable, StyleSheet, Text, View, RefreshControl } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Filtrados = {
@@ -25,7 +24,7 @@ export default function Index() {
   const finishedUsedServicesQuery = useQuery({
     queryKey: ["FinishedUsedServices", email],
     queryFn: () => getFinishedUsedServices(email),
-    enabled: mode === "user"
+    enabled: mode === "user",
   });
 
   const finishedProvidedServicesQuery = useQuery({
@@ -33,13 +32,6 @@ export default function Index() {
     queryFn: () => getFinishedProvidedServices(email),
     enabled: mode === "provider",
   });
-
-  useFocusEffect(
-    useCallback(() => {
-      finishedUsedServicesQuery.refetch();
-      finishedProvidedServicesQuery.refetch();
-    }, [])
-  );
 
   const activeQuery =
     mode === "user" ? finishedUsedServicesQuery : finishedProvidedServicesQuery;
@@ -50,6 +42,7 @@ export default function Index() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState<Filtrados>({});
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     let data = [...serviceData];
@@ -113,6 +106,13 @@ export default function Index() {
     setIsFilterModalVisible(false);
   };
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    activeQuery.refetch()
+    setTimeout(() => {
+    setRefreshing(false);
+    }, 1000);
+  };
 
   if (activeQuery.isLoading) {
     return (
@@ -147,6 +147,8 @@ export default function Index() {
         <FlatList
           data={filteredData}
           renderItem={({ item }) => <ServiceCard data={item} />}
+          ListEmptyComponent={<Text style={styles.emptyText}>No hay servicios actualmente en el historial</Text>}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
       </View>
 
@@ -225,4 +227,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '700',
   },
+  emptyText: {
+    color: "#6B7A90",
+    marginTop: 200,
+    justifyContent:"center",
+    alignSelf: "center"
+  }
 });

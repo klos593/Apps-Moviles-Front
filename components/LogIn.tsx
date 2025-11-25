@@ -35,7 +35,7 @@ export default function LoginScreen() {
     if (!formOk) return;
     try {
       setLoading(true);
-      await login({ email: email, password: pass });
+      await login({ email: email.toLowerCase(), password: pass });
     } catch (e: any) {
       Alert.alert("Login failed", e?.message || "Check your credentials");
     } finally {

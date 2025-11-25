@@ -67,8 +67,9 @@ export default function ProfileNotifications() {
       country: string;
       description: string;
     }) => updateUser(email, payload),
-    onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: ["User", email] });
+    
+    onSuccess: () => {
+      qc.invalidateQueries();
       setEditing(false);
       router.replace("/(tabs)/perfil");
     },

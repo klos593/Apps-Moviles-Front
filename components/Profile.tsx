@@ -3,8 +3,8 @@ import { useAuth, useAuthUser } from "@/src/auth/AuthContext";
 import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useFocusEffect, useRouter } from "expo-router";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useRouter } from "expo-router";
+import React, { useMemo, useRef, useState } from "react";
 import {
   Alert,
   Animated,
@@ -32,10 +32,13 @@ const getTagText = (mode: "user" | "provider") => {
 };
 
 const useUpdatePicture = () => {
-  const queryClient = useQueryClient();
+  const queryClient =  useQueryClient();
 
   return useMutation({
     mutationFn: updatePicture,
+    onSuccess: () => {
+      queryClient.invalidateQueries()
+    },
   });
 };
 
@@ -72,12 +75,6 @@ export default function Profile() {
     extrapolate: "clamp",
   });
 
-  useFocusEffect(
-      useCallback(() => {
-        user.refetch();
-      }, [])
-    );
-
   const handleImage = async (url: string) => {
     if (!user.data) return;
 
@@ -85,10 +82,11 @@ export default function Profile() {
       userId: user.data.id,
       pictureUrl: url
     }
+
     try {
       await updatePictureMutation.mutateAsync(insertData)
       setSuccessOpen(true)
-      user.refetch();
+
     } catch (error) {
       setErrorOpen(true)
     }

@@ -2,12 +2,13 @@ import { getProfessionals, getProfessions, getUser } from "@/api/api";
 import SearchBar from "@/components/SearchBar";
 import { useAuthUserOptional } from "@/src/auth/AuthContext";
 import { useQuery } from '@tanstack/react-query';
-import { router, Stack, useFocusEffect } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import { router, Stack } from "expo-router";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
   Pressable,
+  RefreshControl,
   StyleSheet,
   Text,
   View
@@ -17,17 +18,9 @@ import LoadingArc from "./LoadingAnimation";
 import Card from "./TarjetaProfesional";
 
 export default function HomeScreen() {
-
   const { user: authUser, isBooting } = useAuthUserOptional();
   const email = authUser?.email;
-
-  if (isBooting) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <LoadingArc />
-      </View>
-    );
-  }
+  const [refreshing, setRefreshing] = useState(false);
 
   const user = useQuery({
     queryKey: ["User", email],
@@ -48,16 +41,7 @@ export default function HomeScreen() {
     queryKey: ["professionals", userId],
     queryFn: () => getProfessionals(userId as string),
     enabled: !!userId,
-    refetchInterval: 10000
-
   });
-
-  useFocusEffect(
-    useCallback(() => {
-      if (!userId) return;
-      professionalsQuery.refetch();
-    }, [])
-  );
 
   const professionsData = professionsQuery.data ?? [];
   const professionalsData = professionalsQuery.data ?? [];
@@ -73,7 +57,7 @@ export default function HomeScreen() {
       return;
     }
 
-    const filtered = professionalsData.filter((element) =>
+  const filtered = professionalsData.filter((element) =>
       (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(
         keyWord.toLowerCase()
       )
@@ -82,7 +66,15 @@ export default function HomeScreen() {
     setFilteredData(filtered);
   }
 
-  if (professionalsQuery.isLoading || professionsQuery.isLoading) {
+  const onRefresh = () => {
+    setRefreshing(true);
+    professionalsQuery.refetch()
+    setTimeout(() => {
+    setRefreshing(false);
+    }, 1000);
+  };
+
+  if (professionalsQuery.isLoading || professionsQuery.isLoading || isBooting) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <LoadingArc />
@@ -121,18 +113,21 @@ export default function HomeScreen() {
 
         <View style={{ flex: 3.5 }}>
           <FlatList
-            data={filteredData}
-            key={1}
-            numColumns={1}
-            keyExtractor={(it) => it.id.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.cardWrapper}>
-                <Card data={item} onPress={() => router.push(`/home/profesional/${item.id}`)} />
-              </View>
-            )}
-            style={styles.flatList}
-            contentContainerStyle={styles.flatListContent}
-            showsVerticalScrollIndicator={false} />
+              data={filteredData}
+              key={1}
+              numColumns={1}
+              keyExtractor={(it) => it.id.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.cardWrapper}>
+                  <Card data={item} onPress={() => router.push(`/home/profesional/${item.id}`)} />
+                </View>
+              )}
+              style={styles.flatList}
+              contentContainerStyle={styles.flatListContent}
+              showsVerticalScrollIndicator={false} 
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            />
+            
         </View>
         <View style={{ flex: 0.5 }}></View>
       </View>

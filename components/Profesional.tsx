@@ -1,9 +1,8 @@
-import { createService, getProfessionalProfessions, getProfessionalReviews, getUserIdAndAddressId, getUserPendingReviews } from '@/api/api';
+import { createService, getProfessionalProfessions, getProfessionalReviews, getUserIdAndAddressId } from '@/api/api';
 import { useAuthUser } from '@/src/auth/AuthContext';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useFocusEffect } from 'expo-router';
 import { DateTime } from 'luxon';
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Alert, FlatList, Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import DateTimeSelector from './DateTimeSelector';
 import ErrorModal from './ErorrAnimation';
@@ -23,7 +22,7 @@ const useCreateService = () => {
   return useMutation({
     mutationFn: createService,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['services'] });
+      queryClient.invalidateQueries()
     },
     onError: (error) => {
       console.error('Error al crear servicio:', error);
@@ -49,14 +48,6 @@ export default function Profesional({ data }: ProfesionalProps) {
     queryKey: ["professionalReviews", data.id.toString()],
     queryFn: () => getProfessionalReviews(data.id.toString()),
   });
-
-
-  useFocusEffect(
-    useCallback(() => {
-      professionsQuery.refetch();
-      professionalReviewsQuery.refetch();
-    }, [])
-  );
 
   const serviceDataReview = useMemo(() => professionalReviewsQuery.data ?? [], [professionalReviewsQuery.data]);
   const professionsData = professionsQuery.data ?? [];

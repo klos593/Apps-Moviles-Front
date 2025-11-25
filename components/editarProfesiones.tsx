@@ -19,8 +19,7 @@ const useAddProfession = () => {
     return useMutation({
         mutationFn: addProfession,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professionalAvailableProfessions'] });
-            queryClient.invalidateQueries({ queryKey: ['professionalActiveProfessions'] })
+            queryClient.invalidateQueries()
         },
         onError: (error) => {
             console.error('Error al agregar profesion:', error);
@@ -34,8 +33,7 @@ const useDeleteProfession = () => {
     return useMutation({
         mutationFn: deleteProfession,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['professionalAvailableProfessions'] });
-            queryClient.invalidateQueries({ queryKey: ['professionalActiveProfessions'] })
+            queryClient.invalidateQueries()
         },
         onError: (error) => {
             console.error('Error al eliminar profesion:', error);

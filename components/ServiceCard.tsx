@@ -1,10 +1,9 @@
 import { getServiceInfoById, getUserPendingReviews, updateRating, updateService, updateServiceReview, updateUserPendingReviews } from "@/api/api";
-import { useAuthUser } from "@/src/auth/AuthContext";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { router, useFocusEffect } from "expo-router";
+import { router } from "expo-router";
 import { DateTime } from 'luxon';
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import ServiceDetailsModal from "./ServiceModal";
 import SuccessModal from "./SuccesAnimation";
@@ -16,26 +15,35 @@ type ServiceCardProps = {
 }
 
 const useUpdateStatus = () => {
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: updateService,
+        onSuccess: () => {
+            queryClient.invalidateQueries()
+        },
     });
 };
 
 const useUpdateReviews = () => {
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: updateServiceReview,
+        onSuccess: () => {
+            queryClient.invalidateQueries()
+        },
     });
 };
 
 const useUpdateProfessionalRating = () => {
-    const queryClient = useQueryClient();
-
+    const queryClient = useQueryClient()
+    
     return useMutation({
         mutationFn: updateRating,
+        onSuccess: () => {
+            queryClient.invalidateQueries()
+        },
     });
 };
 
@@ -69,12 +77,6 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         queryFn: () => getServiceInfoById(data.id),
     });
 
-    useFocusEffect(
-        useCallback(() => {
-            serviceQuery.refetch();
-        }, [])
-    );
-
     const serviceData = serviceQuery.data
 
     const openModal = () => {
@@ -104,7 +106,6 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         }
         try {
             await updateStatusMutation.mutateAsync(updateData)
-            await serviceQuery.refetch();
             setSuccessOpen(true)
             setModal(false)
         } catch (error) {
@@ -119,7 +120,6 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         }
         try {
             await updateStatusMutation.mutateAsync(updateData)
-            await serviceQuery.refetch();
             setSuccessOpen(true)
             setModal(false)
         } catch (error) {
@@ -134,7 +134,6 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         }
         try {
             await updateStatusMutation.mutateAsync(updateData)
-            await serviceQuery.refetch();
             setSuccessOpen(true)
             setModal(false)
         } catch (error) {
@@ -149,7 +148,6 @@ export default function ServiceCard({ data }: ServiceCardProps) {
         }
         try {
             await updateStatusMutation.mutateAsync(updateData)
-            await serviceQuery.refetch();
             setSuccessOpen(true)
             setModal(false)
         } catch (error) {
@@ -160,14 +158,12 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             state: true
         }
         updateUserPendingReviews(userReviewsData)
-        serviceQuery.refetch()
     };
 
     const handleReviewService = async (rating: number, comment: string) => {
         try {
             ReviewService(rating, comment)
             updateProfessionalRating()
-            await serviceQuery.refetch();
             setSuccessOpen(true)
             setModal(false)
             setReviewModal(false)

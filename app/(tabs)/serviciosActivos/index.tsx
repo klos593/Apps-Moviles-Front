@@ -5,10 +5,9 @@ import LoadingArc from '@/components/LoadingAnimation';
 import SearchBar from '@/components/SearchBar';
 import ServiceCard from '@/components/ServiceCard';
 import { useAuth, useAuthUser } from '@/src/auth/AuthContext';
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
-import { useFocusEffect } from 'expo-router';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useQuery } from '@tanstack/react-query';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FlatList, Platform, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 
 type Filtrados = {
     fromDate?: string | null;
@@ -18,8 +17,6 @@ type Filtrados = {
 };
 
 export default function Index() {
-
-    const queryClient = new QueryClient()
     const { email } = useAuthUser();
     const { mode } = useAuth();
 
@@ -35,22 +32,15 @@ export default function Index() {
         enabled: mode === "provider",
     });
 
-    useFocusEffect(
-        useCallback(() => {
-            userActiveServicesQuery.refetch();
-            providerActiveServicesQuery.refetch();
-        }, [])
-    );
+    const activeQuery = mode === "user" ? userActiveServicesQuery : providerActiveServicesQuery;
 
-    const activeQuery =
-        mode === "user" ? userActiveServicesQuery : providerActiveServicesQuery;
-    
     const serviceData = useMemo(() => activeQuery.data ?? [], [activeQuery.data]);
 
     const [filteredData, setFilteredData] = useState(serviceData);
     const [searchTerm, setSearchTerm] = useState("");
     const [filters, setFilters] = useState<Filtrados>({});
     const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         let data = [...serviceData];
@@ -113,6 +103,14 @@ export default function Index() {
         setIsFilterModalVisible(false);
     };
 
+    const onRefresh = () => {
+        setRefreshing(true);
+        activeQuery.refetch()
+        setTimeout(() => {
+        setRefreshing(false);
+        }, 1000);
+    };
+
     if (activeQuery.isLoading) {
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -124,7 +122,7 @@ export default function Index() {
     const statusOptions = ["ACCEPTED", "PENDING"];
 
     return (
-        <QueryClientProvider client={queryClient}>
+        <>
             <View style={styles.container}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
@@ -146,9 +144,12 @@ export default function Index() {
                     </View>
                 </View>
                 <View style={{ flex: 10 }}>
-                    <FlatList data={filteredData} renderItem={({ item }) => (
-                        <ServiceCard data={item} />
-                    )} />
+                    <FlatList 
+                        data={filteredData} 
+                        renderItem={({ item }) => (<ServiceCard data={item} />)} 
+                        ListEmptyComponent={<Text style={styles.emptyText}>No hay servicios programados actualmente</Text>}
+                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                    />
                 </View>
                 <View style={{ flex: 1.7 }}></View>
             </View>
@@ -159,7 +160,7 @@ export default function Index() {
                 onApply={handleApplyFilters}
                 statuses={statusOptions}
             />
-        </QueryClientProvider>
+        </>
     );
 }
 
@@ -212,5 +213,12 @@ const styles = StyleSheet.create({
     filterText: {
         color: "white",
         fontWeight: 700
+    },
+
+    emptyText: {
+        color: "#6B7A90",
+        marginTop: 200,
+        justifyContent:"center",
+        alignSelf: "center"
     }
 })

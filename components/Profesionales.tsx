@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import React from "react";
 import {
     FlatList,
+    RefreshControl,
     StyleSheet,
     Text,
     View
@@ -12,9 +13,11 @@ import { BottomWhiteMask } from "./BottomWhiteMask";
 
 type ProfessionalProps = {
     data: ProfessionalCardData[];
+    refreshing: boolean;
+    onRefresh: () => void;
 };
 
-export default function Profesionales({ data }: ProfessionalProps) {
+export default function Profesionales({ data, refreshing, onRefresh }: ProfessionalProps) {
     return (
         <><View style={styles.container}>
             <FlatList
@@ -31,6 +34,7 @@ export default function Profesionales({ data }: ProfessionalProps) {
                 contentContainerStyle={styles.flatListContent}
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={<Text style={styles.empty}>No hay resultados.</Text>}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             />
         </View>
         <BottomWhiteMask /></>
