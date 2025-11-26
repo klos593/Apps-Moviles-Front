@@ -35,7 +35,7 @@ export default function Profesional({ data }: ProfesionalProps) {
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [selectedProfession, setSelectedProfession] = useState<ProfessionCardData | null>(null);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const createServiceMutation = useCreateService();
   const { email } = useAuthUser()
 
@@ -69,12 +69,19 @@ export default function Profesional({ data }: ProfesionalProps) {
     if (!selectedDate) {
       Alert.alert('Error', 'Debes seleccionar una fecha');
       return;
-    } else if (selectedDate < new Date()) {
-      Alert.alert('Error', 'La fecha seleccionada ya no esta disponible')
+
+    } else if (new Date(selectedDate) < new Date()) {
+      Alert.alert('Error', 'La fecha seleccionada ya no esta disponible');
+      return;
     }
 
     if (!userQuery.data?.userId || !userQuery.data?.addressId) {
       Alert.alert('Error', 'No se pudo obtener la información del usuario');
+      return;
+    }
+
+    if (!selectedDate) {
+      Alert.alert('Error', 'Debes seleccionar una fecha');
       return;
     }
 
@@ -85,7 +92,7 @@ export default function Profesional({ data }: ProfesionalProps) {
       rating: null,
       price: null,
       comment: null,
-      date: selectedDate,
+      date: new Date(selectedDate),
       addressId: userQuery.data.addressId,
       state: 'PENDING',
     };

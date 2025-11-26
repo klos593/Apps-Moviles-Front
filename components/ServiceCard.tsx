@@ -4,12 +4,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { DateTime } from 'luxon';
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import ErrorModal from "./ErorrAnimation";
+import LoadingArc from "./LoadingAnimation";
+import ReviewModal from "./ReviewModal";
 import ServiceDetailsModal from "./ServiceModal";
 import SuccessModal from "./SuccesAnimation";
 import ServiceCardData from "./Types/ServiceCardData";
-import ReviewModal from "./ReviewModal";
-import ErrorModal from "./ErorrAnimation";
 
 type ServiceCardProps = {
     data: ServiceCardData,
@@ -21,7 +22,9 @@ const useUpdateStatus = () => {
     return useMutation({
         mutationFn: updateService,
         onSuccess: () => {
-            queryClient.invalidateQueries()
+            setTimeout(() => {
+                queryClient.invalidateQueries()
+            }, 2000)
         },
     });
 };
@@ -32,18 +35,22 @@ const useUpdateReviews = () => {
     return useMutation({
         mutationFn: updateServiceReview,
         onSuccess: () => {
-            queryClient.invalidateQueries()
+            setTimeout(() => {
+                queryClient.invalidateQueries()
+            }, 2000)
         },
     });
 };
 
 const useUpdateProfessionalRating = () => {
     const queryClient = useQueryClient()
-    
+
     return useMutation({
         mutationFn: updateRating,
         onSuccess: () => {
-            queryClient.invalidateQueries()
+            setTimeout(() => {
+                queryClient.invalidateQueries()
+            }, 2000)
         },
     });
 };
@@ -51,20 +58,20 @@ const useUpdateProfessionalRating = () => {
 export default function ServiceCard({ data }: ServiceCardProps) {
 
     useEffect(() => {
-    if (data.state === 'CANCELED' || data.state === 'REJECTED') {
-        setBorderColor('#7A7F85')
-        setBackgroundTextColor('#62666B')
-    } else if (data.state === 'COMPLETED') {
-        setBorderColor('#294936')
-        setBackgroundTextColor('#2b6c5f')
-    } else if (data.state === 'PENDING') {
-        setBorderColor('#5b8266')
-        setBackgroundTextColor('#3f9a7c')
-    } else if (data.state === 'ACCEPTED') {
-        setBorderColor('#3e6259')
-        setBackgroundTextColor('#2b6c5f')
-    }
-}, [data.state])
+        if (data.state === 'CANCELED' || data.state === 'REJECTED') {
+            setBorderColor('#7A7F85')
+            setBackgroundTextColor('#62666B')
+        } else if (data.state === 'COMPLETED') {
+            setBorderColor('#294936')
+            setBackgroundTextColor('#2b6c5f')
+        } else if (data.state === 'PENDING') {
+            setBorderColor('#5b8266')
+            setBackgroundTextColor('#3f9a7c')
+        } else if (data.state === 'ACCEPTED') {
+            setBorderColor('#3e6259')
+            setBackgroundTextColor('#2b6c5f')
+        }
+    }, [data.state])
 
     const [modal, setModal] = useState(false)
     const updateStatusMutation = useUpdateStatus()
@@ -75,6 +82,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     const [errorOpen, setErrorOpen] = useState(false);
     const [borderColor, setBorderColor] = useState("")
     const [backgroundTextColor, setBackgroundTextColor] = useState("")
+    const [loading, setLoading] = useState(false);
 
     const serviceQuery = useQuery({
         queryKey: ["serviceInfo", data.id],
@@ -85,6 +93,14 @@ export default function ServiceCard({ data }: ServiceCardProps) {
 
     const openModal = () => {
         setModal(true)
+    }
+
+    const succesCase = () => {
+        setLoading(false);
+        setModal(false)
+        setReviewModal(false)
+        setSuccessOpen(true)
+        
     }
 
     const updateProfessionalRating = async () => {
@@ -109,11 +125,11 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             state: 'CANCELED'
         }
         try {
+            setLoading(true);
             await updateStatusMutation.mutateAsync(updateData)
-            setSuccessOpen(true)
-            setModal(false)
+            succesCase()
         } catch (error) {
-            console.log(error)
+            console.error(error)
             setErrorOpen(true)
         }
     };
@@ -124,11 +140,11 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             state: 'ACCEPTED'
         }
         try {
+            setLoading(true);
             await updateStatusMutation.mutateAsync(updateData)
-            setSuccessOpen(true)
-            setModal(false)
+            succesCase()
         } catch (error) {
-            console.log(error)
+            console.error(error)
             setErrorOpen(true)
         }
     };
@@ -139,11 +155,11 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             state: 'REJECTED'
         }
         try {
+            setLoading(true);
             await updateStatusMutation.mutateAsync(updateData)
-            setSuccessOpen(true)
-            setModal(false)
+            succesCase()
         } catch (error) {
-            console.log(error)
+            console.error(error)
             setErrorOpen(true)
         }
     };
@@ -154,29 +170,31 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             state: 'COMPLETED'
         }
         try {
+            setLoading(true);
             await updateStatusMutation.mutateAsync(updateData)
-            setSuccessOpen(true)
-            setModal(false)
+            succesCase()
         } catch (error) {
-            console.log(error)
+            console.error(error)
             setErrorOpen(true)
         }
-        const userReviewsData = {
-            id: serviceData.user.id,
-            state: true
+        const userId = serviceData?.user?.id;
+        if (userId !== undefined) {
+            const userReviewsData = {
+                id: userId,
+                state: true
+            };
+            updateUserPendingReviews(userReviewsData);
         }
-        updateUserPendingReviews(userReviewsData)
     };
 
     const handleReviewService = async (rating: number, comment: string) => {
         try {
-            ReviewService(rating, comment)
-            updateProfessionalRating()
-            setSuccessOpen(true)
-            setModal(false)
-            setReviewModal(false)
+            setLoading(true);
+            await ReviewService(rating, comment)
+            await updateProfessionalRating()
+            succesCase()
         } catch (error) {
-            console.log(error)
+            console.error(error)
             setErrorOpen(true)
         }
     };
@@ -191,7 +209,7 @@ export default function ServiceCard({ data }: ServiceCardProps) {
     return (
         <>
             <Pressable onPress={openModal}>
-                <View style={{ ...styles.cardWrapper, borderColor: borderColor }}>
+                <View style={styles.cardWrapper}>
                     <View style={{ ...styles.cardHeader, backgroundColor: borderColor, borderColor: borderColor }}>
                         <View style={styles.nameContainer}>
                             <Text style={styles.name}>{data.name} {data.lastName}</Text>
@@ -222,17 +240,23 @@ export default function ServiceCard({ data }: ServiceCardProps) {
                 </View>
             </Pressable>
             <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} message="Operacion realizada con exito!" />
-            <ServiceDetailsModal
-                visible={modal}
-                onClose={() => setModal(false)}
-                service={serviceData}
-                onCancelService={() => handleCancelService()}
-                onRejectService={() => handleRejectService()}
-                onAcceptService={() => handleAcceptService()}
-                onCompleteService={() => handleCompleteService()}
-                onGoToProfile={() => handleGoToProfile(serviceData.provider.id)}
-                onReviewService={() => {setModal(false); setReviewModal(true)}}
-            />
+            {serviceData && (
+                <ServiceDetailsModal
+                    visible={modal}
+                    onClose={() => setModal(false)}
+                    service={serviceData}
+                    onCancelService={() => handleCancelService()}
+                    onRejectService={() => handleRejectService()}
+                    onAcceptService={() => handleAcceptService()}
+                    onCompleteService={() => handleCompleteService()}
+                    onGoToProfile={() => {
+                        if (serviceData?.provider?.id !== undefined) {
+                            handleGoToProfile(serviceData.provider.id)
+                        }
+                    }}
+                    onReviewService={() => { setModal(false); setReviewModal(true) }}
+                />
+            )}
 
             <ReviewModal
                 visible={reviewModal}
@@ -241,6 +265,16 @@ export default function ServiceCard({ data }: ServiceCardProps) {
             />
 
             <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} message="Error al realizar la operacion!" />
+            <Modal
+                visible={loading}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setLoading(false)}
+            >
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <LoadingArc />
+                </View>
+            </Modal>
         </>
     )
 }
@@ -260,14 +294,16 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
         shadowOffset: { width: 0, height: 4 },
         elevation: 3,
+        overflow: 'hidden',
     },
 
     cardHeader: {
         flex: 2.5,
         flexDirection: 'row',
-        borderTopLeftRadius: 50,
-        borderTopRightRadius: 13,
-        borderBottomRightRadius: 30
+        borderTopLeftRadius: 55,
+        borderTopRightRadius: 16,
+        borderBottomRightRadius: 30,
+        overflow: 'hidden',
     },
 
     nameContainer: {

@@ -13,6 +13,7 @@ import {
   View
 } from 'react-native';
 import Rating from './Rating';
+import { ServiceInfo } from './Types/ServiceInfo';
 
 const handlePressWhatsapp = async (phone: string, profession: string) => {
   const url = `https://wa.me/${phone}?text=Hola%20quisiera%20averiguar%20sobre%20tu%20servicio%20de%20${profession.toLowerCase()}`;
@@ -51,7 +52,19 @@ const handlePressPhone = async (phone: string) => {
 
 }
 
-const ServiceDetailsModal = ({
+type ServiceDetailsModalProps = {
+  visible: boolean;
+  onClose: () => void;
+  service: ServiceInfo;
+  onCancelService: () => void;
+  onRejectService: () => void;
+  onAcceptService: () => void;
+  onCompleteService: () => void;
+  onGoToProfile: () => void;
+  onReviewService: () => void;
+};
+
+const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
   visible,
   onClose,
   service,
@@ -66,7 +79,7 @@ const ServiceDetailsModal = ({
 
   if (!service) return null;
 
-  const getStateColor = (state) => {
+  const getStateColor = (state: string) => {
     switch (state) {
       case 'PENDING':
         return '#5b8266';
@@ -83,7 +96,7 @@ const ServiceDetailsModal = ({
     }
   };
 
-  const getStateText = (state) => {
+  const getStateText = (state: string) => {
     switch (state) {
       case 'PENDING':
         return 'Pendiente';
@@ -384,7 +397,13 @@ const ServiceDetailsModal = ({
   );
 };
 
-const InfoRow = ({ label, value, last }) => (
+
+type InfoRowProps = {
+  label: string;
+  value: string;
+  last?: boolean;
+};
+const InfoRow = ({ label, value, last }: InfoRowProps) => (
   <View style={[styles.row, last && { borderBottomWidth: 0 }]}>
     <Text style={styles.rowLabel}>{label}</Text>
     <Text style={styles.rowValue}>{value || '-'}</Text>

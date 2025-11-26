@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import React, { useState } from "react";
 import {
     Pressable,
@@ -6,9 +7,13 @@ import {
     Text,
     View,
 } from "react-native";
-import { DateTime } from "luxon";
 
-const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
+type SelectorProps = {
+    onDateChange?: (isoString: string) => void;
+    initialDate?: DateTime;
+};
+
+const DateTimeSelector = ({ onDateChange , initialDate = DateTime.local() }: SelectorProps) => {
 
     const now = DateTime.local();
 
@@ -25,17 +30,17 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
 
-    const getDaysInMonth = (month, year) => {
+    const getDaysInMonth = (month: number, year: number) => {
         return DateTime.local(year, month + 1).daysInMonth;
     };
 
-    const isDateValid = (day, month, year, hour, minute) => {
+    const isDateValid = (day: number, month: number, year: number, hour: number, minute: number) => {
         const selected = DateTime.local(year, month + 1, day, hour, minute);
         return selected >= now;
     };
 
     const getValidDays = () => {
-        const daysInMonth = getDaysInMonth(selectedDate.month, selectedDate.year);
+        const daysInMonth = getDaysInMonth(selectedDate.month, selectedDate.year) ?? 0;
         const days = [];
         for (let i = 1; i <= daysInMonth; i++) {
             if (isDateValid(i, selectedDate.month, selectedDate.year, 23, 59)) {
@@ -48,7 +53,7 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
     const getValidMonths = () => {
         const validMonths = [];
         for (let i = 0; i < 12; i++) {
-            const lastDay = getDaysInMonth(i, selectedDate.year);
+            const lastDay = getDaysInMonth(i, selectedDate.year) ?? 1;
             if (isDateValid(lastDay, i, selectedDate.year, 23, 59)) {
                 validMonths.push(i);
             }
@@ -81,7 +86,7 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
     };
 
     const getValidMinutes = () => {
-        const minutes = [];
+        const minutes: number[] = [];
         const isNow =
             selectedDate.day === now.day &&
             selectedDate.month === now.month - 1 &&
@@ -100,9 +105,9 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
         return minutes;
     };
 
-    const handleDateChange = (newDate) => {
+    const handleDateChange = (newDate: { day: number; month: number; year: number; hour: number; minute: number; }) => {
         setSelectedDate(newDate);
-
+    
         if (onDateChange) {
             const dt = DateTime.local(
                 newDate.year,
@@ -111,18 +116,18 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
                 newDate.hour,
                 newDate.minute
             );
-
-            onDateChange(dt.toUTC().toISO());
+    
+            onDateChange(dt.toUTC().toISO() ?? "");
         }
     };
 
-    const renderPicker = (items, selectedValue, onSelect, format = (v) => v) => (
+    const renderPicker = (items: any[], selectedValue: number, onSelect: { (day: any): void; (month: any): void; (year: any): void; (hour: any): void; (minute: any): void; (arg0: any): void; }, format = (v: any) => v) => (
         <ScrollView
             style={styles.picker}
             showsVerticalScrollIndicator={false}
             nestedScrollEnabled
         >
-            {items.map((item) => (
+            {items.map((item: React.Key | null | undefined) => (
                 <Pressable
                     key={item}
                     style={[
@@ -153,7 +158,7 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
                     {renderPicker(
                         getValidDays(),
                         selectedDate.day,
-                        (day) => handleDateChange({ ...selectedDate, day })
+                        (day: any) => handleDateChange({ ...selectedDate, day })
                     )}
                 </View>
 
@@ -162,8 +167,8 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
                     {renderPicker(
                         getValidMonths(),
                         selectedDate.month,
-                        (month) => {
-                            const daysInNewMonth = getDaysInMonth(month, selectedDate.year);
+                        (month: number) => {
+                            const daysInNewMonth = getDaysInMonth(month, selectedDate.year) ?? 1;
                             const newDay = Math.min(selectedDate.day, daysInNewMonth);
                             handleDateChange({ ...selectedDate, month, day: newDay });
                         },
@@ -176,7 +181,7 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
                     {renderPicker(
                         getValidYears(),
                         selectedDate.year,
-                        (year) => handleDateChange({ ...selectedDate, year })
+                        (year: any) => handleDateChange({ ...selectedDate, year })
                     )}
                 </View>
 
@@ -185,7 +190,7 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
                     {renderPicker(
                         getValidHours(),
                         selectedDate.hour,
-                        (hour) => handleDateChange({ ...selectedDate, hour }),
+                        (hour: any) => handleDateChange({ ...selectedDate, hour }),
                         (h) => h.toString().padStart(2, "0")
                     )}
                 </View>
@@ -195,7 +200,7 @@ const DateTimeSelector = ({ onDateChange, initialDate = DateTime.local() }) => {
                     {renderPicker(
                         getValidMinutes(),
                         selectedDate.minute,
-                        (minute) => handleDateChange({ ...selectedDate, minute }),
+                        (minute: any) => handleDateChange({ ...selectedDate, minute }),
                         (m) => m.toString().padStart(2, "0")
                     )}
                 </View>
