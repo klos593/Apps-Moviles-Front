@@ -20,11 +20,7 @@ function AuthGate() {
     if (!token && !inAuthGroup) {
       router.replace("/(auth)");
     } else if (token && inAuthGroup) {
-      if (mode === "user"){
-        router.replace("/(tabs)");
-      }else{
-        router.replace("/(tabs)/serviciosActivos");
-      }
+      router.replace("/(tabs)");
     }
   }, [isBooting, token, segments, router, mode]);
 
