@@ -1,19 +1,20 @@
-import LoadingArc from "@/components/LoadingAnimation";
+import FixItIntro from "@/components/animation";
 import { AuthProvider, useAuth } from "@/src/auth/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Slot, useRouter, useSegments } from "expo-router";
-import React, { useEffect } from "react";
-import { View } from "react-native";
+import React, { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
 
 function AuthGate() {
-  const { isBooting, token, mode } = useAuth();
+  const { isBooting, token } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  
+  const [isSplashAnimationFinished, setSplashAnimationFinished] = useState(false);
 
   useEffect(() => {
-    if (isBooting) return; 
+    if (isBooting || !isSplashAnimationFinished) return;
 
     const inAuthGroup = segments[0] === "(auth)";
 
@@ -22,15 +23,16 @@ function AuthGate() {
     } else if (token && inAuthGroup) {
       router.replace("/(tabs)");
     }
-  }, [isBooting, token, segments, router, mode]);
+  }, [isBooting, isSplashAnimationFinished, token, segments]);
 
-  if (isBooting) {
+  if (isBooting || !isSplashAnimationFinished) {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <LoadingArc size={72} strokeWidth={10} />
-      </View>
+      <FixItIntro 
+        onDone={() => setSplashAnimationFinished(true)} 
+      />
     );
   }
+
   return <Slot />;
 }
 
@@ -38,7 +40,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <AuthGate></AuthGate>
+        <AuthGate />
       </AuthProvider>
     </QueryClientProvider>
   );

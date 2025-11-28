@@ -1,107 +1,75 @@
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
-  Dimensions,
-  Easing,
   StyleSheet,
   Text,
   View,
+  useWindowDimensions
 } from "react-native";
 
 type Props = {
   fixColor?: string;
   itColor?: string;
   revealColor?: string;
-  fontSize?: number;
-  fontWeight?: number;
-  textDurationMs?: number;
-  revealDelayMs?: number;
-  revealDurationMs?: number;
   onDone?: () => void;
 };
 
-const { width: W, height: H } = Dimensions.get("screen");
-const MAX_RADIUS = Math.ceil(Math.sqrt(W * W + H * H) / 2);
-const DIAMETER = MAX_RADIUS * 2.2;
-
 const FixItIntro: React.FC<Props> = ({
   fixColor = "#aef6c7",
-  itColor = "#ffffffff",
+  itColor = "#ffffff",
   revealColor = "#294936",
-  textDurationMs = 600,
-  revealDelayMs = 250,
-  revealDurationMs = 900,
   onDone,
 }) => {
+  const { width, height } = useWindowDimensions();
+  const maxRadius = Math.ceil(Math.sqrt(width * width + height * height) / 2);
+  const diameter = maxRadius * 2.2;
+
   const textOpacity = useRef(new Animated.Value(0)).current;
   const textScale = useRef(new Animated.Value(0.96)).current;
-
-  const revealScale = useRef(new Animated.Value(0)).current;
+  const revealScale = useRef(new Animated.Value(0.01)).current; 
   const revealOpacity = useRef(new Animated.Value(0)).current;
 
+  const onDoneRef = useRef(onDone);
+  useEffect(() => { onDoneRef.current = onDone; }, [onDone]);
+
   useEffect(() => {
-    const textIn = Animated.parallel([
-      Animated.timing(textOpacity, {
-        toValue: 1,
-        duration: textDurationMs,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(textScale, {
-        toValue: 1,
-        duration: textDurationMs,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
+    const anim = Animated.sequence([
+      Animated.parallel([
+        Animated.timing(textOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
+        Animated.timing(textScale, { toValue: 1, duration: 600, useNativeDriver: true }),
+      ]),
+      Animated.delay(250), 
+      Animated.parallel([
+        Animated.timing(revealOpacity, { toValue: 1, duration: 100, useNativeDriver: true }),
+        Animated.timing(revealScale, { toValue: 1, duration: 900, useNativeDriver: true }),
+      ])
     ]);
 
-    const circleIn = Animated.sequence([
-      Animated.delay(revealDelayMs),
-      Animated.timing(revealOpacity, {
-        toValue: 1,
-        duration: 120,
-        easing: Easing.out(Easing.quad),
-        useNativeDriver: true,
-      }),
-      Animated.timing(revealScale, {
-        toValue: 1,
-        duration: revealDurationMs,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]);
+    const t = setTimeout(() => {
+      anim.start(({ finished }) => {
+        if (finished && onDoneRef.current) onDoneRef.current();
+      });
+    }, 100);
 
-    Animated.sequence([textIn, circleIn]).start(() => {
-      onDone?.();
-    });
-  }, [onDone, revealDelayMs, revealDurationMs, textDurationMs, textOpacity, textScale, revealScale, revealOpacity]);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Animated.View
-        pointerEvents="none"
-        style={[
-          styles.revealCircle,
-          {
-            width: DIAMETER,
-            height: DIAMETER,
-            borderRadius: MAX_RADIUS,
+      <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center' }]}>
+        <Animated.View
+          style={{
+            width: diameter,
+            height: diameter,
+            borderRadius: diameter / 2,
             backgroundColor: revealColor,
             opacity: revealOpacity,
             transform: [{ scale: revealScale }],
-          },
-        ]}
-      />
-
-      <Animated.View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          transform: [{ scale: textScale }],
-          opacity: textOpacity,
-        }}
-      >
-        <Text style={[styles.titleLine]}>
+          }}
+        />
+      </View>
+      <Animated.View style={{ opacity: textOpacity, transform: [{ scale: textScale }], zIndex: 10, elevation: 10 }}>
+        <Text style={{ fontSize: 48, fontWeight: "700", letterSpacing: 0.5 }}>
           <Text style={{ color: fixColor }}>Fix</Text>
           <Text style={{ color: itColor }}>It</Text>
         </Text>
@@ -111,22 +79,7 @@ const FixItIntro: React.FC<Props> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  titleLine: {
-    letterSpacing: 0.5,
-    fontSize: 48,
-    fontWeight: "700",
-  },
-  revealCircle: {
-    position: "absolute",
-    left: (W - DIAMETER) / 2,
-    top: (H - DIAMETER) / 2,
-  },
+  container: { flex: 1, backgroundColor: "#FFFFFF", alignItems: "center", justifyContent: "center" },
 });
 
 export default FixItIntro;

@@ -4,7 +4,7 @@ import Filtro from '@/components/Filtro';
 import LoadingArc from '@/components/LoadingAnimation';
 import SearchBar from '@/components/SearchBar';
 import ServiceCard from '@/components/ServiceCard';
-import { useAuth, useAuthUser } from '@/src/auth/AuthContext';
+import { useAuth } from '@/src/auth/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, Platform, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
@@ -17,19 +17,20 @@ type Filtrados = {
 };
 
 export default function Index() {
-    const { email } = useAuthUser();
-    const { mode } = useAuth();
+    const { user, mode } = useAuth();
+
+    const email = user?.email || "";
 
     const userActiveServicesQuery = useQuery({
         queryKey: ["UserActiveServices", email],
         queryFn: () => getUserActiveServices(email),
-        enabled: mode === "user",
+        enabled: mode === "user" && !!user && !!email,
     });
 
     const providerActiveServicesQuery = useQuery({
         queryKey: ["ProviderActiveServices", email],
         queryFn: () => getProviderActiveServices(email),
-        enabled: mode === "provider",
+        enabled: mode === "provider" && !!user && !!email,
     });
 
     const activeQuery = mode === "user" ? userActiveServicesQuery : providerActiveServicesQuery;
@@ -63,7 +64,7 @@ export default function Index() {
         if (filters.fromDate) {
             const from = new Date(filters.fromDate);
             data = data.filter((element: any) => {
-                const d = new Date(element.date); 
+                const d = new Date(element.date);
                 return d >= from;
             });
         }
@@ -71,7 +72,7 @@ export default function Index() {
         if (filters.toDate) {
             const to = new Date(filters.toDate);
             data = data.filter((element: any) => {
-                const d = new Date(element.date); 
+                const d = new Date(element.date);
                 return d <= to;
             });
         }
@@ -107,9 +108,13 @@ export default function Index() {
         setRefreshing(true);
         activeQuery.refetch()
         setTimeout(() => {
-        setRefreshing(false);
+            setRefreshing(false);
         }, 1000);
     };
+
+    if (!user) {
+        return null;
+    }
 
     if (activeQuery.isLoading) {
         return (
@@ -134,9 +139,9 @@ export default function Index() {
                         <SearchBar onSearch={handleSearch} />
                     </View>
                     <View style={styles.filterContainer}>
-                        <Pressable 
-                        style={styles.filterButton}
-                        onPress={() => setIsFilterModalVisible(true)}>
+                        <Pressable
+                            style={styles.filterButton}
+                            onPress={() => setIsFilterModalVisible(true)}>
                             <Text style={styles.filterText}>
                                 Filtrar
                             </Text>
@@ -144,9 +149,9 @@ export default function Index() {
                     </View>
                 </View>
                 <View style={{ flex: 10 }}>
-                    <FlatList 
-                        data={filteredData} 
-                        renderItem={({ item }) => (<ServiceCard data={item} />)} 
+                    <FlatList
+                        data={filteredData}
+                        renderItem={({ item }) => (<ServiceCard data={item} />)}
                         ListEmptyComponent={<Text style={styles.emptyText}>No hay servicios programados actualmente</Text>}
                         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                     />
@@ -218,7 +223,7 @@ const styles = StyleSheet.create({
     emptyText: {
         color: "#6B7A90",
         marginTop: 200,
-        justifyContent:"center",
+        justifyContent: "center",
         alignSelf: "center"
     }
 })
