@@ -23,7 +23,7 @@ function AuthGate() {
     } else if (token && inAuthGroup) {
       router.replace("/(tabs)");
     }
-  }, [isBooting, isSplashAnimationFinished, token, segments]);
+  }, [isBooting, isSplashAnimationFinished, token, segments, router]);
 
   if (isBooting || !isSplashAnimationFinished) {
     return (

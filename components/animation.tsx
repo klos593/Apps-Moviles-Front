@@ -52,7 +52,7 @@ const FixItIntro: React.FC<Props> = ({
     }, 100);
 
     return () => clearTimeout(t);
-  }, []);
+  }, [revealOpacity, revealScale, textOpacity, textScale]);
 
   return (
     <View style={styles.container}>

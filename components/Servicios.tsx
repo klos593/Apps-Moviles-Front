@@ -57,7 +57,7 @@ export default function HomeScreen() {
       return;
     }
 
-  const filtered = professionalsData.filter((element) =>
+    const filtered = professionalsData.filter((element) =>
       (`${element.name.toLowerCase()} ${element.lastName.toLowerCase()}`).includes(
         keyWord.toLowerCase()
       )
@@ -70,7 +70,7 @@ export default function HomeScreen() {
     setRefreshing(true);
     professionalsQuery.refetch()
     setTimeout(() => {
-    setRefreshing(false);
+      setRefreshing(false);
     }, 1000);
   };
 
@@ -83,7 +83,8 @@ export default function HomeScreen() {
   }
 
   return (
-    <><Stack.Screen options={{ gestureEnabled: false }} />
+    <>
+    <Stack.Screen options={{ gestureEnabled: false }} />
       <View style={styles.container}>
         <View style={styles.flatListServiceView}>
           <FlatList
@@ -113,25 +114,26 @@ export default function HomeScreen() {
 
         <View style={{ flex: 3.5 }}>
           <FlatList
-              data={filteredData}
-              key={1}
-              numColumns={1}
-              keyExtractor={(it) => it.id.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.cardWrapper}>
-                  <Card data={item} onPress={() => router.push(`/home/profesional/${item.id}`)} />
-                </View>
-              )}
-              style={styles.flatList}
-              contentContainerStyle={styles.flatListContent}
-              showsVerticalScrollIndicator={false} 
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            />
-            
+            data={filteredData}
+            key={1}
+            numColumns={1}
+            keyExtractor={(it) => it.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.cardWrapper}>
+                <Card data={item} onPress={() => router.push(`/home/profesional/${item.id}`)} />
+              </View>
+            )}
+            style={styles.flatList}
+            contentContainerStyle={styles.flatListContent}
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          />
+
         </View>
-        <View style={{ flex: 0.5 }}></View>
+        <View style={{ flex: 0.8 }}></View>
       </View>
-      <BottomWhiteMask /></>
+      <BottomWhiteMask />
+    </>
   );
 }
 
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
   },
 
   flatListServiceView: {
-    flex: 1,
+    flex: 1.1,
     justifyContent: "center",
     alignItems: "center"
   },
