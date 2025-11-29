@@ -39,6 +39,12 @@ export default function Registro() {
   const [floor, setFloor] = useState(""); 
   const [postalCode, setPostalCode] = useState("");
 
+  const [touchedCountry, setTouchedCountry] = useState(false);
+  const [touchedProvince, setTouchedProvince] = useState(false);
+  const [touchedStreet, setTouchedStreet] = useState(false);
+  const [touchedNumber, setTouchedNumber] = useState(false);
+  const [touchedPostalCode, setTouchedPostalCode] = useState(false);
+
   const nombreOk = nombre.trim().length >= 2;
   const apellidoOk = apellido.trim().length >= 2;
   const telefonoOk = isPhone(telefono);
@@ -216,25 +222,44 @@ export default function Registro() {
 
               <View style={styles.field}>
                 <Text style={styles.label}>País *</Text>
-                <TextInput style={[styles.input, !country && styles.inputError]} value={country} onChangeText={setCountry} placeholder="Argentina" />
+                <TextInput 
+                  style={[styles.input, touchedCountry && !country.trim() && styles.inputError]} 
+                  value={country} 
+                  onChangeText={setCountry} 
+                  onBlur={() => setTouchedCountry(true)}
+                  placeholder="Argentina" 
+                />
               </View>
 
               <View style={styles.field}>
                 <Text style={styles.label}>Provincia *</Text>
-                <TextInput style={[styles.input, !province && styles.inputError]} value={province} onChangeText={setProvince} placeholder="Buenos Aires" />
+                <TextInput 
+                  style={[styles.input, touchedProvince && !province.trim() && styles.inputError]} 
+                  value={province} 
+                  onChangeText={setProvince} 
+                  onBlur={() => setTouchedProvince(true)}
+                  placeholder="Buenos Aires" 
+                />
               </View>
 
               <View style={{ flexDirection: "row", gap: 10 }}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.label}>Calle *</Text>
-                  <TextInput style={[styles.input, !street && styles.inputError]} value={street} onChangeText={setStreet} placeholder="Av. Siempre Viva" />
+                  <TextInput 
+                    style={[styles.input, touchedStreet && !street.trim() && styles.inputError]} 
+                    value={street} 
+                    onChangeText={setStreet} 
+                    onBlur={() => setTouchedStreet(true)}
+                    placeholder="Av. Siempre Viva" 
+                  />
                 </View>
                 <View style={{ width: 110 }}>
                   <Text style={styles.label}>Número *</Text>
                   <TextInput
-                    style={[styles.input, number && !/^\d+$/.test(number) ? styles.inputError : null]}
+                    style={[styles.input, touchedNumber && (!/^\d+$/.test(number.trim()) || !number.trim()) && styles.inputError]}
                     value={number}
                     onChangeText={setNumber}
+                    onBlur={() => setTouchedNumber(true)}
                     placeholder="742"
                     keyboardType="number-pad"
                   />
@@ -249,9 +274,10 @@ export default function Registro() {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.label}>Código Postal *</Text>
                   <TextInput
-                    style={[styles.input, postalCode && !/^\d+$/.test(postalCode) ? styles.inputError : null]}
+                    style={[styles.input, touchedPostalCode && (!/^\d+$/.test(postalCode.trim()) || !postalCode.trim()) && styles.inputError]}
                     value={postalCode}
                     onChangeText={setPostalCode}
+                    onBlur={() => setTouchedPostalCode(true)}
                     placeholder="1405"
                     keyboardType="number-pad"
                   />
