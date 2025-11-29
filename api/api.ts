@@ -1,11 +1,16 @@
+import { PendingReviewsInfo } from "@/components/Types/PendingReviewsInfo";
 import { ProfessionalCardData } from "@/components/Types/ProfessionalCardData";
 import { ProfessionalData } from "@/components/Types/ProfessionalData";
 import { ProfessionCardData } from "@/components/Types/ProfessionCardData";
+import { Review } from "@/components/Types/Review";
+import ServiceCardData from "@/components/Types/ServiceCardData";
+import { ServiceData } from "@/components/Types/ServiceData";
+import { ServiceInfo } from "@/components/Types/ServiceInfo";
+import { UserData } from "@/components/Types/UserData";
 import { URL } from "./url";
 
-
-export async function getProfessionals(): Promise<ProfessionalCardData[]> {
-    const response = await fetch(`${URL}/professionals`);
+export async function getProfessionals(userId: string): Promise<ProfessionalCardData[]> {
+    const response = await fetch(`${URL}/professionals/${encodeURIComponent(userId)}`);
     return response.json();
 }
 
@@ -14,7 +19,197 @@ export async function getProfessions(): Promise<ProfessionCardData[]> {
     return response.json();
 }
 
-export async function getProfessionalWithId(id: string): Promise<ProfessionalData>{
-    const response = await fetch(`${URL}/professional/${id}`);
+export async function getProfessionalProfessions(id: string): Promise<ProfessionCardData[]> {
+    const response = await fetch(`${URL}/professionalProfessions/${encodeURIComponent(id)}`)
+    return response.json()
+}
+
+export async function getProfessionalAvailableProfessions(id: string): Promise<ProfessionCardData[]> {
+    const response = await fetch(`${URL}/professionalAvailableProfessions/${encodeURIComponent(id)}`)
+    return response.json()
+}
+
+export async function getProfessionalWithId(id: string): Promise<ProfessionalData> {
+    const response = await fetch(`${URL}/professional/${encodeURIComponent(id)}`);
     return response.json();
+}
+
+export async function getUser(email: string): Promise<UserData> {
+    const response = await fetch(`${URL}/user/${encodeURIComponent(email)}`);
+    return response.json();
+}
+
+export async function getProfessionalsWithProfession(profession: string, id: string): Promise<ProfessionalCardData[]> {
+    const response = await fetch(`${URL}/professionalsWithProfession/${encodeURIComponent(profession)}/${encodeURIComponent(id)}`);
+    return response.json();
+}
+
+export async function updateUser(email: string, body: { name: string; lastName: string; phone: string; street: string, number: number, floor: string, province: string, country: string, description: string }): Promise<UserData> {
+    const res = await fetch(`${URL}/user/${encodeURIComponent(email)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    }
+    return res.json();
+}
+
+export async function getFinishedUsedServices(email: string): Promise<ServiceCardData[]> {
+    const response = await fetch(`${URL}/finishedUsedServices/${encodeURIComponent(email)}`);
+    return response.json();
+}
+
+export async function getFinishedProvidedServices(email: string): Promise<ServiceCardData[]> {
+    const response = await fetch(`${URL}/finishedProvidedServices/${encodeURIComponent(email)}`);
+    return response.json();
+}
+
+export async function getUserActiveServices(email: string): Promise<ServiceCardData[]> {
+    const response = await fetch(`${URL}/userActiveServices/${encodeURIComponent(email)}`);
+    return response.json();
+}
+
+export async function getProviderActiveServices(email: string): Promise<ServiceCardData[]> {
+    const response = await fetch(`${URL}/providerActiveServices/${encodeURIComponent(email)}`);
+    return response.json();
+}
+
+export async function createService(serviceData: ServiceData) {
+    const response = await fetch(`${URL}/createService`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(serviceData),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al crear el servicio');
+    }
+    return response.json();
+};
+
+export async function getUserIdAndAddressId(email: string): Promise<{ userId: number, addressId: number }> {
+    const response = await fetch(`${URL}/userIdAndAddress/${encodeURIComponent(email)}`);
+    return response.json();
+}
+
+export async function addProfession(data: { userId: string | undefined, professionId: string }) {
+    const response = await fetch(`${URL}/addProfession`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al agregar profesion');
+    }
+    return response.json();
+};
+
+export async function deleteProfession(data: { userId: string | undefined, professionId: string }) {
+    const response = await fetch(`${URL}/deleteProfession`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al eliminar profesion');
+    }
+    return response.json();
+};
+
+export async function getServiceInfoById(id: string): Promise<ServiceInfo> {
+    const response = await fetch(`${URL}/serviceInfo/${encodeURIComponent(id)}`);
+    return response.json();
+}
+
+export async function updatePicture(data: {userId: number, pictureUrl: string}) {
+    const response = await fetch(`${URL}/user/picture`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al cambiar la foto de perfil');
+    }
+    return response.json();
+};
+
+export async function getProfessionalReviews(professionalId: string): Promise<Review[]> {
+    const res = await fetch(`${URL}/serviceInfo/providerReviews/${encodeURIComponent(professionalId)}`);
+
+    if (!res.ok) {
+        throw new Error('Error al obtener reviews');
+    }
+
+    return res.json();
+}
+
+export async function updateService(data: {id: string, state: string }): Promise<ServiceInfo> {
+    const res = await fetch(`${URL}/serviceInfo`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    }
+    return res.json();
+}
+
+export async function getUserPendingReviews(email: string): Promise<PendingReviewsInfo> {
+    const res = await fetch(`${URL}/user/pendingReviews/${encodeURIComponent(email)}`);
+
+    if (!res.ok) {
+        throw new Error('Error al obtener reviews pendientes');
+    }
+
+    return res.json();
+}
+
+export async function updateUserPendingReviews(data: {id: number, state: boolean}) {
+    const res = await fetch(`${URL}/user/pendingReviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    }
+    return res.json();
+}
+
+export async function updateServiceReview(data: {id: string, rating: number, comment: string}){
+    const res = await fetch(`${URL}/service/updateReview`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    }
+    return res.json();
+}
+
+export async function updateRating(data: {id: number | undefined}){
+    const res = await fetch(`${URL}/professional/updateRating`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+        throw new Error("No se pudo actualizar")
+    }
+    return res.json();
 }

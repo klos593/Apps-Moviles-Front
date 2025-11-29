@@ -1,14 +1,13 @@
-import { ImageSourcePropType } from "react-native";
+import Address from "./Address";
 
 export type UserData = {
   id: number;
   mail: string;
   name: string;
   lastName: string;
-  phoneNumber: string;
-  profession: string;
+  phone: string;
   rating: number;
-  picture?: ImageSourcePropType;
-  address: string;
+  picture: string;
   description: string;
+  address: Address
 };

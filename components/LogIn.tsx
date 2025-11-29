@@ -1,4 +1,3 @@
-import { router, Stack } from "expo-router";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -7,29 +6,42 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Stack, useRouter } from "expo-router";
+import { useAuth } from "@/src/auth/AuthContext";
 
-const isEmail = (v: string) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-const handleLogIn = () => {
-  router.push("/paginaServicios");
-};
+const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 
 export default function LoginScreen() {
+  const router = useRouter();
+  const { login } = useAuth();
+
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [touched, setTouched] = useState<{ email?: boolean; pass?: boolean }>(
     {}
   );
+  const [loading, setLoading] = useState(false);
 
   const emailOk = isEmail(email);
   const passOk = pass.length >= 6;
-  const formOk = emailOk && passOk;
+  const formOk = emailOk && passOk && !loading;
 
+  const onSubmit = async () => {
+    if (!formOk) return;
+    try {
+      setLoading(true);
+      await login({ email: email.toLowerCase(), password: pass });
+    } catch (e: any) {
+      Alert.alert("Login failed", e?.message || "Check your credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,7 +96,7 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 textContentType="password"
                 returnKeyType="go"
-                onSubmitEditing={() => {}}
+                onSubmitEditing={onSubmit}
               />
               <Pressable
                 onPress={() => setShowPass((s) => !s)}
@@ -100,13 +112,20 @@ export default function LoginScreen() {
           </View>
 
           <Pressable
-            onPress={handleLogIn}
+            onPress={onSubmit}
             disabled={!formOk}
-            style={[styles.primaryBtn, !formOk && styles.btnDisabled]}
+            style={[styles.primaryBtn, (!formOk || loading) && styles.btnDisabled]}
           >
-            <Text style={styles.primaryText}>Iniciar sesión</Text>
+            <Text style={styles.primaryText}>
+              {loading ? "Ingresando..." : "Iniciar sesión"}
+            </Text>
           </Pressable>
-          <Pressable style={styles.secondaryBtn} onPress={() => router.push("/paginaRegistro")}>
+
+          <Pressable
+            style={styles.secondaryBtn}
+            onPress={() => router.push("/paginaRegistro")}
+            disabled={loading}
+          >
             <Text style={styles.secondaryText}>Registrarse</Text>
           </Pressable>
         </View>
@@ -116,18 +135,40 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#fff" 
+  },
+
   inner: {
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 32,
     gap: 16,
   },
-  brand: { fontSize: 20, fontWeight: "700", textAlign: "center" },
-  title: { fontSize: 24, fontWeight: "800", marginTop: 8, textAlign: "center" },
 
-  field: { gap: 8 },
-  label: { fontSize: 14, color: "#444" },
+  brand: { 
+    fontSize: 20, 
+    fontWeight: "700", 
+    textAlign: "center" 
+  },
+
+  title: { 
+    fontSize: 24, 
+    fontWeight: "800", 
+    marginTop: 8, 
+    textAlign: "center" 
+  },
+
+  field: { 
+    gap: 8 
+  },
+
+  label: { 
+    fontSize: 14, 
+    color: "#444" 
+  },
+
   input: {
     height: 48,
     backgroundColor: "#f2f2f2",
@@ -136,11 +177,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "transparent",
   },
-  inputNoMargin: { marginBottom: 0 },
-  inputError: { borderColor: "#ff5a5f", backgroundColor: "#fff5f5" },
-  helper: { color: "#ff5a5f", fontSize: 12 },
 
-  passWrap: { position: "relative" },
+  inputNoMargin: { 
+    marginBottom: 0 
+  },
+
+  inputError: { 
+    borderColor: "#ff5a5f", 
+    backgroundColor: "#fff5f5" 
+  },
+
+  helper: { 
+    color: "#ff5a5f", 
+    fontSize: 12 
+  },
+
+  passWrap: { 
+    position: "relative" 
+  },
+
   toggle: {
     position: "absolute",
     right: 10,
@@ -151,7 +206,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
   },
-  toggleText: { color: "#000000ff", fontWeight: "600" },
+  
+  toggleText: { 
+    color: "#000000ff", 
+    fontWeight: "600" 
+  },
 
   primaryBtn: {
     height: 50,
@@ -161,8 +220,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 8,
   },
-  primaryText: { color: "#fff", fontSize: 16, fontWeight: "700" },
-  btnDisabled: { opacity: 0.5 },
+
+  primaryText: { 
+    color: "#fff", 
+    fontSize: 16, 
+    fontWeight: "700" 
+  },
+
+  btnDisabled: { 
+    opacity: 0.5 
+  },
 
   secondaryBtn: {
     height: 50,
@@ -172,5 +239,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  secondaryText: { color: "#000000ff", fontSize: 16, fontWeight: "700" },
+
+  secondaryText: { 
+    color: "#000000ff", 
+    fontSize: 16, 
+    fontWeight: "700" 
+  },
 });

@@ -6,8 +6,7 @@ type RatingProps = {
   rating: number;
 };
 
-
-function Rating( rating: RatingProps ) {
+function Rating(rating: RatingProps) {
   const stars = [];
   const maxStars = 5;
 

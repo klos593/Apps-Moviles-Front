@@ -1,4 +1,4 @@
-const PORT='3000';
-const IP= '192.168.100.71';
+const PORT = '3000';
+const IP = '192.168.1.2';
 
-export const URL=`http://${IP}:${PORT}/FixIt`
+export const URL = `http://${IP}:${PORT}/FixIt`

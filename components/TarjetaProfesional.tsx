@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  FlatList,
   Image,
   Pressable,
   StyleSheet,
@@ -15,21 +16,33 @@ type CardProps = {
 };
 
 export default function Card({ data, onPress }: CardProps) {
+  let rating = 0
+  if (data.rating == null){
+    rating = 0
+  }else{
+    rating = data.rating
+  }
   return (
     <Pressable onPress={() => onPress?.(parseInt(data.id))} style={styles.card}>
       <View style={styles.cardHeader}>
         <View>
-          <Image source={{uri: data.picture}} style={styles.userPicture}/>
+          <Image source={{ uri: data.picture }} style={styles.userPicture} />
         </View>
         <View style={styles.data}>
           <Text style={styles.name}>{data.name} {data.lastName}</Text>
           <View style={styles.rating}>
-            <Rating rating={data.rating}/>
-            <Text style={styles.numberedRating}>{(data.rating).toString().slice(0, 3)}</Text>
+            <Rating rating={data.rating} />
+            <Text style={styles.numberedRating}>{(rating).toString().slice(0, 3)}</Text>
           </View>
         </View>
         <View style={styles.tag}>
-          {!!data.professions && <Text style={styles.profession}>{data.professions[0]}</Text>}
+          <FlatList
+            data={data.professions}
+            renderItem={({ item }) => (
+              <View style={{ margin: 2 }}>
+                <Text style={styles.profession}>{item}</Text>
+              </View>
+            )} />
         </View>
       </View>
     </Pressable>
@@ -37,40 +50,46 @@ export default function Card({ data, onPress }: CardProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: "#fff" 
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
   },
 
   card: {
-    backgroundColor: "#f4f4f6", 
-    borderRadius: 16, 
-    padding: 12, 
+    backgroundColor: "white",
+    borderRadius: 16,
+    padding: 12,
     marginBottom: 12,
-    minHeight: 110, 
+    minHeight: 110,
     justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
   },
 
-  cardHeader: { 
-    flexDirection: "row", 
-    alignItems: "center", 
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  
-  name: { 
-    fontSize: 16, 
-    fontWeight: "700", 
-    flexShrink: 1, 
-    paddingRight: 8 
+
+  name: {
+    fontSize: 16,
+    fontWeight: "700",
+    flexShrink: 1,
+    paddingRight: 8
   },
 
   profession: {
-    paddingHorizontal: 8, 
-    paddingVertical: 4, 
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     borderRadius: 10,
-    backgroundColor: "#aef6c7", 
-    color: "#555", 
-    overflow: "hidden", 
-    opacity: 0.7
+    backgroundColor: "#aef6c7",
+    color: "#555",
+    overflow: "hidden",
+    opacity: 0.7,
+    alignSelf:"flex-end"
   },
 
   rating: {
@@ -79,7 +98,7 @@ const styles = StyleSheet.create({
   },
 
   data: {
-    flexDirection:"column",
+    flexDirection: "column",
     marginLeft: 20
   },
 
@@ -87,15 +106,16 @@ const styles = StyleSheet.create({
     marginLeft: 7
   },
 
-  userPicture:{
-    width:55,
-    height: 55,
-    resizeMode: "contain"
+  userPicture: {
+    width: 65,
+    height: 65,
+    resizeMode: "contain",
+    borderRadius: 25
   },
 
   tag: {
     flex: 1,
     alignItems: "flex-end",
-    marginBottom: 57
+    justifyContent: "center"
   }
 });

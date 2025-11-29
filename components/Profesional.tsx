@@ -1,124 +1,513 @@
-import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { createService, getProfessionalProfessions, getProfessionalReviews, getUserIdAndAddressId } from '@/api/api';
+import { useAuthUser } from '@/src/auth/AuthContext';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { DateTime } from 'luxon';
+import React, { useMemo, useState } from "react";
+import { Alert, FlatList, Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import DateTimeSelector from './DateTimeSelector';
+import ErrorModal from './ErorrAnimation';
+import LoadingArc from './LoadingAnimation';
 import Rating from "./Rating";
+import SuccessModal from "./SuccesAnimation";
 import { ProfessionalData } from "./Types/ProfessionalData";
+import { ProfessionCardData } from './Types/ProfessionCardData';
 
 type ProfesionalProps = {
-    data: ProfessionalData;
+  data: ProfessionalData;
 };
 
-export default function Profesional({data}: ProfesionalProps) {
-    return (
-        <>
-        <View style={{flex:1, backgroundColor:"#fff"}}>
-            <View style={{flex:1, backgroundColor:"#f4f4f6", margin: 16, borderRadius: 22}}>
-                <View style={styles.firstHalf}>
-                    <View style={styles.pictureContainer}>
-                        <Image source={{uri: data.picture}} style={styles.picture} />
-                    </View>
-                    <View style={styles.informationContainer}>
-                        <View style={{flex: 2, justifyContent: "center", alignItems: 'center'}}>
-                            <Text style={styles.name}>{data.name} {data.lastName}</Text>
-                            <View style={styles.rating}>
-                                <Rating rating={data.rating}/>
-                                <Text style={styles.numberedRating}>{(data.rating).toString().slice(0, 3)}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.professionsContainer}>
-                            <Text style={styles.professions}>{data.professions[0]}</Text>
-                        </View>
-                    </View>
-                </View>
-                    <View style={styles.secondHalf}>
-                        <View style= {styles.contactContainer}>
-                            <Text>Descripcion: {data.description}</Text>
-                            <Text>Telefono: {data.phoneNumber}</Text>
-                            <Text>Mail: {data.mail}</Text>
-                        </View>
-                        <View style= {{flex: 1, justifyContent: "center", alignItems: "center"}}>
-                            <Pressable style = {{ backgroundColor: "#3E6259", borderRadius: 15, justifyContent: "center", alignItems: "center", padding: 10}}>
-                                <Text style = {{ color: "#FFFFFF", fontWeight: "600", fontSize: 25}}>Contactar</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-            </View>
+const useCreateService = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createService,
+    onSuccess: () => {
+      queryClient.invalidateQueries()
+    },
+    onError: (error) => {
+      console.error('Error al crear servicio:', error);
+    },
+  });
+};
+
+export default function Profesional({ data }: ProfesionalProps) {
+  const [modal, setModal] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [selectedProfession, setSelectedProfession] = useState<ProfessionCardData | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const createServiceMutation = useCreateService();
+  const { email } = useAuthUser()
+
+  const professionsQuery = useQuery({
+    queryKey: ["professionalProfessions", data.id.toString()],
+    queryFn: () => getProfessionalProfessions(data.id.toString()),
+  });
+
+  const professionalReviewsQuery = useQuery({
+    queryKey: ["professionalReviews", data.id.toString()],
+    queryFn: () => getProfessionalReviews(data.id.toString()),
+  });
+
+  const serviceDataReview = useMemo(() => professionalReviewsQuery.data ?? [], [professionalReviewsQuery.data]);
+  const professionsData = professionsQuery.data ?? [];
+
+  const showModal = () => setModal(true);
+  const closeModal = () => setModal(false);
+
+  const userQuery = useQuery({
+    queryKey: ["userInfo", email],
+    queryFn: () => getUserIdAndAddressId(email),
+  });
+
+  const handleContact = async () => {
+    if (!selectedProfession) {
+      Alert.alert('Error', 'Debes seleccionar una profesión');
+      return;
+    }
+
+    if (!selectedDate) {
+      Alert.alert('Error', 'Debes seleccionar una fecha');
+      return;
+
+    } else if (new Date(selectedDate) < new Date()) {
+      Alert.alert('Error', 'La fecha seleccionada ya no esta disponible');
+      return;
+    }
+
+    if (!userQuery.data?.userId || !userQuery.data?.addressId) {
+      Alert.alert('Error', 'No se pudo obtener la información del usuario');
+      return;
+    }
+
+    if (!selectedDate) {
+      Alert.alert('Error', 'Debes seleccionar una fecha');
+      return;
+    }
+
+    const serviceData = {
+      professionId: parseInt(selectedProfession.id, 10),
+      userId: userQuery.data.userId,
+      providerId: data.id,
+      rating: null,
+      price: null,
+      comment: null,
+      date: new Date(selectedDate),
+      addressId: userQuery.data.addressId,
+      state: 'PENDING',
+    };
+
+    try {
+      await createServiceMutation.mutateAsync(serviceData);
+      setModal(false)
+      setSuccessOpen(true)
+    } catch (error) {
+      console.log(error)
+      setModal(false)
+      setErrorOpen(true)
+    }
+  };
+
+  return (
+    <>
+      <View style={styles.root}>
+        <View style={styles.header}>
+          <View style={styles.avatarWrap}>
+            <Image source={{ uri: data.picture }} style={styles.picture} />
+          </View>
         </View>
-    );
+        <View style={styles.content}>
+          <Text style={styles.name}>{data.name} {data.lastName}</Text>
+          <View style={styles.professionsContainer}>
+            <FlatList
+              data={data.professions}
+              horizontal
+              contentContainerStyle={{ gap: 8 }}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, idx) => `${item}-${idx}`}
+              renderItem={({ item }) => (
+                <Text style={styles.professionChip}>{item}</Text>
+              )}
+            />
+          </View>
+          <Text style={styles.description}>
+            <Text style={{ fontWeight: "600" }}>Descripción: </Text>
+            {data.description}
+          </Text>
+          <View style={styles.rowRatingAction}>
+            <View style={styles.ratingBlock}>
+              <Rating rating={data.rating} />
+              <Text style={styles.numberedRating}>{(data.rating).toString().slice(0, 3)}</Text>
+            </View>
+
+            <Pressable style={styles.hireBtn} onPress={showModal}>
+              <Text style={styles.hireBtnText}>Contratar</Text>
+            </Pressable>
+          </View>
+          <View style={styles.reviewsContainer}>
+            <Text style={styles.sectionTitle}>OPINIONES</Text>
+
+            {serviceDataReview && serviceDataReview.length === 0 && (
+              <Text style={{ marginTop: 4 }}>Este profesional aún no tiene reseñas.</Text>
+            )}
+
+            {serviceDataReview && serviceDataReview.length > 0 && (
+              <FlatList
+                data={serviceDataReview}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id.toString()}
+                contentContainerStyle={{ gap: 8, paddingVertical: 6 }}
+                renderItem={({ item }) => (
+                  <View style={styles.reviewCard}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                      <Rating rating={item.rating} />
+                      <Text style={styles.reviewRatingText}>{item.rating}</Text>
+                    </View>
+                    <Text numberOfLines={3} style={styles.reviewComment}>
+                      {item.comment}
+                    </Text>
+                    <Text style={styles.reviewUser}>{item.userName}</Text>
+                  </View>
+                )}
+              />
+            )}
+          </View>
+        </View>
+      </View>
+
+      <Modal
+        visible={modal}
+        transparent
+        animationType="fade"
+        onRequestClose={closeModal}
+      >
+        <Pressable style={styles.overlay} onPress={() => setModal(false)}/>
+          <View style={styles.modal}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>
+                Solicitar Servicio
+              </Text>
+            </View>
+
+            <Text style={styles.sectionTitle}>PROFESIONES DISPONIBLES</Text>
+            <View style={styles.gridContainer}>
+              {professionsData.map((opt) => {
+                const isSelected = selectedProfession === opt;
+                return (
+                  <Pressable
+                    key={opt.id}
+                    style={[styles.card, isSelected && styles.cardSelected]}
+                    onPress={() => setSelectedProfession(opt)}
+                  >
+                    <Text style={styles.serviceText}>{opt.name}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            <Text style={styles.sectionTitle}>SELECCIONAR FECHA Y HORA</Text>
+            <View style={styles.gridContainer}>
+              <View style={styles.dateSection}>
+                <DateTimeSelector
+                  onDateChange={(date) => {
+                    setSelectedDate(date);
+                  }}
+                />
+
+                {selectedDate && (
+                  <Text style={styles.selectedDateText}>
+                    Turno: {
+                      selectedDate
+                        ? DateTime.fromISO(selectedDate, { zone: "utc" })
+                          .setZone("America/Argentina/Buenos_Aires")
+                          .toFormat("dd/MM/yyyy HH:mm")
+                        : "No asignado"
+                    }
+                  </Text>
+                )}
+              </View>
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <Pressable
+                style={[styles.button, { backgroundColor: "#2f6b45" }]}
+                onPress={handleContact}
+                disabled={createServiceMutation.isPending}
+              >
+                <Text style={styles.buttonText}>Solicitar servicio</Text>
+              </Pressable>
+
+              <Pressable
+                style={[styles.button, { backgroundColor: "#e6ebf2" }]}
+                onPress={closeModal}
+              >
+                <Text style={[styles.buttonText, { color: "#516072" }]}>Cancelar</Text>
+              </Pressable>
+            </View>
+
+            {createServiceMutation.isPending &&
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <LoadingArc />
+              </View>}
+          </View>
+      </Modal>
+      <SuccessModal visible={successOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setSuccessOpen(false) }} />
+      <ErrorModal visible={errorOpen} dismissOnBackdrop autoCloseMs={2000} onClose={() => { setErrorOpen(false) }} />
+    </>
+  );
 }
 
+const AVATAR_SIZE = 120;
+
 const styles = StyleSheet.create({
-    firstHalf: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        margin: 10
-    },
+  root: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
 
-    picture: {
-        width: 170,
-        height: 170,
-        resizeMode: "contain"
-    },
+  header: {
+    height: 160,
+    backgroundColor: "#294936",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
 
-    pictureContainer: {
-        flex: 1,
-        alignSelf: "center",
-        justifyContent: "center"
-    },
+  avatarWrap: {
+    position: "absolute",
+    bottom: -(AVATAR_SIZE / 2), 
+    height: AVATAR_SIZE,
+    width: AVATAR_SIZE,
+    borderRadius: AVATAR_SIZE / 2,
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+  },
 
-    name: {
-        fontSize: 22,
-        fontWeight: 700
-    },
-    
-    informationContainer: {
-        alignSelf: "center",
-        flex: 1,
-        justifyContent: "center"
-    },
+  picture: {
+    height: AVATAR_SIZE - 8,
+    width: AVATAR_SIZE - 8,
+    borderRadius: (AVATAR_SIZE - 8) / 2,
+    resizeMode: "cover",
+  },
 
-    secondHalf: {
-        flex: 1.5,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-    },
+  content: {
+    flex: 1,
+    paddingTop: AVATAR_SIZE / 2 + 16,
+    paddingHorizontal: 16,
+    gap: 12,
+  },
 
-    rating: {
-        flexDirection: "row",
-        marginTop: 6
-    },
+  name: {
+    fontSize: 22,
+    fontWeight: "700",
+    textAlign: "center",
+  },
 
-    numberedRating: {
-        marginLeft: 7
-    },
+  professionsContainer: {
+    alignItems: "center",
+  },
 
-    professionsContainer: {
-        flex: 1, 
-        justifyContent: "flex-start", 
-        alignItems: "center",
-    },
+  professionChip: {
+    backgroundColor: "#294936",
+    color: "white",
+    borderRadius: 16,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    fontSize: 14,
+    fontWeight: "500",
+  },
 
-    professions: {
-        backgroundColor: "#5b8266", 
-        borderRadius: 15, 
-        padding: 5, 
-        fontWeight: 500,
-        fontSize: 17
-    },
+  description: {
+    fontSize: 15,
+    textAlign: "center",
+  },
 
-    contactContainer: {
-        flex: 1, 
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-between",
-        margin: 10
-    },
+  rowRatingAction: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 8,
+  },
 
-    text: {
-        fontSize: 19,
-        alignSelf: "baseline"
-    }
+  ratingBlock: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  numberedRating: {
+    marginLeft: 7,
+    fontSize: 16,
+  },
+
+  hireBtn: {
+    backgroundColor: "#3E6259",
+    borderRadius: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+
+  hireBtnText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+
+  reviewsContainer: {
+    marginTop: 16,
+  },
+
+  reviewsPlaceholder: {
+    fontSize: 18,
+  },
+
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "flex-end",
+  },
+
+  modal: {
+    backgroundColor: "#F5F6FA",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 16,
+    height: "80%",
+  },
+
+  titleContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingTop: 10,
+    paddingBottom: 7,
+    backgroundColor: "#F5F6FA"
+  },
+
+  title: {
+    fontSize: 22,
+    fontWeight: "800",
+    marginTop: 6,
+    color: "#1F2D3D"
+  },
+
+  sectionTitle: {
+    color: "#6B7A90",
+    fontWeight: "700",
+    marginBottom: 10,
+    letterSpacing: 0.5
+  },
+
+  buttonContainer: {
+    backgroundColor: "#F5F6FA",
+    gap: 14,
+    marginTop: 15
+  },
+
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    backgroundColor: "white",
+    borderRadius: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+    gap: 14
+  },
+
+  card: {
+    width: 110,
+    height: 40,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: "#beffc7ff",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#beffc7ff",
+    position: "relative",
+  },
+
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "700"
+  },
+
+  button: {
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  cardSelected: {
+    borderColor: "#00cb58b3",
+    backgroundColor: "#00cb58b3",
+  },
+
+  serviceText: {
+    fontWeight: "600",
+    fontSize: 15,
+  },
+
+  dateSection: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  selectedDateText: {
+    marginTop: 8,
+    fontSize: 14,
+    textAlign: "center",
+    color: "#374151",
+  },
+
+  reviewCard: {
+    width: 220,
+    padding: 10,
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+    marginRight: 4,
+  },
+
+  reviewRatingText: {
+    marginLeft: 6,
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#111827',
+  },
+
+  reviewComment: {
+    fontSize: 13,
+    color: '#4B5563',
+    marginBottom: 6,
+  },
+
+  reviewUser: {
+    fontSize: 12,
+    color: '#6B7280',
+    fontStyle: 'italic',
+  },
+
 });
+
+
